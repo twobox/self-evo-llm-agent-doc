@@ -1,3 +1,64 @@
+<!--
+metadata:
+  title: 'EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle'
+  short_title: 'EvolveR'
+  year: 2025
+  note_type: '中文读书笔记'
+  paper_type: 'method / system paper'
+  status: 'arXiv v3, last revised on 2026-05-16; accepted by ICML 2026'
+  venue: 'ICML 2026 / arXiv'
+  arxiv_id: '2510.16079'
+  arxiv_url: 'https://arxiv.org/abs/2510.16079'
+  pdf_url: 'https://arxiv.org/pdf/2510.16079'
+  html_url: 'https://arxiv.org/html/2510.16079v3'
+  code_url: 'https://github.com/KnowledgeXLab/EvolveR'
+  original_code_url: 'https://github.com/Edaizi/EvolveR'
+  model_url: 'https://huggingface.co/Edaizi/EvolveR'
+  authors:
+    - 'Rong Wu'
+    - 'Xiaoman Wang'
+    - 'Jianbiao Mei'
+    - 'Pinlong Cai'
+    - 'Daocheng Fu'
+    - 'Cheng Yang'
+    - 'Licheng Wen'
+    - 'Xuemeng Yang'
+    - 'Yufan Shen'
+    - 'Yuxin Wang'
+    - 'Botian Shi'
+  institutions:
+    - 'Zhejiang University'
+    - 'Shanghai Artificial Intelligence Laboratory'
+    - 'East China Normal University'
+    - 'Fudan University'
+    - 'Central South University'
+    - 'Shanghai Innovation Institute'
+    - 'Shanghai Jiao Tong University'
+    - 'University of Science and Technology of China'
+  topics:
+    - 'Self-Evolving LLM Agent'
+    - 'Experience Base'
+    - 'Agent Memory'
+    - 'Experience Self-Distillation'
+    - 'Experience Retrieval'
+    - 'GRPO'
+    - 'Policy Evolution'
+    - 'Search Agent'
+  tags:
+    - 'self-evolving-agent'
+    - 'experience-base'
+    - 'agent-memory'
+    - 'self-distillation'
+    - 'experience-retrieval'
+    - 'grpo'
+    - 'search-agent'
+    - 'icml-2026'
+  related_notes:
+    - 'notes/harness-updating-is-not-harness-benefit.md'
+  created: '2026-06-05'
+  updated: '2026-06-06'
+-->
+
 # 《EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle》读书笔记
 
 > 论文：**EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle**  
