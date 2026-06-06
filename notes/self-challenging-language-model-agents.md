@@ -147,10 +147,81 @@ Agent 首先扮演 challenger。它不是直接凭空写一个任务，而是先
 
 ### 7.3 Task Executor：再当“解题人”
 
-生成并过滤出高质量任务后，Agent 再扮演 executor 去完成这些任务。论文探索了两种训练方式：
+生成并过滤出高质量 CaT 任务后，Agent 再切换到 executor 角色。这个阶段可以理解为：**把 challenger 造出来的“可验证练习题”变成训练样本，再用这些样本更新执行模型。**
 
-- **Self-improvement**：同一个 Llama-3.1-8B-Instruct 自己生成任务、自己采样轨迹，再用验证器反馈做 RL。论文中使用 one-step REINFORCE；由于奖励是 0/1，形式上接近只用成功轨迹做 Rejection Fine-Tuning。
-- **Distillation**：用 Llama-3.1-8B 生成 CaT 任务，再让更强的 Llama-3.1-70B-Instruct 采样示范轨迹，把能力蒸馏回 Llama-3.1-8B。
+在标准 LLM Agent 设置中，executor 每一步会根据当前上下文输出一个动作。这个动作可以是一段调用工具 API 的 Python 代码，也可以是向用户发出的询问。环境执行动作后，会返回 observation，例如工具返回值、数据库查询结果、网页内容，或者模拟用户的回复。这个 observation 会继续追加到上下文里，供模型决定下一步动作。等 Agent 认为任务完成后，系统运行 CaT 里携带的 verification function，根据最终环境状态和最终回答给出 0/1 reward。
+
+因此，executor 学到的不是单步问答能力，而是完整的多轮行为链条：
+
+1. 读懂 instruction 和当前环境说明；
+2. 判断需要调用哪些工具；
+3. 根据工具返回结果继续规划；
+4. 必要时向用户追问；
+5. 修改环境状态或生成最终答案；
+6. 最后由 verification function 判断是否成功。
+
+论文主要讨论了 executor 的两种训练用法。
+
+#### 7.3.1 Self-improvement：自己出题，自己做题，自己根据验证器学习
+
+Self-improvement 是更“自演化”的设置。这里 challenger 和 executor 都是同一个 Llama-3.1-8B-Instruct。整体流程是：
+
+1. Llama-3.1-8B 先作为 challenger 生成 CaT 任务；
+2. 系统用 example solution 和 failure cases 过滤掉质量差的任务；
+3. 同一个 Llama-3.1-8B 再作为 executor，在这些任务上采样多轮 rollout trajectories；
+4. 每条轨迹完成后，用任务自带的 verification function 打 0/1 分；
+5. 用成功轨迹来微调 executor policy。
+
+论文中 self-improvement 的主实验采用 one-step REINFORCE。因为 reward 是稀疏的 0/1 outcome reward，所以它在实现效果上接近 Rejection Fine-Tuning：失败轨迹 reward 为 0，基本不提供正向学习信号；成功轨迹 reward 为 1，被当成“好示范”拿来训练。换句话说，这里所谓 RL 并不是复杂的长程 credit assignment，而更像是：**模型多尝试几次，把通过验证器的解题轨迹筛出来，再对这些成功轨迹做监督微调。**
+
+这个设计有一个重要优点：工程上相对简单。它不需要人工标注成功/失败，也不需要另一个 LLM 当 judge，只要验证函数能跑，就可以自动产生 reward。缺点是它比较依赖成功轨迹的数量。如果基础模型太弱，生成的大量 rollout 都失败，那么可用于训练的正样本就会比较少。
+
+#### 7.3.2 Distillation：弱模型出题，强模型做题，再教回弱模型
+
+Distillation 是另一种用法，目标不是完全自我提升，而是把强模型在某个工具环境里的能力自动蒸馏到弱模型中。
+
+本文的设置是：
+
+1. 仍然使用 Llama-3.1-8B 作为 challenger 生成 CaT 任务；
+2. 过滤后得到高质量 synthetic tasks；
+3. 使用更强的 Llama-3.1-70B-Instruct 作为 teacher executor，在这些任务上采样解题轨迹；
+4. 用这些 teacher trajectories 对 Llama-3.1-8B student 做 SFT；
+5. 最后测试 student 在真实 benchmark 任务上的泛化能力。
+
+这里的关键点是：训练数据不来自人工任务，也不来自人工示范，而是由“弱模型生成任务 + 强模型执行任务”自动构造出来。这样做的工程意义很明显：如果 70B 模型太慢、太贵，不适合线上部署，就可以先让它在自动生成的任务环境中产生轨迹，再把该环境里的工具使用能力压缩到 8B 模型里。
+
+一个有意思的细节是，论文发现 distillation 时不一定只用成功轨迹。附录实验显示，在 teacher 明显强于 student 的情况下，把成功和失败轨迹都用于蒸馏，效果往往比只用成功轨迹更好。作者的解释是：即使强模型没有完成任务，它的失败轨迹中也可能包含有价值的信息，例如如何探索环境、如何发现错误、如何修正思路。这一点和 self-improvement 不同：self-improvement 主要依赖成功轨迹；distillation 可以从强模型的失败过程里学到一些中间经验。
+
+#### 7.3.3 Executor 训练真正学到的是什么
+
+我理解 executor 阶段学到的能力主要不是“记住某个具体任务答案”，而是学习一类工具环境中的操作模式。例如：
+
+- 在 Calculation 环境中，学会把自然语言问题拆成多步工具调用；
+- 在 Web Browsing 环境中，学会边浏览边提取信息；
+- 在 Retail 环境中，学会查询订单、确认用户身份、退货或换货；
+- 在 Airline 环境中，学会查询航班、改签、订票以及处理用户约束。
+
+所以 executor 的训练价值在于：通过大量 synthetic tasks，让模型形成对工具 API、环境状态、用户交互流程和验证目标的熟悉度。测试时虽然任务不是训练时的同一个任务，但只要工具使用模式相似，模型就可能迁移。
+
+#### 7.3.4 Offline RL 与 Online RL 的区别
+
+论文主实验用的是 offline rollout 方式：先生成一批任务和轨迹，再用这些固定轨迹训练。每种设置生成 800 个 synthetic tasks 和 12k 条 offline rollout trajectories。这种方式比较稳定、成本可控，也容易复现。
+
+论文还做了不同 RL 算法的消融。结果显示，在 Calculation 环境中，Rejection Fine-Tuning 和 DPO 这类 offline 方法已经能带来明显提升；PPO、GRPO 等 online RL 可以进一步提高表现，但代价是工程复杂度和不稳定性更高。论文特别提到，如果 GRPO 没有仔细调参，训练后期性能甚至可能突然掉到 0。
+
+因此，从工程角度看，executor 训练可以分成两个层级：
+
+- **先用 Rejection Fine-Tuning / SFT 跑通闭环**：任务生成、验证器、轨迹采样、成功轨迹训练；
+- **再考虑 PPO / GRPO 等在线 RL**：可能更强，但需要更复杂的采样、训练和稳定性控制。
+
+#### 7.3.5 和普通 SFT 数据训练的区别
+
+这部分容易误解。SCA 的 executor 训练看起来像 SFT，但它和普通 SFT 数据集有两个区别：
+
+1. 训练任务不是人工提前写好的，而是 challenger 在环境中探索后生成的；
+2. 轨迹是否能进入训练，不靠人工判断，而靠 verification function 自动筛选。
+
+所以这篇论文的重点不是“又做了一次 SFT”，而是提出了一条自动产生 SFT/RL 数据的管线。对 self-evolving agent 来说，这个意义更大：Agent 不只是从已有数据学习，而是参与构造自己的训练任务和训练反馈。
 
 ## 8. 实验设计
 
