@@ -6,6 +6,7 @@
 
 - `README.md` 只作为仓库首页和笔记索引，不放单篇论文的完整读书笔记。
 - 单篇笔记统一放在 `notes/` 目录下。
+- 横向综述和跨论文对比统一放在 `surveys/` 目录下。
 - 笔记文件名使用英文短横线命名，并尽量和论文标题保持一致。
 - 每篇笔记尽量覆盖论文外部信息、作者圈子、方法内容、实验结论、工程启发、局限性和个人理解。
 
@@ -16,6 +17,12 @@
 | EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle | [notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md](notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 自演化 Agent、Experience Base、经验自蒸馏、经验检索、GRPO、策略演化 |
 | Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents | [notes/harness-updating-is-not-harness-benefit.md](notes/harness-updating-is-not-harness-benefit.md) | 自演化 Agent、Harness Updating、Harness Benefit、Evolver 与 Task-Solver 解耦分析 |
 | Self-Challenging Language Model Agents | [notes/self-challenging-language-model-agents.md](notes/self-challenging-language-model-agents.md) | Self-Challenging Agent、Code-as-Task、自生成任务、多轮工具使用、RL for Agent、可验证奖励 |
+
+## 横向综述与对比
+
+| 文档 | 内容 |
+|---|---|
+| [surveys/experimental-comparison.md](surveys/experimental-comparison.md) | 汇总已读论文的实验对象、测试数据集、训练方法、对比方法、评价指标和复现信息 |
 
 ## 关注主题
 
@@ -41,3 +48,15 @@
 9. 工程启发。
 10. 局限性。
 11. 我的理解与总结。
+
+## 横向对比维护建议
+
+后续每新增一篇论文笔记，建议同步更新 `surveys/experimental-comparison.md`，至少补充：
+
+1. 实验对象 / Agent 类型。
+2. 核心任务。
+3. 训练数据或更新方式。
+4. 测试数据集 / benchmark / 环境。
+5. 对比方法和 baseline。
+6. 评价指标。
+7. 复现信息。
