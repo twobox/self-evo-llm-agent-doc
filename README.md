@@ -15,6 +15,7 @@
 |---|---|---|
 | EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle | [notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md](notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 自演化 Agent、Experience Base、经验自蒸馏、经验检索、GRPO、策略演化 |
 | Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents | [notes/harness-updating-is-not-harness-benefit.md](notes/harness-updating-is-not-harness-benefit.md) | 自演化 Agent、Harness Updating、Harness Benefit、Evolver 与 Task-Solver 解耦分析 |
+| Self-Challenging Language Model Agents | [notes/self-challenging-language-model-agents.md](notes/self-challenging-language-model-agents.md) | Self-Challenging Agent、Code-as-Task、自生成任务、多轮工具使用、RL for Agent、可验证奖励 |
 
 ## 关注主题
 
@@ -23,6 +24,7 @@
 - **Harness Engineering**：prompt、memory、skill、tool、workflow 等外部组件如何更新，以及模型是否真正受益。
 - **Tool-use / Search Agent**：Agent 如何调用外部工具、搜索系统、代码环境或 API 完成复杂任务。
 - **RL for Agent**：如何用轨迹反馈、奖励设计和强化学习训练 Agent 的工具调用与经验使用能力。
+- **Synthetic Task Generation / Verifiable Reward**：Agent 如何自动生成任务、构造验证器，并把任务反馈转化为可训练奖励信号。
 
 ## 阅读笔记建议格式
 
