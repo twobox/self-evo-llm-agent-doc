@@ -29,6 +29,7 @@ metadata:
 |---|---|---|---|---|---|---|
 | [EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | Search Agent；Experience-based Agent；Self-Evolving Agent | 复杂问答、多跳问答、搜索增强推理 | Experience self-distillation；Experience Base maintenance；SFT / LoRA；GRPO policy evolution | 域内：Natural Questions、HotpotQA；域外：TriviaQA、PopQA、2WikiMultiHopQA、MuSiQue、Bamboogle | Exact Match；部分分析使用 F Score | 有代码、模型权重和系统组件说明 |
 | [Harness Updating Is Not Harness Benefit](../notes/harness-updating-is-not-harness-benefit.md) | Harness-evolving Agent；Memory / Skill / Tool / Workflow Agent | 分析 Evolver 写更新与 Task-Solver 使用更新是否等价 | 不改模型参数；更新外部 harness；通过交叉实验解耦 Evolver 和 Task-Solver | SWE-bench Verified、MCP-Atlas、SkillsBench | 任务成功率 / benchmark 分数；Harness activation / adherence 等诊断指标 | 有代码仓库；具体实验依赖多模型组合 |
+| [Position: Agents Should Invoke External Tools ONLY When Epistemically Necessary](../notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md) | Tool-use Agent 理论；Theory of Agent；工具调用校准 Agent | 判断何时内部推理、何时调用外部工具；分析 overthinking、overacting、over-delegation | 主要是理论建模；提出 internal task set、world task set、knowledge boundary、epistemic effort | 无新增 benchmark；position paper 侧重概念框架 | 无传统实验指标；建议关注 effort allocation、tool-use necessity、process-level calibration | 暂未找到官方代码；有 arXiv 和官方项目页 |
 | [Self-Challenging Language Model Agents](../notes/self-challenging-language-model-agents.md) | Tool-use Agent；Self-Challenging Agent；Synthetic-task Agent | 多轮工具使用、环境探索、自动任务生成与验证 | Code-as-Task；one-step REINFORCE / Rejection Fine-Tuning；SFT distillation；DPO / PPO / GRPO 消融 | M3ToolEval：Calculation、Web Browsing；TauBench：Retail、Airline | Pass@1、Pass@4 | 暂未找到官方公开代码；实验设计较清晰 |
 
 ---
@@ -86,6 +87,23 @@ metadata:
 | 常见指标 | Pass@1、Pass@4 |
 | 关键问题 | 没有人工任务集时，Agent 能否自动构造可验证训练任务？ |
 
+### 2.4 Tool-use Calibration / Theory of Agent
+
+代表论文：**Position: Agents Should Invoke External Tools ONLY When Epistemically Necessary**。
+
+这一类工作更偏理论和评价框架，关注 Agent 是否真的应该调用工具，而不只是工具调用后任务是否成功。
+
+典型分析维度：
+
+| 维度 | 内容 |
+|---|---|
+| 任务类型 | 任意需要内部推理和外部工具之间取舍的 Agent 任务 |
+| 核心概念 | internal task set、world task set、knowledge boundary、epistemic effort |
+| 关键行为 | overthinking、overacting、over-delegation、epistemically calibrated tool use |
+| 训练启发 | agentic midtraining、capability-conditioned SFT、process-level RL reward |
+| 常见指标 | 尚无统一 benchmark；建议记录 tool-use necessity、effort allocation、过程校准 |
+| 关键问题 | Agent 是真的需要外部工具，还是在用外部工具替代内部能力？ |
+
 ---
 
 ## 3. 常见数据集与环境
@@ -106,6 +124,7 @@ metadata:
 | M3ToolEval - Web Browsing | Self-Challenging Language Model Agents | 工具使用环境 | 测试网页浏览和信息提取 |
 | TauBench - Retail | Self-Challenging Language Model Agents | 交互式工具环境 | 测试零售客服、订单、退换货等任务 |
 | TauBench - Airline | Self-Challenging Language Model Agents | 交互式工具环境 | 测试航班查询、改签、订票等任务 |
+| 暂无新增 benchmark | Theory of Agent | 理论 / position paper | 用于提出工具调用校准框架，而不是报告新实验 |
 
 ---
 
@@ -116,6 +135,7 @@ metadata:
 | 直接推理 | Direct Inference | EvolveR | 不显式使用复杂检索或训练的基础设置 |
 | 显式推理 | Chain-of-Thought | EvolveR | 用推理链增强回答 |
 | 检索增强推理 | IRCoT、RAG、Search-o1 | EvolveR | 引入外部知识检索 |
+| 工具调用校准 | Epistemically necessary tool use | Theory of Agent | 关注是否真的需要调用工具，而不只看调用后是否答对 |
 | 监督学习 | SFT、LoRA | EvolveR、Self-Challenging Language Model Agents | 用示范轨迹或筛选轨迹微调模型 |
 | 轨迹筛选 | Rejection Sampling / Rejection Fine-Tuning | EvolveR、Self-Challenging Language Model Agents | 只用成功轨迹或高质量轨迹训练 |
 | RL Agent | R1-base、R1-instruct、Search-R1-base、Search-R1-instruct | EvolveR | 与搜索增强 RL Agent 对比 |
@@ -137,6 +157,8 @@ metadata:
 | Success Rate / Benchmark Score | Agent benchmark | 不同 benchmark 自带的成功率或评分 |
 | Harness Activation | Harness 诊断 | 是否正确检索、加载、激活相关 harness |
 | Harness Adherence | Harness 诊断 | 激活后是否持续遵循 skill / memory / workflow |
+| Tool-use Necessity | 工具调用校准 | 外部工具调用是否在知识上必要，是否真的减少不确定性 |
+| Effort Allocation | Theory of Agent / Agentic RL | 内部推理 effort 与外部工具 effort 是否和任务需求匹配 |
 
 ---
 
@@ -180,6 +202,17 @@ Harness Updating Is Not Harness Benefit 的重要提醒是：
 - 弱模型可能不会激活相关 harness；
 - 强模型可能原本就接近上限，提升空间有限；
 - 中等模型反而可能最能吃到 harness 更新红利。
+
+### 6.5 从“会调用工具”转向“该不该调用工具”
+
+Theory of Agent 的重要提醒是：
+
+- 工具调用不是越多越好；
+- 最终答对不代表工具调用过程合理；
+- 需要区分 closed-book 内部能力和 open-book 工具增强能力；
+- 自演化 Agent 不应让外部工具完全替代内部学习。
+
+后续读 tool-use / RAG / search agent 论文时，可以增加一个检查项：论文是否分析了工具调用的必要性，而不只是报告有工具后的成功率。
 
 ---
 
