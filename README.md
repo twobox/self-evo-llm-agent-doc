@@ -1,6 +1,6 @@
 # Self-Evolving LLM Agent 论文笔记
 
-这个仓库用于整理 **Self-Evolving LLM Agent** 相关论文的中文读书笔记，重点关注 LLM Agent 的自我演化、经验学习、Harness Engineering、Agent Memory、Tool-use Agent、RL for Agent 等方向。
+这个仓库用于整理 **Self-Evolving LLM Agent** 相关论文的中文读书笔记，重点关注 LLM Agent 的自我演化、经验学习、Harness Engineering、Agent Memory、Tool-use Agent、RL for Agent、Tool-use Agent 理论与工具调用校准等方向。
 
 仓库定位：
 
@@ -16,6 +16,7 @@
 |---|---|---|
 | EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle | [notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md](notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 自演化 Agent、Experience Base、经验自蒸馏、经验检索、GRPO、策略演化 |
 | Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents | [notes/harness-updating-is-not-harness-benefit.md](notes/harness-updating-is-not-harness-benefit.md) | 自演化 Agent、Harness Updating、Harness Benefit、Evolver 与 Task-Solver 解耦分析 |
+| Position: Agents Should Invoke External Tools ONLY When Epistemically Necessary | [notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md](notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md) | Theory of Agent、工具调用校准、Epistemic Necessity、Knowledge Boundary、Overthinking、Overacting、Over-delegation |
 | Self-Challenging Language Model Agents | [notes/self-challenging-language-model-agents.md](notes/self-challenging-language-model-agents.md) | Self-Challenging Agent、Code-as-Task、自生成任务、多轮工具使用、RL for Agent、可验证奖励 |
 
 ## 横向综述与对比
@@ -30,6 +31,7 @@
 - **Agent Memory / Experience Base**：如何存储、压缩、检索和维护经验。
 - **Harness Engineering**：prompt、memory、skill、tool、workflow 等外部组件如何更新，以及模型是否真正受益。
 - **Tool-use / Search Agent**：Agent 如何调用外部工具、搜索系统、代码环境或 API 完成复杂任务。
+- **Tool-use Calibration / Theory of Agent**：Agent 如何判断外部工具调用是否在知识上必要，避免 overthinking、overacting 和 over-delegation。
 - **RL for Agent**：如何用轨迹反馈、奖励设计和强化学习训练 Agent 的工具调用与经验使用能力。
 - **Synthetic Task Generation / Verifiable Reward**：Agent 如何自动生成任务、构造验证器，并把任务反馈转化为可训练奖励信号。
 
