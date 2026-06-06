@@ -69,6 +69,12 @@ metadata:
 
 一句话概括：这篇 position paper 不是提出一个新的工具调用算法，而是给 LLM Agent 的工具调用行为提出一个规范性判断标准：**只有当内部推理无法可靠消除任务所需的不确定性时，Agent 才应该调用外部工具。**
 
+> 图源：论文官方项目页 Figure 1；论文许可证见 arXiv HTML 页面（CC BY-NC-ND 4.0）。以下图片仅用于读书笔记引用和学习说明。
+
+![Figure 1: Tool-use decisions shape the trajectory of agent intelligence](https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/toa_example.png)
+
+图 1 可以这样读：两个 Agent 可能最终都答对，但一个靠频繁外部委托维持正确率，内部能力没有增长；另一个只在必要时调用工具，把可内部化的任务留给自己练习，因此 knowledge boundary 会逐步外扩。
+
 ## 2. 投稿 / 发表状态
 
 - arXiv 编号为 **2506.00886**。
@@ -194,6 +200,10 @@ ToA 的第一步是统一 internal reasoning 和 external acting。
 - 对大模型可能在 knowledge boundary 之内，内部推理即可完成；
 - 对同一个模型，在上下文变多、记忆被检索出来之后，也可能从“需要工具”变成“可以内部解决”。
 
+![Figure 3: Internal, world and population-relative task sets](https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/kb.png)
+
+图 3 的作用是把 **Knowledge Boundary** 具体化：左图看单个 Agent 的内部能力边界，中间和右图看一组 Agent 的共同能力下界与能力上界。它提醒我们，同一个任务对不同 Agent 来说“是否需要工具”并不相同。
+
 ### 7.3 工具使用是 belief-based classification
 
 真实系统中，Agent 不可能直接看到自己的 knowledge boundary。因此，它只能估计：当前任务是否可以内部解决。
@@ -255,6 +265,10 @@ ToA 对 alignment 的定义不是“答案正确”这么简单，而是 **effor
 ### 四种行为模式
 
 论文把 Agent 的行为放在“内部推理 effort × 外部工具 effort”的二维平面上看，可以得到四种典型模式：
+
+![Figure 4: Epistemic effort decomposition for internal and external task sets](https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/toa_intro.png)
+
+图 4 是这篇论文最值得反复看的图：横轴是 internal reasoning effort，纵轴是 external acting effort。它说明工具调用不是简单的“多/少”问题，而是 effort allocation 是否落在合理前沿上。过度推理、过度行动、过度委托，本质上都是 effort 分配和 knowledge boundary 不匹配。
 
 | 内部推理 | 外部工具 | 行为模式 | 问题 |
 |---|---|---|---|
