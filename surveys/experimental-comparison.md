@@ -6,7 +6,7 @@ metadata:
   status: '持续维护'
   scope: '仓库内已阅读论文的实验对象、数据集、对比方法与评价指标'
   created: '2026-06-06'
-  updated: '2026-06-06'
+  updated: '2026-06-07'
 -->
 
 # Self-Evolving LLM Agent 实验设置横向对比
@@ -30,6 +30,7 @@ metadata:
 | [EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | Search Agent；Experience-based Agent；Self-Evolving Agent | 复杂问答、多跳问答、搜索增强推理 | Experience self-distillation；Experience Base maintenance；SFT / LoRA；GRPO policy evolution | 域内：Natural Questions、HotpotQA；域外：TriviaQA、PopQA、2WikiMultiHopQA、MuSiQue、Bamboogle | Exact Match；部分分析使用 F Score | 有代码、模型权重和系统组件说明 |
 | [Harness Updating Is Not Harness Benefit](../notes/harness-updating-is-not-harness-benefit.md) | Harness-evolving Agent；Memory / Skill / Tool / Workflow Agent | 分析 Evolver 写更新与 Task-Solver 使用更新是否等价 | 不改模型参数；更新外部 harness；通过交叉实验解耦 Evolver 和 Task-Solver | SWE-bench Verified、MCP-Atlas、SkillsBench | 任务成功率 / benchmark 分数；Harness activation / adherence 等诊断指标 | 有代码仓库；具体实验依赖多模型组合 |
 | [Position: Agents Should Invoke External Tools ONLY When Epistemically Necessary](../notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md) | Tool-use Agent 理论；Theory of Agent；工具调用校准 Agent | 判断何时内部推理、何时调用外部工具；分析 overthinking、overacting、over-delegation | 主要是理论建模；提出 internal task set、world task set、knowledge boundary、epistemic effort | 无新增 benchmark；position paper 侧重概念框架 | 无传统实验指标；建议关注 effort allocation、tool-use necessity、process-level calibration | 暂未找到官方代码；有 arXiv 和官方项目页 |
+| [SE-Agent: Self-Evolution Trajectory Optimization in Multi-Step Reasoning with LLM-Based Agents](../notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md) | Code Agent；SWE-bench Agent；Trajectory-level Self-Evolving Agent；Test-Time Search Agent | 真实 GitHub issue 修复；多步代码定位、编辑、测试和补丁生成 | 不训练模型参数；测试时构造 trajectory pool；通过 Revision、Recombination、Refinement 迭代优化轨迹 | SWE-bench Verified | Pass@1 / resolution rate；Pass@5；trajectory reward / evaluation score | 官方代码已开源；基于 SWE-Agent，可作为外层轨迹优化模块 |
 | [Self-Challenging Language Model Agents](../notes/self-challenging-language-model-agents.md) | Tool-use Agent；Self-Challenging Agent；Synthetic-task Agent | 多轮工具使用、环境探索、自动任务生成与验证 | Code-as-Task；one-step REINFORCE / Rejection Fine-Tuning；SFT distillation；DPO / PPO / GRPO 消融 | M3ToolEval：Calculation、Web Browsing；TauBench：Retail、Airline | Pass@1、Pass@4 | 暂未找到官方公开代码；实验设计较清晰 |
 
 ---
@@ -104,6 +105,24 @@ metadata:
 | 常见指标 | 尚无统一 benchmark；建议记录 tool-use necessity、effort allocation、过程校准 |
 | 关键问题 | Agent 是真的需要外部工具，还是在用外部工具替代内部能力？ |
 
+### 2.5 Code Agent / Trajectory Optimization Agent
+
+代表论文：**SE-Agent**。
+
+这一类工作关注真实代码仓库任务中，Agent 如何保存、反思、重组和筛选完整执行轨迹。它不一定更新模型参数，而是把测试时的多条轨迹看成可演化对象。
+
+典型实验设置：
+
+| 维度 | 内容 |
+|---|---|
+| 任务类型 | 真实 GitHub issue 修复、代码定位、补丁生成、测试验证 |
+| 基础框架 | SWE-Agent 作为基础 CodeAct agent；SWE-Search / MCTS 作为强 baseline |
+| 轨迹来源 | 多 planning strategy 生成的初始轨迹池；mutation-based diversification |
+| 核心操作 | Revision、Recombination、Refinement |
+| 训练方式 | 不改模型参数；测试时轨迹池优化 / test-time search |
+| 常见指标 | Pass@1 / resolution rate、Pass@5、trajectory reward |
+| 关键问题 | 多条失败或半成功轨迹能否被组合成更好的解，而不是只做 best-of-N？ |
+
 ---
 
 ## 3. 常见数据集与环境
@@ -117,7 +136,7 @@ metadata:
 | 2WikiMultiHopQA | EvolveR | 多跳问答 | 域外泛化评测 |
 | MuSiQue | EvolveR | 多跳问答 | 域外泛化评测 |
 | Bamboogle | EvolveR | 多跳 / 组合问答 | 域外泛化评测 |
-| SWE-bench Verified | Harness Updating Is Not Harness Benefit | 代码修复 Agent benchmark | 测试真实代码仓库 issue 修复能力 |
+| SWE-bench Verified | Harness Updating Is Not Harness Benefit、SE-Agent | 代码修复 Agent benchmark | 测试真实 GitHub issue 修复能力；SE-Agent 用于评估轨迹级测试时优化 |
 | MCP-Atlas | Harness Updating Is Not Harness Benefit | MCP 工具调用 benchmark | 测试多工具调用和复杂任务执行 |
 | SkillsBench | Harness Updating Is Not Harness Benefit | Skill 使用 benchmark | 测试 skill 加载、复用和执行能力 |
 | M3ToolEval - Calculation | Self-Challenging Language Model Agents | 工具使用环境 | 测试计算类多轮工具调用 |
@@ -138,6 +157,9 @@ metadata:
 | 工具调用校准 | Epistemically necessary tool use | Theory of Agent | 关注是否真的需要调用工具，而不只看调用后是否答对 |
 | 监督学习 | SFT、LoRA | EvolveR、Self-Challenging Language Model Agents | 用示范轨迹或筛选轨迹微调模型 |
 | 轨迹筛选 | Rejection Sampling / Rejection Fine-Tuning | EvolveR、Self-Challenging Language Model Agents | 只用成功轨迹或高质量轨迹训练 |
+| 轨迹级测试时优化 | SE-Agent | SE-Agent | 通过 revision、recombination、refinement 操作完整轨迹，不训练模型参数 |
+| CodeAct Agent | SWE-Agent | SE-Agent | 代码修复基础 agent，作为 SE-Agent 的底层框架和 baseline |
+| MCTS Agent | SWE-Search | SE-Agent | 用 MCTS 做搜索增强的代码修复 agent，是 SE-Agent 的强 baseline |
 | RL Agent | R1-base、R1-instruct、Search-R1-base、Search-R1-instruct | EvolveR | 与搜索增强 RL Agent 对比 |
 | Offline preference / RL | DPO | Self-Challenging Language Model Agents | 在固定轨迹上进行偏好优化消融 |
 | Online RL | PPO、GRPO | EvolveR、Self-Challenging Language Model Agents | 在线采样和策略优化，收益可能更高但更不稳定 |
@@ -152,9 +174,11 @@ metadata:
 |---|---|---|
 | Exact Match | 开放域 / 多跳问答 | 预测答案与标准答案标准化后完全一致 |
 | F Score | 问答任务补充分析 | 允许部分匹配，更适合别名或长答案场景 |
-| Pass@1 | 工具调用 / 交互式任务 | 单次采样是否成功 |
+| Pass@1 | 工具调用 / 交互式任务 / 代码修复 | 单次采样是否成功；在 SE-Agent 中也对应 resolution rate |
 | Pass@4 | 工具调用 / 交互式任务 | 多次采样中是否至少一次成功 |
+| Pass@5 | 代码修复 / SWE-bench | 五次尝试中是否至少一次成功，反映有限预算下的搜索效率 |
 | Success Rate / Benchmark Score | Agent benchmark | 不同 benchmark 自带的成功率或评分 |
+| Trajectory Reward / Evaluation Score | 轨迹级优化 Agent | 对完整轨迹的任务完成度、推理质量和效率进行综合打分 |
 | Harness Activation | Harness 诊断 | 是否正确检索、加载、激活相关 harness |
 | Harness Adherence | Harness 诊断 | 激活后是否持续遵循 skill / memory / workflow |
 | Tool-use Necessity | 工具调用校准 | 外部工具调用是否在知识上必要，是否真的减少不确定性 |
@@ -213,6 +237,17 @@ Theory of Agent 的重要提醒是：
 - 自演化 Agent 不应让外部工具完全替代内部学习。
 
 后续读 tool-use / RAG / search agent 论文时，可以增加一个检查项：论文是否分析了工具调用的必要性，而不只是报告有工具后的成功率。
+
+### 6.6 从“多次采样”转向“轨迹级重组”
+
+SE-Agent 的重要提醒是：
+
+- best-of-N 只是从多条独立轨迹里挑一个，未必能产生真正新的解法；
+- 多条轨迹中可能分别包含正确文件定位、有效测试分析、合理 patch 结构等局部优势；
+- 轨迹级 revision / recombination / refinement 可以把这些局部优势重新组合；
+- 这类方法更像测试时外层优化器，不一定带来长期参数能力提升。
+
+后续读 Code Agent / SWE-bench / Web Agent 论文时，可以增加一个检查项：论文是否只是增加采样次数，还是显式利用了轨迹之间的信息互补。
 
 ---
 
