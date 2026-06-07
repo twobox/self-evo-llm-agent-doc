@@ -80,6 +80,8 @@ metadata:
 
 我理解这篇论文的关键词是：**轨迹级自演化**、**代码修复 Agent**、**测试时搜索 / 优化**、**多轨迹信息融合**。
 
+> 图表选择说明：本文只补充两张最有复习价值的图：一张解释 SE-Agent 整体框架，一张解释真实代码修复案例中的轨迹差异。主结果表已经转写成 Markdown 表格，便于检索和横向对比，因此不再额外贴表格截图。
+
 ## 2. 投稿 / 发表状态
 
 - arXiv 页面显示：arXiv:2508.02085，v1 提交时间为 2025-08-04，当前版本为 v6，最后修订时间为 2025-11-03。
@@ -146,6 +148,10 @@ metadata:
 SE-Agent 的核心想法是：与其只在 token 层、采样层或局部动作层做变化，不如直接在完整轨迹层面做操作，把“这条路径的好步骤”和“另一条路径的好思路”组合起来。
 
 ## 7. 方法：SE-Agent 的轨迹级自演化框架
+
+![SE-Agent Framework](https://github.com/JARVIS-Xs/SE-Agent/blob/main/static/img/framework.jpg?raw=true)
+
+> **图 1：SE-Agent 整体框架。** 这张图最适合放在方法部分，因为它把论文核心机制压缩成一个闭环：初始轨迹池 → Revision 单轨迹修订 → Recombination 跨轨迹重组 → Refinement 评价筛选 → 更新轨迹池。读这篇文章时，先看这张图能快速抓住“轨迹级自演化”到底在演化什么。
 
 ### 7.1 轨迹视角的问题建模
 
@@ -279,6 +285,10 @@ Refinement 负责最终优化和选择。论文设计了多维 reward / evaluati
 
 论文通过一个代码修复案例说明：传统 ReAct / MCTS agent 可能会困在局部搜索路径里，例如过度相信某个栈跟踪位置、反复编辑局部代码，忽略真正根因。SE-Agent 通过多条轨迹之间的迭代交互和重组，有机会跳出这种局部视角。
 
+![SE-Agent Case Study](https://github.com/JARVIS-Xs/SE-Agent/blob/main/static/img/se-agent-case-study.png?raw=true)
+
+> **图 2：SE-Agent case study。** 这张图适合放在实验结果后面，因为它解释了“为什么不是简单多采样”：传统 agent 的多条路径可能都围绕相同局部文件做近似 quick fix，而 SE-Agent 通过轨迹重组探索到更接近根因的修复位置。它比单纯看 Pass@1 表格更能说明 trajectory-level recombination 的意义。
+
 ## 10. 主要结论
 
 我把论文结论概括为四点：
@@ -375,5 +385,7 @@ SE-Agent 则把重点放在第四层：
 - arXiv abs：<https://arxiv.org/abs/2508.02085>
 - arXiv PDF：<https://arxiv.org/pdf/2508.02085>
 - 官方代码仓库：<https://github.com/JARVIS-Xs/SE-Agent>
+- 官方框架图：<https://github.com/JARVIS-Xs/SE-Agent/blob/main/static/img/framework.jpg>
+- 官方 case study 图：<https://github.com/JARVIS-Xs/SE-Agent/blob/main/static/img/se-agent-case-study.png>
 - QuantaAlpha 团队主页：<https://quantaalpha.com/>
 - SWE-bench Verified：<https://www.swebench.com/>
