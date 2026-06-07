@@ -17,6 +17,7 @@
 | EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle | [notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md](notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 自演化 Agent、Experience Base、经验自蒸馏、经验检索、GRPO、策略演化 |
 | Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents | [notes/harness-updating-is-not-harness-benefit.md](notes/harness-updating-is-not-harness-benefit.md) | 自演化 Agent、Harness Updating、Harness Benefit、Evolver 与 Task-Solver 解耦分析 |
 | Position: Agents Should Invoke External Tools ONLY When Epistemically Necessary | [notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md](notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md) | Theory of Agent、工具调用校准、Epistemic Necessity、Knowledge Boundary、Overthinking、Overacting、Over-delegation |
+| SE-Agent: Self-Evolution Trajectory Optimization in Multi-Step Reasoning with LLM-Based Agents | [notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md](notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md) | 自演化 Agent、Code Agent、轨迹优化、测试时搜索、Revision、Recombination、Refinement、SWE-bench Verified |
 | Self-Challenging Language Model Agents | [notes/self-challenging-language-model-agents.md](notes/self-challenging-language-model-agents.md) | Self-Challenging Agent、Code-as-Task、自生成任务、多轮工具使用、RL for Agent、可验证奖励 |
 
 ## 横向综述与对比
@@ -34,6 +35,7 @@
 - **Tool-use Calibration / Theory of Agent**：Agent 如何判断外部工具调用是否在知识上必要，避免 overthinking、overacting 和 over-delegation。
 - **RL for Agent**：如何用轨迹反馈、奖励设计和强化学习训练 Agent 的工具调用与经验使用能力。
 - **Synthetic Task Generation / Verifiable Reward**：Agent 如何自动生成任务、构造验证器，并把任务反馈转化为可训练奖励信号。
+- **Trajectory Optimization / Test-Time Search**：Agent 如何在测试时保存、反思、重组和筛选多条执行轨迹，提高复杂任务求解成功率。
 
 ## 阅读笔记建议格式
 
