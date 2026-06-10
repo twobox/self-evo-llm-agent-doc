@@ -10,6 +10,7 @@ metadata:
   arxiv_id: '2605.30621'
   arxiv_url: 'https://arxiv.org/abs/2605.30621'
   pdf_url: 'https://arxiv.org/pdf/2605.30621v1'
+  html_url: 'https://arxiv.org/html/2605.30621v1'
   code_url: 'https://github.com/A-EVO-Lab/a-evolve/tree/release/harness-evolution'
   model_url: ''
   authors:
@@ -53,7 +54,7 @@ metadata:
   related_notes:
     - 'notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
   created: '2026-06-05'
-  updated: '2026-06-06'
+  updated: '2026-06-10'
 -->
 
 # 《Harness Updating Is Not Harness Benefit》读书笔记
@@ -61,6 +62,7 @@ metadata:
 > 论文：**Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents**  
 > arXiv：<https://arxiv.org/abs/2605.30621>  
 > PDF 下载地址：<https://arxiv.org/pdf/2605.30621v1>  
+> arXiv HTML：<https://arxiv.org/html/2605.30621v1>  
 > 官方代码仓库：<https://github.com/A-EVO-Lab/a-evolve/tree/release/harness-evolution>  
 > 当前状态：arXiv 预印本，v1 提交时间为 2026-05-28。
 
@@ -182,6 +184,12 @@ LLM
 执行任务 → 失败/成功轨迹 → Evolver 总结经验 → 更新 prompt/skill/memory → 下次任务复用
 ```
 
+> 图源：论文 arXiv HTML Figure 1；仅用于读书笔记引用和学习说明。
+
+![Figure 1: Overview of harness self-evolution](https://arxiv.org/html/2605.30621v1/x1.png)
+
+图 1 适合放在研究背景处：它把 harness self-evolution 的基本循环画清楚了。模型参数保持不变，系统在任务执行后收集 evidence，再由 Evolver 更新外部 harness，下一轮 Task-Solver 使用更新后的 harness 完成任务。
+
 但是这里有一个关键问题：
 
 > 如果 Agent 后续表现变好了，到底是因为“更新写得好”，还是因为“求解器会用这些更新”？
@@ -238,6 +246,12 @@ Harness Benefit  = 会不会用好攻略
 
 这两个能力不等价。一个模型会写更新，不代表它自己会用更新；一个模型不会写特别好的更新，也可能很会使用别人写好的更新。
 
+> 图源：论文 arXiv HTML Figure 2；仅用于读书笔记引用和学习说明。
+
+![Figure 2: Overview of main findings](https://arxiv.org/html/2605.30621v1/x2.png)
+
+图 2 是这篇论文的“结论总图”：左侧强调 **Harness Updating** 随基础能力提升并没有显著拉开差距；右侧强调 **Harness Benefit** 不是单调增加，而是中等能力模型收益最大，弱模型因为激活和遵循失败吃不到更新红利。
+
 ---
 
 ## 4. 论文方法：解耦实验框架
@@ -290,6 +304,12 @@ Harness Benefit  = 会不会用好攻略
 
 论文中提到，即使是 **Qwen3.5-9B** 作为 Evolver，它生成的 harness 更新在一些场景下也能带来接近 **Claude Opus 4.6** 的收益。
 
+> 图源：论文 arXiv HTML Figure 3；仅用于读书笔记引用和学习说明。
+
+![Figure 3: Harness-updating capability of each evolver](https://arxiv.org/html/2605.30621v1/x3.png)
+
+图 3 对应“Evolver-side analysis”：不同 evolver 在 SWE、MCP、SkillsBench 上的 harness-updating gain 差距并不大，而且没有一个模型在所有基准上稳定领先。这正是论文说的 **harness-updating is flat in base capability**。
+
 这说明在当前这种 prompt/skill/memory 外部更新范式下，写更新这件事可能并不总是需要最贵、最强的大模型。
 
 ### 5.2 结论二：真正拉开差距的是“会不会用更新”
@@ -333,6 +353,12 @@ Harness Benefit  = 会不会用好攻略
 即：**虽然加载了 harness，但执行过程中没有坚持遵循**。
 
 例如模型一开始读到了 skill，但执行到中间遇到错误后，就偏离了原本的 fallback 流程，提前放弃或改走错误路径。
+
+> 图源：论文 arXiv HTML Figure 7；仅用于读书笔记引用和学习说明。
+
+![Figure 7: Two harness-benefit failure modes](https://arxiv.org/html/2605.30621v1/x7.png)
+
+图 7 是解释弱模型为什么吃不到 harness 红利的关键图。左侧是 **activation failure**：模型没有用正确动作把 skill 加载进上下文；右侧是 **adherence failure**：skill 虽然被加载了，但模型没有把它当成可执行流程持续遵循。
 
 这说明弱模型的问题不只是“不懂提示”，更是：
 
@@ -465,3 +491,16 @@ Task-Solver 正确加载、理解、遵循更新
 一句话总结：
 
 > 这篇论文告诉我们：自演化 Agent 的性能瓶颈往往不在“写攻略”的 Evolver，而在“能不能按攻略执行”的 Task-Solver。
+
+---
+
+## 10. 参考链接
+
+- arXiv：<https://arxiv.org/abs/2605.30621>
+- PDF：<https://arxiv.org/pdf/2605.30621v1>
+- arXiv HTML：<https://arxiv.org/html/2605.30621v1>
+- 官方代码仓库：<https://github.com/A-EVO-Lab/a-evolve/tree/release/harness-evolution>
+- 论文 Figure 1：<https://arxiv.org/html/2605.30621v1/x1.png>
+- 论文 Figure 2：<https://arxiv.org/html/2605.30621v1/x2.png>
+- 论文 Figure 3：<https://arxiv.org/html/2605.30621v1/x3.png>
+- 论文 Figure 7：<https://arxiv.org/html/2605.30621v1/x7.png>
