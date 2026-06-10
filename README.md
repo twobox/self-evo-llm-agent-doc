@@ -20,6 +20,7 @@
 | 4 | Position: Agents Should Invoke External Tools ONLY When Epistemically Necessary | [notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md](notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md) | Theory of Agent、工具调用校准、Epistemic Necessity、Knowledge Boundary、Overthinking、Overacting、Over-delegation | ICML 2026 · Position Paper |
 | 5 | SE-Agent: Self-Evolution Trajectory Optimization in Multi-Step Reasoning with LLM-Based Agents | [notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md](notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md) | 自演化 Agent、Code Agent、轨迹优化、测试时搜索、Revision、Recombination、Refinement、SWE-bench Verified | NeurIPS 2025 |
 | 6 | Self-Challenging Language Model Agents | [notes/self-challenging-language-model-agents.md](notes/self-challenging-language-model-agents.md) | Self-Challenging Agent、Code-as-Task、自生成任务、多轮工具使用、RL for Agent、可验证奖励 | NeurIPS 2025 poster |
+| 7 | Gödel Agent: A Self-Referential Agent Framework for Recursive Self-Improvement | [notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md](notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 自指 Agent、递归自我改进、Agent 设计空间搜索、运行时代码自修改、Monkey Patching | ACL 2025 Long Paper |
 
 ## 横向综述与对比
 
@@ -30,6 +31,7 @@
 ## 关注主题
 
 - **Self-Evolving LLM Agent**：Agent 如何通过历史任务、反思、经验库或强化学习持续改进。
+- **Recursive Self-Improvement / Self-Referential Agent**：Agent 如何读取和修改自身程序逻辑，甚至修改负责自我改进的机制。
 - **Context Engineering / Context Adaptation**：如何把 prompt、memory、策略、示例和领域规则维护成可持续演化的上下文资产。
 - **Agent Memory / Experience Base**：如何存储、压缩、检索和维护经验。
 - **Harness Engineering**：prompt、memory、skill、tool、workflow 等外部组件如何更新，以及模型是否真正受益。
