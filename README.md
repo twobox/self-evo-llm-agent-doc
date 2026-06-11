@@ -23,6 +23,12 @@
 | 7 | Gödel Agent: A Self-Referential Agent Framework for Recursive Self-Improvement | [notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md](notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 自指 Agent、递归自我改进、Agent 设计空间搜索、运行时代码自修改、Monkey Patching | ACL 2025 Long Paper |
 | 8 | From Storage to Experience: A Survey on the Evolution of LLM Agent Memory Mechanisms | [notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md](notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md) | Agent Memory、Storage / Reflection / Experience、轨迹保存、轨迹反思、经验抽象、主动探索、跨轨迹抽象 | ACL 2026 Findings |
 
+## 相关基础与边界研究
+
+| 序号 | 论文 | 笔记 | 主题 | 发表时间 |
+|---|---|---|---|---|
+| 1 | On the Limits of LLM Adaptability: Impact of Model-Internalized Priors on Annotation Task Performance | [notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md](notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md) | LLM Adaptability、Model-internalized Priors、Prompt Steerability、LLM-as-Annotator、Decision Stickiness、能力边界 | arXiv 2026 |
+
 ## 横向综述与对比
 
 | 文档 | 内容 |
