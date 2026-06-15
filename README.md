@@ -23,6 +23,7 @@
 | 7 | Gödel Agent: A Self-Referential Agent Framework for Recursive Self-Improvement | [notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md](notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 自指 Agent、递归自我改进、Agent 设计空间搜索、运行时代码自修改、Monkey Patching | ACL 2025 Long Paper |
 | 8 | From Storage to Experience: A Survey on the Evolution of LLM Agent Memory Mechanisms | [notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md](notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md) | Agent Memory、Storage / Reflection / Experience、轨迹保存、轨迹反思、经验抽象、主动探索、跨轨迹抽象 | ACL 2026 Findings |
 | 9 | From Player to Master: RL over Memory (MemoPilot) | [notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md](notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | Test-Time Learning、Memory RL、Multi-turn GRPO、Agent Memory Update | ICML 2026 |
+| 10 | MLEvolve: A Self-Evolving Framework for Automated Machine Learning Algorithm Discovery | [notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md](notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md) | MLE Agent、AutoML、Progressive MCGS、Retrospective Memory、Adaptive Code Generation、MLE-Bench、算法发现 | arXiv 2026 |
 
 ## 相关基础与边界研究
 

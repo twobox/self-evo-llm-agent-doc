@@ -6,7 +6,7 @@ metadata:
   status: '持续维护'
   scope: '仓库内已阅读论文的实验对象、数据集、对比方法与评价指标'
   created: '2026-06-06'
-  updated: '2026-06-10'
+  updated: '2026-06-15'
 -->
 
 # Self-Evolving LLM Agent 实验设置横向对比
@@ -35,6 +35,7 @@ metadata:
 | [Self-Challenging Language Model Agents](../notes/self-challenging-language-model-agents.md) | Tool-use Agent；Self-Challenging Agent；Synthetic-task Agent | 多轮工具使用、环境探索、自动任务生成与验证 | Code-as-Task；one-step REINFORCE / Rejection Fine-Tuning；SFT distillation；DPO / PPO / GRPO 消融 | M3ToolEval：Calculation、Web Browsing；TauBench：Retail、Airline | Pass@1、Pass@4 | 暂未找到官方公开代码；实验设计较清晰 |
 | [Gödel Agent: A Self-Referential Agent Framework for Recursive Self-Improvement](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | Self-referential Agent；Recursive Self-Improvement Agent；Agent Design Search system；Program-level Self-Modifying Agent | 通过读取、评估和修改自身代码来搜索更大的 agent design space；数学推理、阅读理解、多任务知识问答、科学问答、Game of 24 案例 | 不训练模型参数；通过 runtime self-inspection、dynamic code modification、monkey patching、环境反馈和递归调用修改 agent policy / self-improvement loop | DROP、MGSM、MMLU、GPQA；Game of 24 case study | DROP F1；MGSM / MMLU / GPQA Accuracy；95% bootstrap CI；accidental termination、temporary drop、optimization failure | 官方代码已开源；MIT License；依赖 OpenAI API key 和任务环境；暂未找到官方模型权重 |
 | [From Storage to Experience: A Survey on the Evolution of LLM Agent Memory Mechanisms](../notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md) | Survey / taxonomy；LLM Agent Memory；Experience-based Agent framework | 统一梳理 Agent memory 从 Storage、Reflection 到 Experience 的演化；分析主动探索和跨轨迹抽象 | 无新模型训练；通过文献分类、机制归纳和资源列表整理 memory 研究；强调 trajectory preservation / refinement / abstraction | 无新增主实验 benchmark；附录整理 memory 相关 benchmark；重点讨论现有评测对 Experience 抽象能力和生命周期评估不足 | 无传统实验指标；建议关注 memory retrieval、memory utility、experience generalization、lifecycle robustness、continual learning benefit | 官方 GitHub 资源列表已开源；综述论文暂未找到单独实验代码或模型权重 |
+| [MLEvolve: A Self-Evolving Framework for Automated Machine Learning Algorithm Discovery](../notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md) | MLE Agent；AutoML / Algorithm Discovery Agent；Graph-search Self-Evolving Agent；Code-generation Agent | Kaggle-style 端到端机器学习工程；自动生成、执行、评估和迭代 ML pipeline；数学算法优化 | 不训练模型参数；Progressive MCGS 搜索图；Retrospective Memory；Planner-Coder 解耦；Base / Stepwise / Diff 自适应代码生成 | MLE-Bench 全量 75 个 Kaggle 任务；AlphaEvolve 15 个数学优化任务 | Medal Rate、Gold Medal Rate、Valid Submission Rate、Above Median Rate、Beat Ratio；数学任务使用任务特定最优值 | 官方代码已开源；MIT License；主结果使用 Gemini-3.1-Pro-preview，12h / task，H200 GPU；暂未找到官方模型权重 |
 
 ---
 
@@ -144,7 +145,26 @@ metadata:
 | 常见指标 | Pass@1 / resolution rate、Pass@5、trajectory reward |
 | 关键问题 | 多条失败或半成功轨迹能否被组合成更好的解，而不是只做 best-of-N？ |
 
-### 2.7 Self-Referential / Recursive Self-Improvement Agent
+### 2.7 MLE / Algorithm Discovery Agent
+
+代表论文：**MLEvolve**。
+
+这一类工作把 Agent 放到端到端机器学习工程和算法发现任务里。它不只是生成一次代码，而是在长时间预算内反复生成、执行、评估、复盘和融合多个候选方案。
+
+典型实验设置：
+
+| 维度 | 内容 |
+|---|---|
+| 任务类型 | Kaggle-style 机器学习工程、ML pipeline 自动设计、数学算法优化 |
+| 基础框架 | Progressive Monte Carlo Graph Search；多 Agent planner / coder / debugger / fusion pipeline |
+| 搜索对象 | candidate solution graph；完整训练 / 推理代码；submission；数学优化候选程序 |
+| 经验来源 | 静态 domain knowledge base；动态 global memory；plan、code、metric、analysis、failure feedback |
+| 核心操作 | intra-branch evolution、cross-branch reference、multi-branch aggregation、Elite-Guided exploitation |
+| 训练方式 | 不训练模型参数；通过长时程搜索图、Retrospective Memory 和自适应代码生成改进候选方案 |
+| 常见指标 | Medal Rate、Gold Medal Rate、Valid Submission Rate、Above Median Rate、Beat Ratio、任务特定优化目标 |
+| 关键问题 | Agent 能否像机器学习工程师一样在有限时间内持续试验、记忆经验、融合分支并稳定改进代码方案？ |
+
+### 2.8 Self-Referential / Recursive Self-Improvement Agent
 
 代表论文：**Gödel Agent**。
 
@@ -162,7 +182,7 @@ metadata:
 | 常见指标 | F1、Accuracy、bootstrap confidence interval、temporary drop / optimization failure 等鲁棒性统计 |
 | 关键问题 | Agent design space 能否从“人类预设更新算法”扩展到“Agent 自己改写更新算法”？ |
 
-### 2.8 Memory Mechanism Survey / Taxonomy
+### 2.9 Memory Mechanism Survey / Taxonomy
 
 代表论文：**From Storage to Experience**。
 
@@ -197,6 +217,8 @@ metadata:
 | MuSiQue | EvolveR | 多跳问答 | 域外泛化评测 |
 | Bamboogle | EvolveR | 多跳 / 组合问答 | 域外泛化评测 |
 | SWE-bench Verified | Harness Updating Is Not Harness Benefit、SE-Agent | 代码修复 Agent benchmark | 测试真实 GitHub issue 修复能力；SE-Agent 用于评估轨迹级测试时优化 |
+| MLE-Bench | MLEvolve | 端到端机器学习工程 benchmark | 75 个 Kaggle-style 任务，覆盖 NLP、CV、信号处理、表格数据；评估 Agent 自动生成有效 ML pipeline 和 submission 的能力 |
+| AlphaEvolve mathematical optimization tasks | MLEvolve | 数学算法优化 / 程序搜索任务 | 15 个开放数学优化任务，用于测试自演化搜索机制是否能从 MLE 泛化到算法发现 |
 | MCP-Atlas | Harness Updating Is Not Harness Benefit | MCP 工具调用 benchmark | 测试多工具调用和复杂任务执行 |
 | SkillsBench | Harness Updating Is Not Harness Benefit | Skill 使用 benchmark | 测试 skill 加载、复用和执行能力 |
 | M3ToolEval - Calculation | Self-Challenging Language Model Agents | 工具使用环境 | 测试计算类多轮工具调用 |
@@ -237,6 +259,10 @@ metadata:
 | 轨迹级测试时优化 | SE-Agent | SE-Agent | 通过 revision、recombination、refinement 操作完整轨迹，不训练模型参数 |
 | CodeAct Agent | SWE-Agent | SE-Agent | 代码修复基础 agent，作为 SE-Agent 的底层框架和 baseline |
 | MCTS Agent | SWE-Search | SE-Agent | 用 MCTS 做搜索增强的代码修复 agent，是 SE-Agent 的强 baseline |
+| MLE Agent | AIDE、ML-Master、AIRA-Dojo、R&D-Agent、Leeroo、ML-Master 2.0 | MLEvolve | 自动机器学习工程 agent，对比 MLE-Bench 上的代码生成、搜索和提交能力 |
+| Proprietary MLE Agent | FM-Agent、MLE-STAR-Pro-1.5、MARS、MARS+、AIBuildAI | MLEvolve | MLE-Bench 上的强闭源 / 专有系统 baseline，部分使用 24h 预算 |
+| Graph-search MLE Agent | Progressive MCGS / MLEvolve | MLEvolve | 从树搜索扩展到图搜索，通过 reference edges、跨分支融合和 progressive schedule 复用多分支经验 |
+| 数学算法发现系统 | AlphaEvolve、AlphaEvolve-v2、SimpleTES、TTT-Discover、OpenEvolve | MLEvolve | 用于比较 MLEvolve 在 15 个数学优化任务上的跨域算法发现能力 |
 | RL Agent | R1-base、R1-instruct、Search-R1-base、Search-R1-instruct | EvolveR | 与搜索增强 RL Agent 对比 |
 | Offline preference / RL | DPO | Self-Challenging Language Model Agents | 在固定轨迹上进行偏好优化消融 |
 | Online RL | PPO、GRPO | EvolveR、Self-Challenging Language Model Agents | 在线采样和策略优化，收益可能更高但更不稳定 |
@@ -260,6 +286,10 @@ metadata:
 | Pass@1 | 工具调用 / 交互式任务 / 代码修复 | 单次采样是否成功；在 SE-Agent 中也对应 resolution rate |
 | Pass@4 | 工具调用 / 交互式任务 | 多次采样中是否至少一次成功 |
 | Pass@5 | 代码修复 / SWE-bench | 五次尝试中是否至少一次成功，反映有限预算下的搜索效率 |
+| Medal Rate | MLE / Kaggle-style benchmark | MLE-Bench 中达到 bronze、silver 或 gold medal 阈值的任务比例；MLEvolve 主结果使用 Low / Medium / High / All 分层 medal rate |
+| Gold Medal Rate | MLE / Kaggle-style benchmark | 达到 gold medal 阈值的任务比例，反映方案是否能进入更强 leaderboard 区间 |
+| Valid Submission Rate | MLE / Kaggle-style benchmark | 生成的提交文件是否通过格式和正确性检查，反映 Agent 代码执行与提交稳定性 |
+| Above Median Rate / Beat Ratio | MLE / Kaggle-style benchmark | 分别衡量超过一半 Kaggle 人类参赛者的任务比例，以及平均超过的人类参赛者比例 |
 | Success Rate / Benchmark Score | Agent benchmark | 不同 benchmark 自带的成功率或评分 |
 | Trajectory Reward / Evaluation Score | 轨迹级优化 Agent | 对完整轨迹的任务完成度、推理质量和效率进行综合打分 |
 | Harness Activation | Harness 诊断 | 是否正确检索、加载、激活相关 harness |
