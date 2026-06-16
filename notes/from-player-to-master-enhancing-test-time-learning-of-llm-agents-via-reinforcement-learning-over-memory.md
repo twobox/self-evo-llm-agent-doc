@@ -11,7 +11,7 @@ metadata:
   arxiv_url: 'https://arxiv.org/abs/2606.08656'
   pdf_url: 'https://arxiv.org/pdf/2606.08656'
   html_url: 'https://arxiv.org/html/2606.08656v1'
-  code_url: '暂未找到'
+  code_url: '论文摘要称已公开代码，当前笔记尚未补入链接'
   original_code_url: '暂未找到'
   model_url: '暂未找到'
   authors:
@@ -27,8 +27,12 @@ metadata:
     - 'Jie Tang'
     - 'Xu Sun'
   institutions:
-    - '暂未在 arXiv 页面解析文本中找到完整作者机构'
-    - 'Zhipu AI（论文致谢中提到第一作者实习期间完成该工作）'
+    - 'Peking University'
+    - 'Central South University'
+    - 'Zhipu AI'
+    - 'Tsinghua University'
+    - 'East China Normal University'
+    - 'Renmin University of China'
   topics:
     - 'Self-Evolving LLM Agent'
     - 'Agent Memory'
@@ -51,7 +55,7 @@ metadata:
     - 'notes/harness-updating-is-not-harness-benefit.md'
     - 'notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md'
   created: '2026-06-15'
-  updated: '2026-06-15'
+  updated: '2026-06-16'
 -->
 
 # 《From Player to Master: Enhancing Test-Time Learning of LLM Agents via Reinforcement Learning over Memory》读书笔记
@@ -61,7 +65,7 @@ metadata:
 > PDF 下载地址：<https://arxiv.org/pdf/2606.08656>  
 > arXiv HTML：<https://arxiv.org/html/2606.08656v1>  
 > 官方项目页：暂未找到  
-> 官方代码仓库：暂未找到  
+> 官方代码仓库：论文摘要称 “code is publicly available here”，但当前笔记尚未补入具体链接
 > 模型权重：暂未找到  
 > 当前状态：arXiv v1，提交时间为 **2026-06-07**；arXiv 页面 comments 标注为 **Accepted by ICML 2026**。
 
@@ -95,21 +99,23 @@ metadata:
 
 ### 1.2 作者与机构
 
-arXiv 页面可以确认论文作者如下。当前可解析的 arXiv 页面没有直接展示完整作者机构；论文致谢部分提到：**This work was done during the first author’s internship at Zhipu AI**，因此只能确认第一作者在智谱 AI 实习期间完成了这项工作，完整机构信息后续需要等 PDF 首页或会议页面进一步核对。
+arXiv 页面可以确认论文作者列表，PDF 首页则已经给出了完整作者机构。另一个需要区分的点是：论文致谢部分提到 **This work was done during the first author’s internship at Zhipu AI**，这说明第一作者在智谱 AI 实习期间完成了该工作，但并不等于整篇论文只有这一个机构来源。
 
 | 作者 | 机构 / 备注 |
 |---|---|
-| Yishuo Cai | 暂未在 arXiv 页面解析文本中找到完整机构；论文致谢提到第一作者实习于 Zhipu AI |
-| Xingyu Guo | 暂未找到 |
-| Xuancheng Huang | 暂未找到 |
-| Jinhua Du | 暂未找到 |
-| Can Huang | 暂未找到 |
-| Wenxuan Huang | 暂未找到 |
-| Wenhan Ma | 暂未找到 |
-| Yuyang Hu | 暂未找到 |
-| Aohan Zeng | 暂未找到 |
-| Jie Tang | 暂未找到 |
-| Xu Sun | 暂未找到 |
+| Yishuo Cai | Peking University |
+| Xingyu Guo | Central South University |
+| Xuancheng Huang | Zhipu AI |
+| Jinhua Du | Tsinghua University |
+| Can Huang | Zhipu AI |
+| Wenxuan Huang | East China Normal University |
+| Wenhan Ma | Peking University |
+| Yuyang Hu | Renmin University of China |
+| Aohan Zeng | Tsinghua University |
+| Jie Tang | Tsinghua University |
+| Xu Sun | Peking University |
+
+这也说明这篇工作更准确的外部定位应当是：以北大、清华、智谱等机构共同参与的多方合作论文，而不是“机构暂不明确，只知道第一作者和智谱 AI 有关联”。
 
 ### 1.3 作者背景和研究圈子观察
 
@@ -279,7 +285,7 @@ MemoPilot 使用 **multi-turn GRPO** 训练 memory model。训练时对同一个
 核心改动有两个：
 
 1. **turn-wise reward**：第 t 次 memory 更新使用下一局 reward 作为 proxy return，即 `R_{i,t}=r_{i,t+1}`。
-2. **turn-level advantage**：在同一 turn 的多个 rollout 之间做 group-normalized advantage，而不是只对整条 episode 做总回报比较。
+2. **turn-level advantage**：在同一 turn 的多个 rollout 之间做 **context-independent, group-normalized advantage estimation**，而不是只对整条 episode 做总回报比较。
 
 直观理解：
 
@@ -360,7 +366,7 @@ RPS 来自 TextArena，LHE 来自 RLCard。StreamBench 中论文使用了两个�
 | LHE@k | 连续 k 局 LHE duplicate match 的平均每局 chip |
 | mean@64 | 对 64 次 evaluation runs 取平均 |
 | Elo rating | 对 memory methods 做 head-to-head 后的强度排名 |
-| StreamBench pass@4 / overall accuracy | 连续任务中平均通过率 |
+| StreamBench overall accuracy (pass@4) | 按各 turn 汇总的平均通过率 |
 
 论文主表报告的是 **RPS@5 / LHE@5**。
 
@@ -549,9 +555,9 @@ RPS 和 LHE 很适合研究 test-time learning，因为对手策略可控、rewa
 
 StreamBench 扩展评估提供了迁移证据，但规模和任务类型仍有限。
 
-### 8.3 代码和模型权重暂未找到
+### 8.3 代码链接在当前笔记中尚未补全
 
-截至本笔记记录时，没有找到官方项目页、代码仓库或模型权重。复现时会遇到几个问题：
+论文摘要明确写了 **Our code is publicly available here**，所以严格来说，不能把它写成“暂未找到代码”。更准确的说法是：**论文声称已公开代码，但当前笔记尚未补入具体仓库链接**。在这种情况下，复现时仍然会遇到几个实际问题：
 
 - 对手池构造细节需要完整代码；
 - multi-turn GRPO 训练环境需要 rollout 框架；

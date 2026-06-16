@@ -6,7 +6,7 @@ metadata:
   status: '持续维护'
   scope: '仓库内已阅读论文的实验对象、数据集、对比方法与评价指标'
   created: '2026-06-06'
-  updated: '2026-06-15'
+  updated: '2026-06-16'
 -->
 
 # Self-Evolving LLM Agent 实验设置横向对比
@@ -35,6 +35,7 @@ metadata:
 | [Self-Challenging Language Model Agents](../notes/self-challenging-language-model-agents.md) | Tool-use Agent；Self-Challenging Agent；Synthetic-task Agent | 多轮工具使用、环境探索、自动任务生成与验证 | Code-as-Task；one-step REINFORCE / Rejection Fine-Tuning；SFT distillation；DPO / PPO / GRPO 消融 | M3ToolEval：Calculation、Web Browsing；TauBench：Retail、Airline | Pass@1、Pass@4 | 暂未找到官方公开代码；实验设计较清晰 |
 | [Gödel Agent: A Self-Referential Agent Framework for Recursive Self-Improvement](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | Self-referential Agent；Recursive Self-Improvement Agent；Agent Design Search system；Program-level Self-Modifying Agent | 通过读取、评估和修改自身代码来搜索更大的 agent design space；数学推理、阅读理解、多任务知识问答、科学问答、Game of 24 案例 | 不训练模型参数；通过 runtime self-inspection、dynamic code modification、monkey patching、环境反馈和递归调用修改 agent policy / self-improvement loop | DROP、MGSM、MMLU、GPQA；Game of 24 case study | DROP F1；MGSM / MMLU / GPQA Accuracy；95% bootstrap CI；accidental termination、temporary drop、optimization failure | 官方代码已开源；MIT License；依赖 OpenAI API key 和任务环境；暂未找到官方模型权重 |
 | [From Storage to Experience: A Survey on the Evolution of LLM Agent Memory Mechanisms](../notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md) | Survey / taxonomy；LLM Agent Memory；Experience-based Agent framework | 统一梳理 Agent memory 从 Storage、Reflection 到 Experience 的演化；分析主动探索和跨轨迹抽象 | 无新模型训练；通过文献分类、机制归纳和资源列表整理 memory 研究；强调 trajectory preservation / refinement / abstraction | 无新增主实验 benchmark；附录整理 memory 相关 benchmark；重点讨论现有评测对 Experience 抽象能力和生命周期评估不足 | 无传统实验指标；建议关注 memory retrieval、memory utility、experience generalization、lifecycle robustness、continual learning benefit | 官方 GitHub 资源列表已开源；综述论文暂未找到单独实验代码或模型权重 |
+| [From Player to Master: Enhancing Test-Time Learning of LLM Agents via Reinforcement Learning over Memory](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | TTL Memory Agent；Frozen-player + trainable memory updater；Plug-in memory system | 多轮 RPS、LHE 与 StreamBench 连续任务；通过 memory 在测试时吸收经验 | multi-turn GRPO；turn-wise one-step reward；turn-level advantage；3-tier adaptive memory | RPS（TextArena）、LHE（RLCard）、StreamBench（CoSQL / DS-1000） | RPS@k、LHE@k、Elo rating、StreamBench overall accuracy (pass@4) | 论文摘要称代码已公开，但当前笔记尚未补入仓库链接；核心实验以可控对手池和 512-token memory budget 为主 |
 | [MLEvolve: A Self-Evolving Framework for Automated Machine Learning Algorithm Discovery](../notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md) | MLE Agent；AutoML / Algorithm Discovery Agent；Graph-search Self-Evolving Agent；Code-generation Agent | Kaggle-style 端到端机器学习工程；自动生成、执行、评估和迭代 ML pipeline；数学算法优化 | 不训练模型参数；Progressive MCGS 搜索图；Retrospective Memory；Planner-Coder 解耦；Base / Stepwise / Diff 自适应代码生成 | MLE-Bench 全量 75 个 Kaggle 任务；AlphaEvolve 15 个数学优化任务 | Medal Rate、Gold Medal Rate、Valid Submission Rate、Above Median Rate、Beat Ratio；数学任务使用任务特定最优值 | 官方代码已开源；MIT License；主结果使用 Gemini-3.1-Pro-preview，12h / task，H200 GPU；暂未找到官方模型权重 |
 
 ---
