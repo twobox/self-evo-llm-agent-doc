@@ -212,13 +212,69 @@ MemoPilot 要解决的正是这个 gap：让 memory 的写入方式被下游任�
 
 ### 3.3 第三层：长期 credit assignment 很难
 
-如果 memory 在第 1 局写入，第 5 局表现变好，到底应该把功劳分给哪一次 memory update？如果用整段累计回报训练，在扑克这种随机性很强的环境里，后面几局的随机牌面会把信号搅乱。
+这里的 **credit assignment** 可以先翻译成“功劳 / 责任分配”：训练时看到后面某一轮成功或失败，要判断到底是哪一次 memory update 导致了这个结果。
 
-因此论文提出一个关键训练设计：
+在 MemoPilot 里，这个问题尤其容易误读。因为第 `t` 次 memory update 不是先发生、再影响第 `t` 轮；它是在第 `t` 轮结束后才发生，所以它最直接影响的是下一轮。
 
-> 用 turn-wise reward / one-step proxy reward，把第 t 次 memory update 主要归因到下一次交互的 reward。
+更准确的时间顺序是：
 
-这牺牲了一部分长期归因的完整性，但显著降低了训练方差，更适合多轮随机环境。
+```text
+第 t 轮：
+  1. player π 读取旧 memory m_{t-1}
+  2. player 与环境 / 对手交互
+  3. 环境返回轨迹 e_t 和奖励 r_t
+  4. memory updater G_θ 读取 e_t 和 m_{t-1}
+  5. 写出新的 memory m_t
+
+第 t+1 轮：
+  6. player π 读取新的 memory m_t
+  7. player 再次交互
+  8. 环境返回下一轮奖励 r_{t+1}
+```
+
+所以，第 `t` 次 memory update 的直接效果，不应该主要看已经发生过的 `r_t`，而应该看它写出来的 `m_t` 在下一轮有没有帮到 player，也就是看 `r_{t+1}`。
+
+这就是论文里的关键训练设计：
+
+> 用 **turn-wise reward / one-step proxy reward**，把第 `t` 次 memory update 主要归因到下一次交互的 reward。
+
+可以把它理解成下面这个近似：
+
+```text
+复杂目标：
+第 t 次 memory update 对未来很多轮总收益到底贡献了多少？
+
+MemoPilot 的简化目标：
+第 t 次 memory update 写出的 m_t，是否让第 t+1 轮表现更好？
+```
+
+举个石头剪刀布的例子：
+
+```text
+第 1 轮结束后，memory updater 写入：
+“对手连续出石头，下一轮优先出布。”
+
+第 2 轮，player 读到这条 memory，真的出布并赢了。
+
+训练时就把第 2 轮的好结果，主要归因给第 1 轮之后的这次 memory update。
+```
+
+它没有试图完整回答“这条 memory 对第 3、4、5 轮总成绩分别贡献多少”。这当然牺牲了一部分长期归因的完整性，但好处是训练信号更近、更清楚、方差更低。
+
+对扑克这类随机性更强的环境尤其如此。如果第 1 局写入的 memory 到第 5 局才表现变好，中间可能混入随机牌面、下注噪声、对手策略波动等因素。直接用整段累计回报训练，会很难判断到底是哪一次 memory update 起了作用。
+
+这里几个术语可以对应起来：
+
+| 术语 | 在这篇论文里的直观含义 |
+|---|---|
+| **turn-wise reward** | 每一轮单独计算 reward，不只看整段 episode 的总 reward |
+| **one-step proxy reward** | 用“下一轮 reward”近似衡量这次 memory update 的质量 |
+| **credit assignment** | 判断成功 / 失败应该归因到哪一次 memory update |
+| **proxy** | 代理指标 / 近似指标，不是完整长期目标，但更容易训练 |
+
+一句话总结：
+
+> MemoPilot 不直接要求 memory updater 学会优化很长未来的总收益，而是先让它学会：**我这次写的 memory，下一轮能不能立刻帮到 frozen player。**
 
 ---
 
@@ -284,20 +340,41 @@ MemoPilot 使用 **multi-turn GRPO** 训练 memory model。训练时对同一个
 
 核心改动有两个：
 
-1. **turn-wise reward**：第 t 次 memory 更新使用下一局 reward 作为 proxy return，即 `R_{i,t}=r_{i,t+1}`。
+1. **turn-wise reward**：第 `t` 次 memory 更新不直接使用整段累计回报，而是使用下一局 reward 作为 proxy return，即 `R_{i,t}=r_{i,t+1}`。
 2. **turn-level advantage**：在同一 turn 的多个 rollout 之间做 **context-independent, group-normalized advantage estimation**，而不是只对整条 episode 做总回报比较。
 
-直观理解：
+这里的 `R_{i,t}=r_{i,t+1}` 就是上一节解释的 one-step proxy reward。它的意思不是“第 `t` 轮的 reward 训练第 `t` 次 update”，而是：
+
+```text
+第 i 条 rollout 中：
+第 t 次 memory 写法 m_t
+    ↓
+影响第 t+1 轮 player 行为
+    ↓
+用第 t+1 轮奖励 r_{i,t+1}
+近似评价这次 memory update 好不好
+```
+
+再结合 GRPO 的 group 比较，可以理解成：
 
 ```text
 同一个对手策略下：
   rollout 1 第 t 次 memory 写法 → 下一局得分
   rollout 2 第 t 次 memory 写法 → 下一局得分
+  rollout 3 第 t 次 memory 写法 → 下一局得分
   ...
-比较这些写法谁带来更好下一局结果，更新 memory model。
+
+比较这些“同一位置的 memory 写法”谁带来更好的下一局结果，
+再更新 memory model。
 ```
 
-这样做的好处是 credit assignment 更细，训练方差更低。论文的 reward ablation 也支持这一点：在 LHE@5 上，cumulative reward 只有 0.61，而 one-step reward 达到 2.03。
+这种训练方式的好处是：
+
+- credit assignment 更细：每次 memory update 都有更近的反馈；
+- 训练方差更低：不把很久之后的随机波动都算到早期 update 头上；
+- 更符合 memory updater 的真实作用链：写 memory → 下一轮 player 使用 → 下一轮 reward 变化。
+
+论文的 reward ablation 也支持这一点：在 LHE@5 上，cumulative reward 只有 0.61，而 one-step reward 达到 2.03。
 
 ---
 
