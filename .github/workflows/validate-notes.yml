@@ -43,14 +43,14 @@ jobs:
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
 
-      - name: Validate note metadata and structure
-        run: python scripts/validate_notes.py .
+      - name: Require metadata schema 1.0
+        run: python scripts/validate_notes.py . --require-schema
 
       - name: Check local Markdown links
         run: python scripts/check_links.py .
 
-      - name: Preview and check README note index
-        run: python scripts/generate_readme.py . --check --output /tmp/generated-note-index.md
+      - name: Check generated README note index
+        run: python scripts/generate_readme.py . --check --require-markers --output /tmp/generated-note-index.md
 
       - name: Upload generated index preview
         if: always()
