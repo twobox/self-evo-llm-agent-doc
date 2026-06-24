@@ -1,19 +1,35 @@
 <!--
 metadata:
+  schema_version: '1.0'
   title: 'EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle'
   short_title: 'EvolveR'
-  year: 2025
+  year: 2026
   note_type: '中文读书笔记'
-  paper_type: 'method / system paper'
-  status: 'arXiv v3, last revised on 2026-05-16; accepted by ICML 2026'
-  venue: 'ICML 2026 / arXiv'
+  paper_type: 'method'
+  paper_status: 'accepted'
+  venue: 'ICML 2026'
+  venue_track: ''
+  evolution_object: 'Experience Base / Executor Policy'
+  learning_stage: 'mixed'
+  parameter_update: 'yes'
+  cross_task: 'yes'
   arxiv_id: '2510.16079'
+  arxiv_version: 'v3'
   arxiv_url: 'https://arxiv.org/abs/2510.16079'
   pdf_url: 'https://arxiv.org/pdf/2510.16079'
   html_url: 'https://arxiv.org/html/2510.16079v3'
+  project_url: ''
   code_url: 'https://github.com/KnowledgeXLab/EvolveR'
   original_code_url: 'https://github.com/Edaizi/EvolveR'
+  resource_url: ''
   model_url: 'https://huggingface.co/Edaizi/EvolveR'
+  code_status: 'official_available'
+  model_status: 'official_available'
+  first_submitted: '2025-10-17'
+  last_revised: '2026-05-16'
+  accepted_at: ''
+  published_at: ''
+  last_verified: '2026-06-24'
   authors:
     - 'Rong Wu'
     - 'Xiaoman Wang'
@@ -56,7 +72,7 @@ metadata:
   related_notes:
     - 'notes/harness-updating-is-not-harness-benefit.md'
   created: '2026-06-05'
-  updated: '2026-06-07'
+  updated: '2026-06-24'
 -->
 
 # 《EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle》读书笔记

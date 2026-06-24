@@ -1,19 +1,35 @@
 <!--
 metadata:
+  schema_version: '1.0'
   title: 'From Storage to Experience: A Survey on the Evolution of LLM Agent Memory Mechanisms'
   short_title: 'From Storage to Experience'
   year: 2026
   note_type: '中文读书笔记'
-  paper_type: 'survey / taxonomy paper'
-  status: 'Accepted by ACL 2026 Findings; arXiv:2605.06716v1, submitted on 2026-05-07'
-  venue: 'ACL 2026 Findings / arXiv'
+  paper_type: 'survey'
+  paper_status: 'accepted'
+  venue: 'ACL 2026'
+  venue_track: 'Findings'
+  evolution_object: 'Agent Memory Taxonomy'
+  learning_stage: 'not-applicable'
+  parameter_update: 'not-applicable'
+  cross_task: 'not-applicable'
   arxiv_id: '2605.06716'
+  arxiv_version: 'v1'
   arxiv_url: 'https://arxiv.org/abs/2605.06716'
   pdf_url: 'https://arxiv.org/pdf/2605.06716'
   html_url: 'https://arxiv.org/html/2605.06716v1'
-  code_url: 'https://github.com/FeishuLuo/Evolving-LLM-Agent-Memory-Survey'
+  project_url: ''
+  code_url: ''
   original_code_url: ''
+  resource_url: 'https://github.com/FeishuLuo/Evolving-LLM-Agent-Memory-Survey'
   model_url: ''
+  code_status: 'not_applicable'
+  model_status: 'not_applicable'
+  first_submitted: '2026-05-07'
+  last_revised: ''
+  accepted_at: ''
+  published_at: ''
+  last_verified: '2026-06-24'
   authors:
     - 'Jinghao Luo'
     - 'Yuchen Tian'
@@ -56,7 +72,7 @@ metadata:
     - 'notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md'
     - 'notes/harness-updating-is-not-harness-benefit.md'
   created: '2026-06-10'
-  updated: '2026-06-10'
+  updated: '2026-06-24'
 -->
 
 # 《From Storage to Experience: A Survey on the Evolution of LLM Agent Memory Mechanisms》读书笔记

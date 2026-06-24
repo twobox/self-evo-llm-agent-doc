@@ -1,19 +1,35 @@
 <!--
 metadata:
+  schema_version: '1.0'
   title: 'Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models'
   short_title: 'ACE'
   year: 2026
   note_type: '中文读书笔记'
-  paper_type: 'method / system paper'
-  status: 'Published as ICLR 2026 conference paper / poster; arXiv v3, last revised on 2026-03-29; OpenReview last modified on 2026-04-11'
-  venue: 'ICLR 2026 / arXiv / OpenReview'
+  paper_type: 'system'
+  paper_status: 'published'
+  venue: 'ICLR 2026'
+  venue_track: 'Poster'
+  evolution_object: 'Context / Playbook'
+  learning_stage: 'mixed'
+  parameter_update: 'no'
+  cross_task: 'yes'
   arxiv_id: '2510.04618'
+  arxiv_version: 'v3'
   arxiv_url: 'https://arxiv.org/abs/2510.04618'
   pdf_url: 'https://arxiv.org/pdf/2510.04618'
   html_url: 'https://ar5iv.labs.arxiv.org/html/2510.04618v3'
+  project_url: 'https://ace-agent.github.io/'
   code_url: 'https://github.com/ace-agent/ace'
   original_code_url: ''
+  resource_url: ''
   model_url: ''
+  code_status: 'official_available'
+  model_status: 'not_found'
+  first_submitted: '2025-10-06'
+  last_revised: '2026-03-29'
+  accepted_at: ''
+  published_at: ''
+  last_verified: '2026-06-24'
   authors:
     - 'Qizheng Zhang'
     - 'Changran Hu'
@@ -54,7 +70,7 @@ metadata:
     - 'notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
     - 'notes/harness-updating-is-not-harness-benefit.md'
   created: '2026-06-08'
-  updated: '2026-06-10'
+  updated: '2026-06-24'
 -->
 
 # 《Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models》读书笔记

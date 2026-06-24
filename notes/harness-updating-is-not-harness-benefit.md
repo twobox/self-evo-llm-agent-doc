@@ -1,18 +1,35 @@
 <!--
 metadata:
+  schema_version: '1.0'
   title: 'Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents'
   short_title: 'Harness Updating Is Not Harness Benefit'
   year: 2026
   note_type: '中文读书笔记'
-  paper_type: 'analysis / diagnostic / evaluation paper'
-  status: 'arXiv preprint, v1 submitted on 2026-05-28'
+  paper_type: 'diagnostic'
+  paper_status: 'preprint'
   venue: 'arXiv'
+  venue_track: ''
+  evolution_object: 'Harness Updating / Harness Benefit'
+  learning_stage: 'not-applicable'
+  parameter_update: 'no'
+  cross_task: 'yes'
   arxiv_id: '2605.30621'
+  arxiv_version: 'v1'
   arxiv_url: 'https://arxiv.org/abs/2605.30621'
   pdf_url: 'https://arxiv.org/pdf/2605.30621v1'
   html_url: 'https://arxiv.org/html/2605.30621v1'
+  project_url: ''
   code_url: 'https://github.com/A-EVO-Lab/a-evolve/tree/release/harness-evolution'
+  original_code_url: ''
+  resource_url: ''
   model_url: ''
+  code_status: 'official_available'
+  model_status: 'not_applicable'
+  first_submitted: '2026-05-28'
+  last_revised: ''
+  accepted_at: ''
+  published_at: ''
+  last_verified: '2026-06-24'
   authors:
     - 'Minhua Lin'
     - 'Juncheng Wu'
@@ -54,7 +71,7 @@ metadata:
   related_notes:
     - 'notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
   created: '2026-06-05'
-  updated: '2026-06-10'
+  updated: '2026-06-24'
 -->
 
 # 《Harness Updating Is Not Harness Benefit》读书笔记

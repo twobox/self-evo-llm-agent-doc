@@ -1,19 +1,35 @@
 <!--
 metadata:
+  schema_version: '1.0'
   title: 'On the Limits of LLM Adaptability: Impact of Model-Internalized Priors on Annotation Task Performance'
   short_title: 'On the Limits of LLM Adaptability'
   year: 2026
   note_type: '中文读书笔记'
-  paper_type: 'analysis / diagnostic / evaluation paper / boundary study'
-  status: 'Accepted at ICML 2026 (Oral & Spotlight); arXiv v1 submitted on 2026-05-30; PMLR vol. 306'
-  venue: 'ICML 2026 Oral & Spotlight / PMLR vol. 306 / arXiv'
+  paper_type: 'diagnostic'
+  paper_status: 'published'
+  venue: 'ICML 2026'
+  venue_track: 'Oral & Spotlight'
+  evolution_object: 'Model Priors / Prompt Adaptability'
+  learning_stage: 'not-applicable'
+  parameter_update: 'not-applicable'
+  cross_task: 'not-applicable'
   arxiv_id: '2606.00467'
+  arxiv_version: 'v1'
   arxiv_url: 'https://arxiv.org/abs/2606.00467'
   pdf_url: 'https://arxiv.org/pdf/2606.00467'
   html_url: 'https://arxiv.org/html/2606.00467v1'
+  project_url: ''
   code_url: ''
   original_code_url: ''
+  resource_url: ''
   model_url: ''
+  code_status: 'not_found'
+  model_status: 'not_applicable'
+  first_submitted: '2026-05-30'
+  last_revised: ''
+  accepted_at: ''
+  published_at: ''
+  last_verified: '2026-06-24'
   authors:
     - 'Etienne Casanova'
     - 'Rafal Kocielnik'
@@ -43,7 +59,7 @@ metadata:
     - 'notes/harness-updating-is-not-harness-benefit.md'
     - 'notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md'
   created: '2026-06-11'
-  updated: '2026-06-11'
+  updated: '2026-06-24'
 -->
 
 # 《On the Limits of LLM Adaptability》读书笔记

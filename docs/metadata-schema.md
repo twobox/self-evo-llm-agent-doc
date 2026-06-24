@@ -26,6 +26,11 @@ metadata:
   paper_status: ''
   venue: ''
   venue_track: ''
+  evolution_object: ''
+  learning_stage: ''
+  parameter_update: ''
+  cross_task: ''
+  venue_track: ''
   arxiv_id: ''
   arxiv_version: ''
   arxiv_url: ''
@@ -70,6 +75,10 @@ metadata:
 | `paper_type` | enum | 论文主要性质 |
 | `paper_status` | enum | 当前可验证的发布状态 |
 | `venue` | string | 主要会议、期刊或 `arXiv`；不要混入日期和版本 |
+| `evolution_object` | string | 论文主要更新、演化或分析的对象 |
+| `learning_stage` | enum | 机制发生在训练时、测试时、部署时或混合阶段 |
+| `parameter_update` | enum | 是否更新模型参数 |
+| `cross_task` | enum | 是否在不同任务之间积累或复用 |
 | `authors` | list[string] | 按论文署名顺序记录 |
 | `topics` | list[string] | 面向阅读者的主题名称，可保留大小写和空格 |
 | `tags` | list[string] | 面向机器检索的小写短横线标签 |
@@ -121,6 +130,29 @@ metadata:
 - `not_found`
 - `not_applicable`
 - `unknown`
+
+### 4.4 `learning_stage`
+
+- `training`
+- `test-time`
+- `deployment`
+- `mixed`
+- `not-applicable`
+
+### 4.5 `parameter_update`
+
+- `yes`
+- `no`
+- `auxiliary-only`
+- `mixed`
+- `not-applicable`
+
+### 4.6 `cross_task`
+
+- `yes`
+- `no`
+- `conditional`
+- `not-applicable`
 
 ## 5. URL 字段
 
@@ -277,6 +309,10 @@ metadata:
   paper_status: 'accepted'
   venue: 'ICML 2026'
   venue_track: 'Poster'
+  evolution_object: 'External Memory'
+  learning_stage: 'mixed'
+  parameter_update: 'auxiliary-only'
+  cross_task: 'yes'
   arxiv_id: '2601.01234'
   arxiv_version: 'v2'
   arxiv_url: 'https://arxiv.org/abs/2601.01234'

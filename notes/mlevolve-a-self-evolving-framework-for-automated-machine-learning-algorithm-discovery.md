@@ -1,19 +1,35 @@
 <!--
 metadata:
+  schema_version: '1.0'
   title: 'MLEvolve: A Self-Evolving Framework for Automated Machine Learning Algorithm Discovery'
   short_title: 'MLEvolve'
   year: 2026
   note_type: '中文读书笔记'
-  paper_type: 'method / system paper'
-  status: 'arXiv v1 submitted on 2026-06-04'
+  paper_type: 'system'
+  paper_status: 'preprint'
   venue: 'arXiv'
+  venue_track: ''
+  evolution_object: 'Solution Graph / Retrospective Memory'
+  learning_stage: 'test-time'
+  parameter_update: 'no'
+  cross_task: 'no'
   arxiv_id: '2606.06473'
+  arxiv_version: 'v1'
   arxiv_url: 'https://arxiv.org/abs/2606.06473'
   pdf_url: 'https://arxiv.org/pdf/2606.06473'
   html_url: 'https://arxiv.org/html/2606.06473'
+  project_url: 'https://internscience.github.io/MLEvolve/'
   code_url: 'https://github.com/InternScience/MLEvolve'
   original_code_url: 'https://github.com/InternScience/MLEvolve'
+  resource_url: ''
   model_url: ''
+  code_status: 'official_available'
+  model_status: 'not_found'
+  first_submitted: '2026-06-04'
+  last_revised: ''
+  accepted_at: ''
+  published_at: ''
+  last_verified: '2026-06-24'
   authors:
     - 'Shangheng Du'
     - 'Xiangchao Yan'
@@ -56,7 +72,7 @@ metadata:
     - 'notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
     - 'notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md'
   created: '2026-06-15'
-  updated: '2026-06-15'
+  updated: '2026-06-24'
 -->
 
 # 《MLEvolve: A Self-Evolving Framework for Automated Machine Learning Algorithm Discovery》读书笔记
