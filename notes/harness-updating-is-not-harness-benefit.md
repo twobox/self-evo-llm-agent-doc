@@ -85,6 +85,76 @@ metadata:
 
 ---
 
+
+## 30 秒读懂
+
+> **一句话总结：** 这篇论文没有再提出一个新的自演化算法，而是把“谁写出了更好的 harness 更新”和“谁真正能从更新中受益”拆开评测，发现两种能力并不等价，实际瓶颈往往出现在 Task-Solver 对 harness 的激活和持续遵循上。
+
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | 分析 / 诊断 / 评测论文 |
+| 核心问题 | 自演化 Agent 的性能提升究竟来自 Evolver 写得好，还是 Task-Solver 用得好？ |
+| 核心机制 | 交叉固定 Evolver 与 Task-Solver，分别测量 Harness Updating 和 Harness Benefit |
+| 分析对象 | Prompt、Skill、Memory、Tool、Workflow 等外部 harness |
+| 学习阶段 | 不适用；被分析的 harness 更新发生在跨任务部署过程中 |
+| 是否跨任务 | 是，前序任务产生的更新用于后续任务 |
+| 是否更新模型参数 | 否，论文分析的是冻结模型下的外部 harness 更新 |
+| 最重要结论 | 更新质量随基础模型能力提升较平坦；受益能力呈非单调关系；弱模型常败在激活和遵循 |
+| 最大局限 | 结论主要适用于冻结参数、外部 harness 更新和论文覆盖的三个 Agent benchmark |
+
+### 三个关键结论
+
+1. **Harness Updating 较平坦**：更强的 Evolver 不一定稳定写出显著更有用的更新。
+2. **Harness Benefit 非单调**：中等能力模型常获得最大增益；强模型受天花板限制，弱模型则难以正确使用更新。
+3. **弱模型的主要失败不是没有经验，而是不会调用和坚持执行经验**：论文将其归纳为 activation failure 与 adherence failure。
+
+### 不要误读
+
+这篇论文不是说 Evolver 不重要，也不是说弱模型一定最需要 harness 就一定获益最大。它说明的是：**写更新与用更新是两种需要独立测量的能力，端到端分数会把二者混在一起。**
+
+---
+
+## 论文定位
+
+这是一篇 **Self-Evolving Agent / Harness Engineering 的诊断型论文**。它的主要贡献不是新增 memory、skill 或反思算法，而是提供一套能力解耦框架，把自演化链条拆成：
+
+```text
+Evolver 生成更新
+    ↓
+外部 Harness 被修改
+    ↓
+Task-Solver 激活并遵循更新
+    ↓
+后续任务性能变化
+```
+
+因此，这篇论文最适合作为评估其他自演化方法时的“分析尺子”：当系统变好或变差时，先判断问题在更新生成端，还是在更新使用端。
+
+## 研究问题
+
+> 在冻结模型参数、只演化外部 harness 的系统中，基础模型能力如何分别影响更新生成质量与更新使用收益？
+
+论文进一步追问：
+
+- 更强的模型作为 Evolver，是否一定写出更好的 prompt、skill 或 memory？
+- 同一份更新交给不同 Task-Solver，谁能真正把它转化为任务收益？
+- 弱模型为什么即使拥有相关 harness，仍然无法完成任务？
+
+## 分析框架卡片
+
+| 维度 | 内容 |
+|---|---|
+| 被质疑的常见假设 | 更强模型写出的反思或经验更好，因此自演化收益会随模型能力单调提高 |
+| 研究对象 | Evolver、Task-Solver，以及二者之间传递的外部 harness 更新 |
+| 关键变量 | Evolver 模型、Task-Solver 模型、benchmark、harness 类型 |
+| 控制方法 | 固定 Task-Solver 替换 Evolver；固定 Evolver 替换 Task-Solver |
+| 主要诊断指标 | 更新带来的下游增益、Harness Updating、Harness Benefit、激活与遵循失败 |
+| 覆盖任务 | SWE-bench Verified、MCP-Atlas、SkillsBench |
+| 核心发现 | 写更新能力较平坦；使用更新收益非单调；弱模型主要存在 activation / adherence failure |
+| 结论边界 | 不直接覆盖参数持续训练、长期开放环境或完全不同的 harness 接口 |
+
+---
+
 ## 1. 论文外部信息
 
 ### 1.1 投稿与发表状态
@@ -511,7 +581,7 @@ Task-Solver 正确加载、理解、遵循更新
 
 ---
 
-## 10. 参考链接
+## 10. 参考资料与链接
 
 - arXiv：<https://arxiv.org/abs/2605.30621>
 - PDF：<https://arxiv.org/pdf/2605.30621v1>

@@ -87,6 +87,97 @@ metadata:
 
 ---
 
+
+## 30 秒读懂
+
+> **一句话总结：** MemoPilot 冻结执行任务的 player，单独训练一个外部 memory updater，让它在每次交互后把轨迹压缩成下一轮真正可执行的记忆，并用后续任务奖励通过 multi-turn GRPO 学会“怎样写 memory 才有用”。
+
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | 方法 / 系统论文 |
+| 核心问题 | 完整历史和手写反思并不一定能帮助 frozen agent，memory 写入策略如何直接对齐未来任务收益？ |
+| 核心机制 | 将 memory updater 视为可训练策略，用 multi-turn GRPO 和下一轮奖励优化跨轮 memory 更新 |
+| 更新对象 | Memory updater 的参数，以及部署时持续变化的外部结构化 memory |
+| 学习阶段 | 混合：离线训练 updater，测试 / 部署时在线更新 memory |
+| 是否跨任务 | 是，在相关任务流中将前序交互经验用于后续任务 |
+| 是否更新模型参数 | Player 不更新；只训练外部 memory updater |
+| 最重要结论 | 学习得到的 memory policy 比完整历史和 prompt-based memory 更能促进连续任务中的 test-time learning |
+| 最大局限 | 依赖明确 reward 和多轮 rollout，实验以可控环境为主，非平稳环境仍会退化 |
+
+### 三个关键结论
+
+1. **历史更多不等于信息更有用**：Full History 可能引入噪声，甚至弱于 No Memory。
+2. **Memory update 可以成为独立的 RL policy**：训练目标不是生成漂亮总结，而是提高 frozen player 的后续奖励。
+3. **Credit assignment 必须跨轮理解**：第 `t` 次 memory update 无法改变已经发生的第 `t` 轮结果，它主要通过影响第 `t+1` 次交互获得学习信号。
+
+### 不要误读
+
+MemoPilot 不是在测试时微调主模型，也不是简单把所有历史塞进上下文。它训练的是一个 **外挂 memory copilot**；部署时变化的是外部 memory，player 参数保持冻结。
+
+---
+
+## 论文定位
+
+MemoPilot 位于 **Agent Memory、Test-Time Learning 与 RL for Agent** 的交叉处。它把常见的“让 LLM 根据 prompt 写反思”改写为一个明确的策略学习问题：
+
+```text
+过去轨迹 + 旧 Memory
+    ↓
+可训练 Memory Updater
+    ↓
+新 Memory
+    ↓
+冻结 Player 在下一轮读取
+    ↓
+后续环境 Reward 反向训练 Updater
+```
+
+相比 EvolveR，MemoPilot 更集中于连续任务流中的 memory 写入策略；相比 ACE，它不是用固定 Generator / Reflector / Curator 提示维护 playbook，而是让 updater 通过奖励学习；相比 Harness Updating 的诊断结论，它直接尝试提升“写出的 memory 能否被 frozen solver 使用”。
+
+## 研究问题
+
+> 能否在不更新执行模型参数的情况下，训练一个外部 memory updater，使冻结 Agent 从连续交互中越来越会做后续任务？
+
+具体包括：
+
+- 怎样从带有噪声和偶然性的历史中提取稳定规律？
+- 怎样让 memory 对齐行动，而不只是对过去做自然语言总结？
+- memory update 的动作跨多轮产生效果时，奖励应如何归因？
+- 学到的 updater 能否迁移到不同规模或不同家族的 player？
+
+## 进化机制卡片
+
+| 维度 | 内容 |
+|---|---|
+| 初始 Agent | 冻结的 player，加一个可训练 memory model / copilot |
+| 学习信号来源 | 连续交互的环境 reward，重点使用更新后下一轮表现形成 turn-wise proxy reward |
+| 被更新的对象 | 训练阶段更新 memory updater 参数；部署阶段更新外部 memory 内容 |
+| 经验形式 | 从交互轨迹抽取的结构化文本，包括模式识别、记忆维护和行动指导 |
+| 存储位置 | 受固定预算约束的外部 memory，上下文中提供给 frozen player |
+| 更新时间 | 每轮交互结束后，用当前轨迹与旧 memory 生成新 memory |
+| 后续使用方式 | 下一轮 player 读取 memory 并据此调整行动 |
+| 作用范围 | 相关任务流中的跨任务积累；并评估跨 player 迁移 |
+| 是否更新模型参数 | Player 否；memory updater 是 |
+| 是否需要明确奖励 | 是，训练依赖可计算的下游 reward |
+| 是否依赖教师模型 | 不以更强教师生成标签为核心，但训练依赖环境 rollout 与策略优化 |
+| 主要计算与 Token 成本 | 多轮 rollout、GRPO 采样与更新；实验采用 512-token memory budget |
+
+### 时间与信用分配
+
+```text
+第 t 轮交互得到轨迹 e_t
+        ↓
+Updater 生成新记忆 m_t
+        ↓
+第 t+1 轮 Player 读取 m_t
+        ↓
+第 t+1 轮 Reward 主要评价第 t 次更新是否有用
+```
+
+这也是 turn-wise reward / one-step proxy reward 的直观含义：把一次 memory update 的主要责任归到它最直接影响的下一次交互，而不是归到已经发生的当前轮。
+
+---
+
 ## 1. 论文外部信息
 
 ### 1.1 投稿与发表状态
@@ -716,3 +807,14 @@ MemoPilot 的贡献在于把 memory update 从 prompt engineering 推向了 **re
 如果用一句话概括这篇文章：
 
 > MemoPilot 把“经验记忆”从手写反思模板变成了一个可以用多轮奖励训练的外部策略模块，让冻结 LLM agent 在连续任务中真正表现出 test-time learning。
+
+
+---
+
+## 11. 参考资料
+
+- arXiv：<https://arxiv.org/abs/2606.08656>
+- PDF：<https://arxiv.org/pdf/2606.08656>
+- arXiv HTML：<https://arxiv.org/html/2606.08656v1>
+- 相关综述笔记：[From Storage to Experience](from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md)
+- 相关诊断笔记：[Harness Updating Is Not Harness Benefit](harness-updating-is-not-harness-benefit.md)
