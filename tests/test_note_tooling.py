@@ -217,7 +217,7 @@ class GenerateReadmeTests(unittest.TestCase):
             self.assertEqual(first, second)
             self.assertIn(BEGIN, first)
             self.assertIn(END, first)
-            self.assertIn("arXiv · preprint", first)
+            self.assertIn("arXiv · 预印本", first)
             self.assertIn("notes/example.md", first)
 
 
