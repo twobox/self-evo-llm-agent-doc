@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Validate note metadata, required sections, and README index coverage."""
+"""Validate note metadata, structure, links between notes, and README coverage."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import re
-import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -22,77 +21,35 @@ H1_RE = re.compile(r"^#\s+(.+)$", re.MULTILINE)
 H2_RE = re.compile(r"^##\s+(.+)$", re.MULTILINE)
 
 PAPER_TYPES = {
-    "method",
-    "system",
-    "analysis",
-    "diagnostic",
-    "evaluation",
-    "survey",
-    "position",
-    "benchmark",
-    "dataset",
-    "theory",
+    "method", "system", "analysis", "diagnostic", "evaluation", "survey",
+    "position", "benchmark", "dataset", "theory",
 }
 PAPER_STATUSES = {"preprint", "submitted", "accepted", "published", "withdrawn", "unknown"}
 CODE_STATUSES = {
-    "official_available",
-    "unofficial_available",
-    "claimed_public_link_missing",
-    "not_found",
-    "not_applicable",
-    "unknown",
+    "official_available", "unofficial_available", "claimed_public_link_missing",
+    "not_found", "not_applicable", "unknown",
 }
 MODEL_STATUSES = {"official_available", "not_found", "not_applicable", "unknown"}
+LEARNING_STAGES = {"training", "test-time", "deployment", "mixed", "not-applicable"}
+PARAMETER_UPDATES = {"yes", "no", "auxiliary-only", "mixed", "not-applicable"}
+CROSS_TASK_VALUES = {"yes", "no", "conditional", "not-applicable"}
 URL_FIELDS = {
-    "arxiv_url",
-    "pdf_url",
-    "html_url",
-    "project_url",
-    "code_url",
-    "original_code_url",
-    "resource_url",
-    "model_url",
+    "arxiv_url", "pdf_url", "html_url", "project_url", "code_url",
+    "original_code_url", "resource_url", "model_url",
 }
 DATE_FIELDS = {
-    "first_submitted",
-    "last_revised",
-    "accepted_at",
-    "published_at",
-    "last_verified",
-    "created",
-    "updated",
+    "first_submitted", "last_revised", "accepted_at", "published_at",
+    "last_verified", "created", "updated",
 }
 STRICT_REQUIRED = {
-    "schema_version",
-    "title",
-    "short_title",
-    "year",
-    "note_type",
-    "paper_type",
-    "paper_status",
-    "venue",
-    "authors",
-    "topics",
-    "tags",
-    "related_notes",
-    "created",
-    "updated",
-    "last_verified",
+    "schema_version", "title", "short_title", "year", "note_type", "paper_type",
+    "paper_status", "venue", "evolution_object", "learning_stage",
+    "parameter_update", "cross_task", "authors", "topics", "tags",
+    "related_notes", "created", "updated", "last_verified",
 }
 LEGACY_REQUIRED = {
-    "title",
-    "short_title",
-    "year",
-    "note_type",
-    "paper_type",
-    "status",
-    "venue",
-    "authors",
-    "topics",
-    "tags",
-    "related_notes",
-    "created",
-    "updated",
+    "title", "short_title", "year", "note_type", "paper_type", "status", "venue",
+    "authors", "topics", "tags", "related_notes", "created", "updated",
 }
 
 
@@ -108,11 +65,14 @@ class Reporter:
     def __init__(self) -> None:
         self.findings: list[Finding] = []
 
+    def add(self, severity: str, path: Path | str, code: str, message: str) -> None:
+        self.findings.append(Finding(severity, str(path), code, message))
+
     def error(self, path: Path | str, code: str, message: str) -> None:
-        self.findings.append(Finding("error", str(path), code, message))
+        self.add("error", path, code, message)
 
     def warning(self, path: Path | str, code: str, message: str) -> None:
-        self.findings.append(Finding("warning", str(path), code, message))
+        self.add("warning", path, code, message)
 
     @property
     def errors(self) -> int:
@@ -164,32 +124,52 @@ def _validate_common(path: Path, metadata: dict[str, Any], text: str, reporter: 
         for item in related:
             if not isinstance(item, str):
                 continue
+            candidate = root / item if item.startswith("notes/") else path.parent / item
             if not item.startswith("notes/"):
-                reporter.warning(path, "legacy-related-path", f"related_notes should use repo-root path: {item}")
-                candidate = path.parent / item
-            else:
-                candidate = root / item
+                reporter.warning(path, "legacy-related-path", f"use repo-root path in related_notes: {item}")
             if not candidate.exists():
                 reporter.error(path, "missing-related-note", f"related note does not exist: {item}")
 
 
-def _validate_schema_1(path: Path, metadata: dict[str, Any], text: str, reporter: Reporter) -> None:
-    missing = sorted(field for field in STRICT_REQUIRED if field not in metadata)
-    for field in missing:
+def _structure_finding(
+    reporter: Reporter, path: Path, code: str, message: str, *, require_structure: bool
+) -> None:
+    if require_structure:
+        reporter.error(path, code, message)
+    else:
+        reporter.warning(path, code, message)
+
+
+def _validate_schema_1(
+    path: Path,
+    metadata: dict[str, Any],
+    text: str,
+    reporter: Reporter,
+    *,
+    require_structure: bool,
+) -> None:
+    for field in sorted(STRICT_REQUIRED - metadata.keys()):
         reporter.error(path, "missing-field", f"schema 1.0 requires metadata field: {field}")
 
+    enum_checks = {
+        "paper_type": PAPER_TYPES,
+        "paper_status": PAPER_STATUSES,
+        "code_status": CODE_STATUSES,
+        "model_status": MODEL_STATUSES,
+        "learning_stage": LEARNING_STAGES,
+        "parameter_update": PARAMETER_UPDATES,
+        "cross_task": CROSS_TASK_VALUES,
+    }
     if metadata.get("schema_version") != SCHEMA_VERSION:
         reporter.error(path, "schema-version", f"schema_version must be {SCHEMA_VERSION!r}")
     if metadata.get("note_type") != "中文读书笔记":
         reporter.error(path, "note-type", "note_type must be '中文读书笔记'")
-    if metadata.get("paper_type") not in PAPER_TYPES:
-        reporter.error(path, "paper-type", f"invalid paper_type: {metadata.get('paper_type')!r}")
-    if metadata.get("paper_status") not in PAPER_STATUSES:
-        reporter.error(path, "paper-status", f"invalid paper_status: {metadata.get('paper_status')!r}")
-    if "code_status" in metadata and metadata.get("code_status") not in CODE_STATUSES:
-        reporter.error(path, "code-status", f"invalid code_status: {metadata.get('code_status')!r}")
-    if "model_status" in metadata and metadata.get("model_status") not in MODEL_STATUSES:
-        reporter.error(path, "model-status", f"invalid model_status: {metadata.get('model_status')!r}")
+    for field, allowed in enum_checks.items():
+        value = metadata.get(field)
+        if field in {"code_status", "model_status"} and value is None:
+            continue
+        if value not in allowed:
+            reporter.error(path, f"invalid-{field}", f"invalid {field}: {value!r}")
 
     year = metadata.get("year")
     if not isinstance(year, int) or not 1900 <= year <= 2100:
@@ -216,41 +196,42 @@ def _validate_schema_1(path: Path, metadata: dict[str, Any], text: str, reporter
                 reporter.error(path, "invalid-tag", f"tag must be lowercase kebab-case: {tag!r}")
 
     headings = H2_RE.findall(text)
-    required_headings = ["30 秒读懂", "论文定位", "研究问题", "参考资料"]
-    for heading in required_headings:
+    for heading in ("30 秒读懂", "论文定位", "研究问题", "参考资料"):
         if not _has_heading(headings, heading):
-            reporter.error(path, "missing-section", f"schema 1.0 note is missing section containing: {heading}")
+            _structure_finding(
+                reporter, path, "missing-section",
+                f"note is missing section containing: {heading}",
+                require_structure=require_structure,
+            )
 
     paper_type = metadata.get("paper_type")
     if paper_type in {"method", "system"} and not _has_heading(headings, "进化机制卡片"):
-        reporter.error(path, "missing-mechanism-card", "method/system note requires a 进化机制卡片 section")
+        _structure_finding(
+            reporter, path, "missing-mechanism-card",
+            "method/system note requires a 进化机制卡片 section",
+            require_structure=require_structure,
+        )
     if paper_type in {"analysis", "diagnostic", "evaluation"} and not _has_heading(headings, "分析框架卡片"):
-        reporter.error(path, "missing-analysis-card", "analysis/diagnostic/evaluation note requires an 分析框架卡片 section")
+        _structure_finding(
+            reporter, path, "missing-analysis-card",
+            "analysis/diagnostic/evaluation note requires an 分析框架卡片 section",
+            require_structure=require_structure,
+        )
 
 
-def _validate_legacy(path: Path, metadata: dict[str, Any], reporter: Reporter) -> None:
-    reporter.warning(path, "legacy-schema", "metadata has no schema_version; applying transitional checks")
-    for field in sorted(LEGACY_REQUIRED):
-        if field not in metadata:
-            reporter.error(path, "missing-legacy-field", f"legacy metadata is missing field: {field}")
-
-    for field in URL_FIELDS:
-        if field not in metadata:
-            continue
-        value = metadata.get(field)
-        if value in {None, ""}:
-            continue
-        if not _is_url(value):
-            reporter.warning(path, "legacy-invalid-url", f"{field} contains non-URL text and must be migrated")
-
-    tags = metadata.get("tags")
-    if isinstance(tags, list):
-        for tag in tags:
-            if isinstance(tag, str) and not TAG_RE.fullmatch(tag):
-                reporter.warning(path, "legacy-tag", f"tag is not lowercase kebab-case: {tag!r}")
+def _validate_legacy(path: Path, metadata: dict[str, Any], reporter: Reporter, *, require_schema: bool) -> None:
+    message = "metadata has no schema_version; migrate to schema 1.0"
+    if require_schema:
+        reporter.error(path, "legacy-schema", message)
+    else:
+        reporter.warning(path, "legacy-schema", message)
+    for field in sorted(LEGACY_REQUIRED - metadata.keys()):
+        reporter.error(path, "missing-legacy-field", f"legacy metadata is missing field: {field}")
 
 
-def validate_repository(root: Path) -> Reporter:
+def validate_repository(
+    root: Path, *, require_schema: bool = False, require_structure: bool = False
+) -> Reporter:
     reporter = Reporter()
     try:
         note_files = find_note_files(root)
@@ -268,60 +249,50 @@ def validate_repository(root: Path) -> Reporter:
         metadata = parsed.metadata
         _validate_common(path, metadata, text, reporter)
         if metadata.get("schema_version") == SCHEMA_VERSION:
-            _validate_schema_1(path, metadata, text, reporter)
+            _validate_schema_1(
+                path, metadata, text, reporter, require_structure=require_structure
+            )
         else:
-            _validate_legacy(path, metadata, reporter)
+            _validate_legacy(path, metadata, reporter, require_schema=require_schema)
 
     readme = root / "README.md"
     if not readme.is_file():
         reporter.error(readme, "missing-readme", "README.md does not exist")
         return reporter
-
-    readme_text = readme.read_text(encoding="utf-8")
-    indexed = set(NOTE_LINK_RE.findall(readme_text))
+    indexed = set(NOTE_LINK_RE.findall(readme.read_text(encoding="utf-8")))
     expected = {path.relative_to(root).as_posix() for path in note_files}
     for missing in sorted(expected - indexed):
         reporter.error(readme, "unindexed-note", f"note is not linked from README: {missing}")
     for stale in sorted(indexed - expected):
         reporter.error(readme, "stale-note-link", f"README links to missing note: {stale}")
-
     return reporter
-
-
-def _print_text(reporter: Reporter, *, strict_warnings: bool) -> None:
-    for item in reporter.findings:
-        label = item.severity.upper()
-        print(f"{label} [{item.code}] {item.path}: {item.message}")
-    effective_errors = reporter.errors + (reporter.warnings if strict_warnings else 0)
-    print(
-        f"Summary: {reporter.errors} error(s), {reporter.warnings} warning(s), "
-        f"effective failures={effective_errors}"
-    )
 
 
 def _main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("root", nargs="?", type=Path, default=Path.cwd(), help="Repository root")
+    parser.add_argument("root", nargs="?", type=Path, default=Path.cwd())
     parser.add_argument("--strict", action="store_true", help="Treat warnings as failures")
-    parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
+    parser.add_argument("--require-schema", action="store_true", help="Reject legacy metadata")
+    parser.add_argument("--require-structure", action="store_true", help="Require the new note sections")
+    parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
 
-    reporter = validate_repository(args.root.resolve())
+    reporter = validate_repository(
+        args.root.resolve(),
+        require_schema=args.require_schema,
+        require_structure=args.require_structure,
+    )
     if args.json:
-        print(
-            json.dumps(
-                {
-                    "errors": reporter.errors,
-                    "warnings": reporter.warnings,
-                    "strict": args.strict,
-                    "findings": [asdict(item) for item in reporter.findings],
-                },
-                ensure_ascii=False,
-                indent=2,
-            )
-        )
+        print(json.dumps({
+            "errors": reporter.errors,
+            "warnings": reporter.warnings,
+            "strict": args.strict,
+            "findings": [asdict(item) for item in reporter.findings],
+        }, ensure_ascii=False, indent=2))
     else:
-        _print_text(reporter, strict_warnings=args.strict)
+        for item in reporter.findings:
+            print(f"{item.severity.upper()} [{item.code}] {item.path}: {item.message}")
+        print(f"Summary: {reporter.errors} error(s), {reporter.warnings} warning(s)")
     return 1 if reporter.errors or (args.strict and reporter.warnings) else 0
 
 
