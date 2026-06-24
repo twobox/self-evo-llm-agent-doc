@@ -1,16 +1,16 @@
 # 单篇论文笔记 Metadata 规范
 
-本文定义 `notes/*.md` 顶部隐藏式 metadata 的目标结构。后续校验脚本、README 生成器和横向综述工具都应以这里的定义为准。
+本文定义 `notes/*.md` 顶部隐藏式 metadata 的结构。校验脚本、README 生成器和横向综述工具都以此为准。
 
 ## 1. 基本原则
 
 1. 继续使用 HTML 注释，不改用 YAML front matter。
-2. metadata 是结构化事实，不写长篇解释和个人判断。
+2. metadata 只记录结构化事实，不写长篇解释和个人判断。
 3. URL 字段只能填写合法 URL 或空字符串 `''`。
 4. 日期统一使用 `YYYY-MM-DD`。
-5. 会议录用、arXiv 版本、代码状态等独立事实必须拆成独立字段。
-6. 不确定的事实保持空值或使用明确的 `unknown` 状态，不根据题目、作者简介或二手文章猜测。
-7. `README.md` 和横向综述中的结构化信息应尽量从 metadata 生成，而不是重复手工维护。
+5. 录用状态、venue、arXiv 版本、日期和代码状态必须拆成独立字段。
+6. 不确定的信息保持空值或使用 `unknown`，不要猜测。
+7. README 中的结构化索引由 metadata 自动生成。
 
 ## 2. 标准结构
 
@@ -30,7 +30,6 @@ metadata:
   learning_stage: ''
   parameter_update: ''
   cross_task: ''
-  venue_track: ''
   arxiv_id: ''
   arxiv_version: ''
   arxiv_url: ''
@@ -67,31 +66,29 @@ metadata:
 
 | 字段 | 类型 | 说明 |
 |---|---|---|
-| `schema_version` | string | 当前固定为 `'1.0'` |
-| `title` | string | 论文正式标题；优先采用正式 proceedings 标题，其次 arXiv 标题 |
-| `short_title` | string | README、表格和正文中使用的简称 |
-| `year` | integer | 论文主要引用年份；规则见第 7 节 |
-| `note_type` | enum | 当前固定为 `'中文读书笔记'` |
-| `paper_type` | enum | 论文主要性质 |
+| `schema_version` | string | 固定为 `'1.0'` |
+| `title` | string | 正式论文标题；优先采用正式 proceedings 标题 |
+| `short_title` | string | README 和对比表使用的简称 |
+| `year` | integer | 主要引用年份；规则见第 7 节 |
+| `note_type` | enum | 固定为 `'中文读书笔记'` |
+| `paper_type` | enum | 论文的主要性质 |
 | `paper_status` | enum | 当前可验证的发布状态 |
-| `venue` | string | 主要会议、期刊或 `arXiv`；不要混入日期和版本 |
-| `evolution_object` | string | 论文主要更新、演化或分析的对象 |
-| `learning_stage` | enum | 机制发生在训练时、测试时、部署时或混合阶段 |
+| `venue` | string | 主要会议、期刊或 `arXiv` |
+| `evolution_object` | string | 主要更新、演化或分析的对象 |
+| `learning_stage` | enum | 机制发生的阶段 |
 | `parameter_update` | enum | 是否更新模型参数 |
-| `cross_task` | enum | 是否在不同任务之间积累或复用 |
+| `cross_task` | enum | 是否跨任务积累或复用 |
 | `authors` | list[string] | 按论文署名顺序记录 |
-| `topics` | list[string] | 面向阅读者的主题名称，可保留大小写和空格 |
+| `topics` | list[string] | 面向读者的主题名称 |
 | `tags` | list[string] | 面向机器检索的小写短横线标签 |
-| `related_notes` | list[string] | 仓库根目录相对路径，例如 `notes/example.md` |
-| `created` | date | 笔记首次创建日期 |
-| `updated` | date | 笔记内容最近修改日期 |
+| `related_notes` | list[string] | 仓库根目录相对路径 |
+| `created` | date | 笔记创建日期 |
+| `updated` | date | 笔记最近实质修改日期 |
 | `last_verified` | date | 外部事实最近核验日期 |
 
 ## 4. 枚举字段
 
 ### 4.1 `paper_type`
-
-只填写一个最主要的类型：
 
 - `method`
 - `system`
@@ -104,13 +101,13 @@ metadata:
 - `dataset`
 - `theory`
 
-一篇论文同时具备多种性质时，主类型写入 `paper_type`，其他性质写入 `topics` 或 `tags`。不要使用 `method / framework / agent training paper` 这类自由组合字符串。
+只填写一个主类型，其他性质写入 `topics` 或 `tags`。
 
 ### 4.2 `paper_status`
 
-- `preprint`：仅公开预印本，未找到正式录用信息
-- `submitted`：有可靠来源确认正在投稿，但未录用
-- `accepted`：已确认录用，正式 proceedings 尚未发布或不区分
+- `preprint`：仅有预印本
+- `submitted`：有可靠来源确认正在投稿
+- `accepted`：已录用，但不以正式出版状态记录
 - `published`：正式会议、期刊或 proceedings 已发布
 - `withdrawn`：已撤稿
 - `unknown`：无法可靠判断
@@ -131,7 +128,7 @@ metadata:
 - `not_applicable`
 - `unknown`
 
-### 4.4 `learning_stage`
+### 4.5 `learning_stage`
 
 - `training`
 - `test-time`
@@ -139,7 +136,7 @@ metadata:
 - `mixed`
 - `not-applicable`
 
-### 4.5 `parameter_update`
+### 4.6 `parameter_update`
 
 - `yes`
 - `no`
@@ -147,7 +144,7 @@ metadata:
 - `mixed`
 - `not-applicable`
 
-### 4.6 `cross_task`
+### 4.7 `cross_task`
 
 - `yes`
 - `no`
@@ -163,24 +160,24 @@ metadata:
 | `html_url` | arXiv HTML、ar5iv 或正式 HTML 版本 |
 | `project_url` | 官方项目主页 |
 | `code_url` | 当前有效的主要代码仓库 |
-| `original_code_url` | 原始代码地址；发生迁移或跳转时记录 |
+| `original_code_url` | 发生迁移前的原始代码地址 |
 | `resource_url` | 综述资源列表、benchmark 集合等非实验代码资源 |
 | `model_url` | 官方模型权重或模型页面 |
 
-规则：
+正确写法：
 
 ```yaml
 code_url: ''
 code_status: 'not_found'
 ```
 
-正确。下面这种写法不允许：
+不允许把说明文字塞进 URL：
 
 ```yaml
 code_url: '暂未找到官方代码'
 ```
 
-综述资源列表不能冒充实验代码：
+综述资源列表应单独记录：
 
 ```yaml
 code_url: ''
@@ -192,29 +189,27 @@ code_status: 'not_applicable'
 
 | 字段 | 说明 |
 |---|---|
-| `first_submitted` | arXiv v1 或可验证的首次公开提交日期 |
+| `first_submitted` | arXiv v1 或首次公开提交日期 |
 | `last_revised` | 当前记录版本的最后修订日期 |
 | `accepted_at` | 可确认的录用日期；只知道会议年份时留空 |
 | `published_at` | 正式 proceedings 或期刊发布日期 |
-| `last_verified` | 最近一次核验 venue、代码、模型等外部事实的日期 |
+| `last_verified` | 最近一次核验 venue、代码和模型等事实的日期 |
 | `created` | 仓库笔记创建日期 |
 | `updated` | 仓库笔记最近实质修改日期 |
 
-不要把 OpenReview 页面“Last Modified”直接当作论文修订日期。确需记录时，应在正文外部信息部分说明，而不是复用 `last_revised`。
+OpenReview 的 `Last Modified` 不应直接写入 `last_revised`。
 
 ## 7. `year` 的确定规则
 
 按以下优先级选择：
 
-1. 正式 proceedings / 期刊引用年份；
+1. 正式 proceedings 或期刊引用年份；
 2. 已录用会议的会议年份；
 3. 未录用预印本的 arXiv 首次提交年份。
 
-因此，一篇 2025 年首次上传、被 ICML 2026 接收的论文，`year` 应填写 `2026`；BibTeX 中若仍采用 arXiv 引用，可以在正文 BibTeX 区保留原引用年份，但不影响 metadata 的仓库分类年份。
+例如，一篇 2025 年上传、被 ICML 2026 接收的论文，仓库 metadata 中的 `year` 写为 `2026`。
 
 ## 8. `venue` 与 `venue_track`
-
-示例：
 
 ```yaml
 paper_status: 'published'
@@ -234,44 +229,50 @@ venue: 'arXiv'
 venue_track: ''
 ```
 
-不要写成：
+不要把 arXiv、OpenReview 和正式 venue 混写在同一个字段中。
 
-```yaml
-venue: 'ICML 2026 / arXiv / OpenReview'
-```
+## 9. 研究定位字段
 
-arXiv、OpenReview、PMLR 等承载页面通过 URL 字段体现；`venue` 只表示主要发表载体。
+### `evolution_object`
 
-## 9. `topics` 与 `tags`
+用简短短语说明论文主要更新、演化或分析的对象，例如：
 
-### `topics`
+- `Context / Playbook`
+- `Experience Base / Executor Policy`
+- `Trajectory Pool`
+- `Model Priors / Prompt Adaptability`
 
-面向人阅读，可以写：
+### `learning_stage`
+
+描述主要机制发生在哪一阶段。包含离线训练和在线适应时使用 `mixed`。
+
+### `parameter_update`
+
+只训练 memory updater、critic 等外挂模块时使用 `auxiliary-only`；同时更新主模型和外部系统时使用 `mixed`。
+
+### `cross_task`
+
+这里关注经验是否在不同任务实例之间积累或复用，不是论文是否使用多个 benchmark。
+
+## 10. `topics` 与 `tags`
+
+`topics` 面向人阅读，可以保留大小写和空格：
 
 ```yaml
 topics:
   - 'Self-Evolving LLM Agent'
   - 'Agent Memory'
-  - 'Test-Time Learning'
 ```
 
-### `tags`
-
-面向脚本、搜索和分类，必须：
-
-- 全部小写；
-- 只使用英文字母、数字和短横线；
-- 不使用空格和下划线；
-- 同一概念全仓库使用同一写法。
+`tags` 面向脚本，必须全部小写，只使用字母、数字和短横线：
 
 ```yaml
 tags:
   - 'self-evolving-agent'
   - 'agent-memory'
-  - 'test-time-learning'
 ```
 
-## 10. `related_notes`
+## 11. `related_notes`
 
 统一使用仓库根目录相对路径：
 
@@ -280,22 +281,9 @@ related_notes:
   - 'notes/harness-updating-is-not-harness-benefit.md'
 ```
 
-不允许：
+优先关联机制最接近、结论直接支持或冲突、横向比较时需要一起阅读的工作。
 
-```yaml
-related_notes:
-  - 'harness-updating-is-not-harness-benefit.md'
-```
-
-关系应当有实质意义，优先选择：
-
-- 机制最接近的工作；
-- 结论直接支持或冲突的工作；
-- 横向比较时最需要一起阅读的工作。
-
-不要把所有笔记互相全部关联。
-
-## 11. 完整示例
+## 12. 完整示例
 
 ```yaml
 <!--
@@ -348,12 +336,11 @@ metadata:
 -->
 ```
 
-## 12. 迁移原则
+## 13. 迁移与维护原则
 
-现有笔记迁移到 schema 1.0 时：
-
-1. 只拆分和规范已有可验证事实，不顺便改写正文；
-2. 对外部状态重新核验并填写 `last_verified`；
-3. 无法确认的信息使用空值或 `unknown`；
-4. 保留原有作者顺序和有价值的主题分类；
-5. metadata 修改和正文重构应分开提交，便于审阅和回滚。
+1. metadata 规范化和正文重构分开提交。
+2. 修改外部状态前重新核验，并更新 `last_verified`。
+3. 无法确认的信息使用空值或 `unknown`。
+4. 保留原有作者顺序和有价值的主题分类。
+5. 修改 metadata 后运行 `python scripts/generate_readme.py . --write`。
+6. 提交前运行仓库完整校验。
