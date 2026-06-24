@@ -1,1 +1,517 @@
-PLACEHOLDER
+{
+  "schema_version": "0.1-audit",
+  "generated_at": "2026-06-24",
+  "repository": "twobox/self-evo-llm-agent-doc",
+  "source": {
+    "branch": "main",
+    "commit": "18b6f89429b9781623ff60da35d7e45ca8ba4757"
+  },
+  "scope": {
+    "notes": 11,
+    "surveys": 1,
+    "readme_indexed_notes": 11,
+    "orphan_markdown_notes_detected": 0,
+    "limitation": "Code search cannot prove absence of unindexed binary assets; run a full checkout scan later."
+  },
+  "systemic_issues": [
+    {
+      "id": "metadata-mixed-fields",
+      "severity": "high",
+      "affected": "11/11",
+      "summary": "status and venue mix several independent facts and are not stable for automation"
+    },
+    {
+      "id": "missing-standard-quick-read",
+      "severity": "high",
+      "affected": "11/11",
+      "summary": "no note implements the planned 30-second quick-reading block"
+    },
+    {
+      "id": "readme-drift",
+      "severity": "high",
+      "affected": "at least 2 notes",
+      "summary": "README venue/year is stale for Harness Updating and On the Limits of LLM Adaptability"
+    },
+    {
+      "id": "invalid-url-field",
+      "severity": "high",
+      "affected": "MemoPilot",
+      "summary": "URL fields contain prose placeholders rather than URLs or empty strings"
+    },
+    {
+      "id": "related-notes-path-style",
+      "severity": "medium",
+      "affected": "4 notes",
+      "summary": "related_notes mixes repository-root paths and same-directory filenames"
+    },
+    {
+      "id": "tag-normalization",
+      "severity": "medium",
+      "affected": "4 notes",
+      "summary": "tags mix lowercase slugs with display names, spaces and uppercase letters"
+    },
+    {
+      "id": "external-image-dependency",
+      "severity": "medium",
+      "affected": "at least 10 notes",
+      "summary": "detected figures rely on external URLs; no local asset references were found"
+    },
+    {
+      "id": "survey-scope-gap",
+      "severity": "medium",
+      "affected": "surveys/experimental-comparison.md",
+      "summary": "boundary-study note is not included although the survey scope sounds repository-wide"
+    }
+  ],
+  "notes": [
+    {
+      "path": "notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md",
+      "title": "Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models",
+      "short_title": "ACE",
+      "year": 2026,
+      "paper_type": "method / system paper",
+      "status": "Published as ICLR 2026 conference paper / poster; arXiv v3, last revised on 2026-03-29; OpenReview last modified on 2026-04-11",
+      "venue": "ICLR 2026 / arXiv / OpenReview",
+      "arxiv_id": "2510.04618",
+      "code_url": "https://github.com/ace-agent/ace",
+      "tags": [
+        "context-engineering",
+        "agent-memory",
+        "self-improving-llm",
+        "playbook",
+        "test-time-adaptation",
+        "appworld",
+        "finance",
+        "iclr-2026"
+      ],
+      "related_notes": [
+        "notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md",
+        "notes/harness-updating-is-not-harness-benefit.md"
+      ],
+      "created": "2026-06-08",
+      "updated": "2026-06-10",
+      "checks": {
+        "readme_indexed": true,
+        "standard_quick_read": false,
+        "experiment_discussion": true,
+        "limitations": true,
+        "personal_analysis": true,
+        "external_images": true,
+        "local_assets": false
+      },
+      "issues": []
+    },
+    {
+      "path": "notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md",
+      "title": "EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle",
+      "short_title": "EvolveR",
+      "year": 2025,
+      "paper_type": "method / system paper",
+      "status": "arXiv v3, last revised on 2026-05-16; accepted by ICML 2026",
+      "venue": "ICML 2026 / arXiv",
+      "arxiv_id": "2510.16079",
+      "code_url": "https://github.com/KnowledgeXLab/EvolveR",
+      "tags": [
+        "self-evolving-agent",
+        "experience-base",
+        "agent-memory",
+        "self-distillation",
+        "experience-retrieval",
+        "grpo",
+        "search-agent",
+        "icml-2026"
+      ],
+      "related_notes": [
+        "notes/harness-updating-is-not-harness-benefit.md"
+      ],
+      "created": "2026-06-05",
+      "updated": "2026-06-07",
+      "checks": {
+        "readme_indexed": true,
+        "standard_quick_read": false,
+        "experiment_discussion": true,
+        "limitations": true,
+        "personal_analysis": true,
+        "external_images": true,
+        "local_assets": false
+      },
+      "issues": []
+    },
+    {
+      "path": "notes/harness-updating-is-not-harness-benefit.md",
+      "title": "Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents",
+      "short_title": "Harness Updating Is Not Harness Benefit",
+      "year": 2026,
+      "paper_type": "analysis / diagnostic / evaluation paper",
+      "status": "arXiv preprint, v1 submitted on 2026-05-28",
+      "venue": "arXiv",
+      "arxiv_id": "2605.30621",
+      "code_url": "https://github.com/A-EVO-Lab/a-evolve/tree/release/harness-evolution",
+      "tags": [
+        "self-evolving-agent",
+        "harness-engineering",
+        "agent-memory",
+        "agent-evaluation",
+        "diagnostic-paper"
+      ],
+      "related_notes": [
+        "notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md"
+      ],
+      "created": "2026-06-05",
+      "updated": "2026-06-10",
+      "checks": {
+        "readme_indexed": true,
+        "standard_quick_read": false,
+        "experiment_discussion": true,
+        "limitations": true,
+        "personal_analysis": true,
+        "external_images": true,
+        "local_assets": false
+      },
+      "issues": [
+        "README venue/year says arxiv 2025 while note metadata says 2026"
+      ]
+    },
+    {
+      "path": "notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md",
+      "title": "Position: Agents Should Invoke External Tools ONLY When Epistemically Necessary",
+      "short_title": "Theory of Agent",
+      "year": 2026,
+      "paper_type": "position paper / theory paper / tool-use decision-making paper",
+      "status": "arXiv v4 last revised on 2026-05-08; official project page marks it as ICML 2026 Position Paper",
+      "venue": "ICML 2026 / arXiv",
+      "arxiv_id": "2506.00886",
+      "code_url": "",
+      "tags": [
+        "LLM Agent",
+        "external tools",
+        "overthinking",
+        "overacting",
+        "over-delegation",
+        "meta-cognition",
+        "agentic RL"
+      ],
+      "related_notes": [
+        "self-challenging-language-model-agents.md",
+        "evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md",
+        "harness-updating-is-not-harness-benefit.md"
+      ],
+      "created": "2026-06-06",
+      "updated": "2026-06-06",
+      "checks": {
+        "readme_indexed": true,
+        "standard_quick_read": false,
+        "experiment_discussion": true,
+        "limitations": true,
+        "personal_analysis": true,
+        "external_images": true,
+        "local_assets": false
+      },
+      "issues": [
+        "tags are not normalized",
+        "related_notes uses same-directory filenames"
+      ]
+    },
+    {
+      "path": "notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md",
+      "title": "SE-Agent: Self-Evolution Trajectory Optimization in Multi-Step Reasoning with LLM-Based Agents",
+      "short_title": "SE-Agent",
+      "year": 2025,
+      "paper_type": "method / framework / code agent paper",
+      "status": "arXiv v6 submitted on 2025-08-04, last revised on 2025-11-03; NeurIPS 2025 Poster",
+      "venue": "NeurIPS 2025 / arXiv",
+      "arxiv_id": "2508.02085",
+      "code_url": "https://github.com/JARVIS-Xs/SE-Agent",
+      "tags": [
+        "LLM Agent",
+        "self-evolution",
+        "trajectory-level evolution",
+        "revision",
+        "recombination",
+        "refinement",
+        "trajectory pool",
+        "test-time optimization",
+        "SWE-Agent",
+        "SWE-Search",
+        "SWE-bench Verified"
+      ],
+      "related_notes": [
+        "evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md",
+        "agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md",
+        "harness-updating-is-not-harness-benefit.md",
+        "self-challenging-language-model-agents.md"
+      ],
+      "created": "2026-06-07",
+      "updated": "2026-06-10",
+      "checks": {
+        "readme_indexed": true,
+        "standard_quick_read": false,
+        "experiment_discussion": true,
+        "limitations": true,
+        "personal_analysis": true,
+        "external_images": true,
+        "local_assets": false
+      },
+      "issues": [
+        "tags are not normalized",
+        "related_notes uses same-directory filenames"
+      ]
+    },
+    {
+      "path": "notes/self-challenging-language-model-agents.md",
+      "title": "Self-Challenging Language Model Agents",
+      "short_title": "Self-Challenging Agents",
+      "year": 2025,
+      "paper_type": "method / framework / agent training paper",
+      "status": "arXiv v1 submitted on 2025-06-02; NeurIPS 2025 poster; OpenReview published on 2025-09-18 and last modified on 2026-04-21",
+      "venue": "NeurIPS 2025 / arXiv / OpenReview",
+      "arxiv_id": "2506.01716",
+      "code_url": "",
+      "tags": [
+        "LLM Agent",
+        "self-improvement",
+        "multi-turn tool-use",
+        "reinforcement learning",
+        "verifiable reward",
+        "M3ToolEval",
+        "TauBench"
+      ],
+      "related_notes": [
+        "evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md",
+        "harness-updating-is-not-harness-benefit.md"
+      ],
+      "created": "2026-06-06",
+      "updated": "2026-06-10",
+      "checks": {
+        "readme_indexed": true,
+        "standard_quick_read": false,
+        "experiment_discussion": true,
+        "limitations": true,
+        "personal_analysis": true,
+        "external_images": true,
+        "local_assets": false
+      },
+      "issues": [
+        "tags are not normalized",
+        "related_notes uses same-directory filenames"
+      ]
+    },
+    {
+      "path": "notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md",
+      "title": "Gödel Agent: A Self-Referential Agent Framework for Recursive Self-Improvement",
+      "short_title": "Gödel Agent",
+      "year": 2025,
+      "paper_type": "method / framework / self-referential agent paper",
+      "status": "ACL 2025 Long Paper；arXiv v4 submitted on 2025-05-31；官方代码已开源",
+      "venue": "ACL 2025 / arXiv",
+      "arxiv_id": "2410.04444",
+      "code_url": "https://github.com/Arvid-pku/Godel_Agent",
+      "tags": [
+        "LLM Agent",
+        "self-evolution",
+        "recursive self-improvement",
+        "self-reference",
+        "self-modification",
+        "agent design space",
+        "Meta Agent Search",
+        "DROP",
+        "MGSM",
+        "MMLU",
+        "GPQA"
+      ],
+      "related_notes": [
+        "evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md",
+        "harness-updating-is-not-harness-benefit.md",
+        "agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md",
+        "se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md",
+        "self-challenging-language-model-agents.md"
+      ],
+      "created": "2026-06-10",
+      "updated": "2026-06-10",
+      "checks": {
+        "readme_indexed": true,
+        "standard_quick_read": false,
+        "experiment_discussion": true,
+        "limitations": true,
+        "personal_analysis": true,
+        "external_images": true,
+        "local_assets": false
+      },
+      "issues": [
+        "tags are not normalized",
+        "related_notes uses same-directory filenames"
+      ]
+    },
+    {
+      "path": "notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md",
+      "title": "From Storage to Experience: A Survey on the Evolution of LLM Agent Memory Mechanisms",
+      "short_title": "From Storage to Experience",
+      "year": 2026,
+      "paper_type": "survey / taxonomy paper",
+      "status": "Accepted by ACL 2026 Findings; arXiv:2605.06716v1, submitted on 2026-05-07",
+      "venue": "ACL 2026 Findings / arXiv",
+      "arxiv_id": "2605.06716",
+      "code_url": "https://github.com/FeishuLuo/Evolving-LLM-Agent-Memory-Survey",
+      "tags": [
+        "agent-memory",
+        "survey",
+        "taxonomy",
+        "storage-reflection-experience",
+        "experience-abstraction",
+        "self-evolving-agent",
+        "acl-2026-findings"
+      ],
+      "related_notes": [
+        "notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md",
+        "notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md",
+        "notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md",
+        "notes/harness-updating-is-not-harness-benefit.md"
+      ],
+      "created": "2026-06-10",
+      "updated": "2026-06-10",
+      "checks": {
+        "readme_indexed": true,
+        "standard_quick_read": false,
+        "experiment_discussion": true,
+        "limitations": true,
+        "personal_analysis": true,
+        "external_images": true,
+        "local_assets": false
+      },
+      "issues": [
+        "code_url points to a resource list rather than executable experiment code"
+      ]
+    },
+    {
+      "path": "notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md",
+      "title": "From Player to Master: Enhancing Test-Time Learning of LLM Agents via Reinforcement Learning over Memory",
+      "short_title": "MemoPilot",
+      "year": 2026,
+      "paper_type": "method / system paper",
+      "status": "arXiv v1, submitted on 2026-06-07; accepted by ICML 2026",
+      "venue": "ICML 2026 / arXiv",
+      "arxiv_id": "2606.08656",
+      "code_url": "论文摘要称已公开代码，当前笔记尚未补入链接",
+      "tags": [
+        "self-evolving-agent",
+        "agent-memory",
+        "test-time-learning",
+        "reinforcement-learning",
+        "grpo",
+        "memory-updater",
+        "icml-2026"
+      ],
+      "related_notes": [
+        "notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md",
+        "notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md",
+        "notes/harness-updating-is-not-harness-benefit.md",
+        "notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md"
+      ],
+      "created": "2026-06-15",
+      "updated": "2026-06-16",
+      "checks": {
+        "readme_indexed": true,
+        "standard_quick_read": false,
+        "experiment_discussion": true,
+        "limitations": true,
+        "personal_analysis": true,
+        "external_images": false,
+        "local_assets": false
+      },
+      "issues": [
+        "code_url is descriptive text rather than URL",
+        "original_code_url and model_url use descriptive placeholders"
+      ]
+    },
+    {
+      "path": "notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md",
+      "title": "MLEvolve: A Self-Evolving Framework for Automated Machine Learning Algorithm Discovery",
+      "short_title": "MLEvolve",
+      "year": 2026,
+      "paper_type": "method / system paper",
+      "status": "arXiv v1 submitted on 2026-06-04",
+      "venue": "arXiv",
+      "arxiv_id": "2606.06473",
+      "code_url": "https://github.com/InternScience/MLEvolve",
+      "tags": [
+        "self-evolving-agent",
+        "mle-agent",
+        "automl",
+        "algorithm-discovery",
+        "mcgs",
+        "retrospective-memory",
+        "adaptive-code-generation",
+        "mle-bench",
+        "arxiv-2026"
+      ],
+      "related_notes": [
+        "notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md",
+        "notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md",
+        "notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md"
+      ],
+      "created": "2026-06-15",
+      "updated": "2026-06-15",
+      "checks": {
+        "readme_indexed": true,
+        "standard_quick_read": false,
+        "experiment_discussion": true,
+        "limitations": true,
+        "personal_analysis": true,
+        "external_images": true,
+        "local_assets": false
+      },
+      "issues": []
+    },
+    {
+      "path": "notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md",
+      "title": "On the Limits of LLM Adaptability: Impact of Model-Internalized Priors on Annotation Task Performance",
+      "short_title": "On the Limits of LLM Adaptability",
+      "year": 2026,
+      "paper_type": "analysis / diagnostic / evaluation paper / boundary study",
+      "status": "Accepted at ICML 2026 (Oral & Spotlight); arXiv v1 submitted on 2026-05-30; PMLR vol. 306",
+      "venue": "ICML 2026 Oral & Spotlight / PMLR vol. 306 / arXiv",
+      "arxiv_id": "2606.00467",
+      "code_url": "",
+      "tags": [
+        "llm-adaptability",
+        "model-priors",
+        "prompt-steerability",
+        "llm-as-annotator",
+        "llm-as-judge",
+        "boundary-study",
+        "diagnostic-paper"
+      ],
+      "related_notes": [
+        "notes/harness-updating-is-not-harness-benefit.md",
+        "notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md"
+      ],
+      "created": "2026-06-11",
+      "updated": "2026-06-11",
+      "checks": {
+        "readme_indexed": true,
+        "standard_quick_read": false,
+        "experiment_discussion": true,
+        "limitations": true,
+        "personal_analysis": true,
+        "external_images": true,
+        "local_assets": false
+      },
+      "issues": [
+        "README only says arXiv 2026 while note records ICML 2026 Oral & Spotlight / PMLR"
+      ]
+    }
+  ],
+  "surveys": [
+    {
+      "path": "surveys/experimental-comparison.md",
+      "title": "Self-Evolving LLM Agent 实验设置横向对比",
+      "status": "持续维护",
+      "created": "2026-06-06",
+      "updated": "2026-06-16",
+      "issues": [
+        "scope should explicitly exclude boundary studies or include On the Limits of LLM Adaptability",
+        "document currently combines taxonomy, benchmarks, baselines, metrics, reproducibility and open questions"
+      ]
+    }
+  ]
+}
