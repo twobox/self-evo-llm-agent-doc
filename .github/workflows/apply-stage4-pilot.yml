@@ -5,7 +5,7 @@ on:
     branches:
       - codex/add-pilot-quick-read
     paths:
-      - '.github/workflows/apply-stage4-pilot.yml'
+      - '.stage4-trigger'
 
 permissions:
   contents: write
