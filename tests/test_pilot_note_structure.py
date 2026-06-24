@@ -51,7 +51,7 @@ class PilotNoteStructureTests(unittest.TestCase):
             "参考资料",
         ):
             self.assertIn(heading, text)
-        self.assertIn("不是长期跨任务经验库", text)
+        self.assertIn("不建立长期跨任务经验库", text)
         self.assertIn("Revision", text)
         self.assertIn("Recombination", text)
         self.assertIn("Refinement", text)
