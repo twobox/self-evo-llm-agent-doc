@@ -1,17 +1,17 @@
 # 笔记维护工具使用说明
 
-Stage 2 提供四个无第三方依赖的 Python 工具。建议使用 Python 3.11 或更高版本。
+仓库使用四个无第三方依赖的 Python 工具，建议使用 Python 3.11 或更高版本。
 
-## 1. 设计原则
+## 1. 当前状态
 
-当前仓库仍以旧 metadata 为主，因此工具采用过渡策略：
+Stage 3 完成后：
 
-- 旧 metadata：执行基础检查，问题主要报告为 warning；
-- schema 1.0 metadata：按照 `docs/metadata-schema.md` 严格校验；
-- 真正的文件缺失、解析错误、README 漏链等始终视为 error；
-- 等 Stage 3 完成 metadata 迁移后，再在 CI 中启用严格模式。
+- 全部 `notes/*.md` 已迁移到 metadata schema 1.0；
+- README 笔记索引由 metadata 生成，并受生成标记保护；
+- CI 强制拒绝旧 metadata；
+- “30 秒读懂”和机制卡片等正文结构暂时只报告 warning，Stage 4 完成后再设为强制要求。
 
-所有工具只依赖 Python 标准库，不需要安装 PyYAML、Markdown parser 或其他包。
+所有工具只依赖 Python 标准库，不需要安装 PyYAML 或 Markdown 解析器。
 
 ## 2. Metadata 解析
 
@@ -27,58 +27,53 @@ python scripts/parse_metadata.py notes/example.md --pretty
 python scripts/parse_metadata.py . --pretty
 ```
 
-解析器支持当前仓库使用的 metadata 子集：
-
-- 顶层标量；
-- 字符串列表；
-- 单引号或双引号字符串；
-- 整数、布尔值和空值；
-- 旧笔记中的未加引号字符串。
-
-它不会执行任意 YAML 标签，也不会加载外部对象。
+解析器支持仓库 metadata 使用的标量、字符串列表、整数、布尔值和空值。它不会执行任意 YAML 标签，也不会加载外部对象。
 
 ## 3. 笔记校验
 
-过渡模式：
+当前 CI 使用：
 
 ```bash
-python scripts/validate_notes.py .
+python scripts/validate_notes.py . --require-schema
 ```
+
+这会强制所有笔记使用 schema 1.0，同时继续把尚未完成的正文结构迁移报告为 warning。
 
 机器可读输出：
 
 ```bash
-python scripts/validate_notes.py . --json
+python scripts/validate_notes.py . --require-schema --json
 ```
 
-严格模式：
+Stage 4 完成快速阅读层和机制卡片后，使用：
 
 ```bash
-python scripts/validate_notes.py . --strict
+python scripts/validate_notes.py . --require-schema --require-structure --strict
 ```
 
-严格模式会把 warning 也当作失败。Stage 3 完成前不建议在默认 CI 中启用。
-
-### 对所有笔记执行的检查
-
-- 顶部 metadata 是否可解析；
-- 是否存在一级标题；
-- metadata 标题和一级标题是否明显冲突；
-- `authors`、`topics`、`tags`、`related_notes` 是否为字符串列表；
-- `related_notes` 目标是否存在；
-- README 是否收录全部笔记；
-- README 是否链接到已删除笔记。
-
-### schema 1.0 严格检查
+### Metadata 检查
 
 - 必填字段；
-- 枚举值；
+- `paper_type`、`paper_status` 等枚举值；
 - URL 格式；
 - `YYYY-MM-DD` 日期；
 - 小写短横线 tags；
-- “30 秒读懂”等必需章节；
+- `related_notes` 路径与目标文件；
+- README 是否收录全部笔记；
+- README 是否链接到已删除笔记。
+
+### 正文结构检查
+
+当前检查但不阻塞：
+
+- “30 秒读懂”；
+- 论文定位；
+- 研究问题；
+- 参考资料；
 - 方法 / 系统论文的进化机制卡片；
 - 分析 / 诊断 / 评测论文的分析框架卡片。
+
+传入 `--require-structure` 后，这些项目会变成 error。
 
 ## 4. 本地链接检查
 
@@ -98,7 +93,7 @@ python scripts/check_links.py .
 python scripts/check_links.py . --include-docs
 ```
 
-工具只验证本地链接是否存在，并对外部 URL 做基本语法检查，不发送网络请求。这样可以避免 CI 因 arXiv、OpenReview 或项目站点短暂不可用而失败。
+工具只验证本地链接是否存在，并对外部 URL 做基本语法检查，不发送网络请求，避免外部站点短暂不可用导致 CI 失败。
 
 ## 5. README 索引生成
 
@@ -108,19 +103,19 @@ python scripts/check_links.py . --include-docs
 python scripts/generate_readme.py .
 ```
 
-保存预览：
+检查 README 生成区是否最新：
 
 ```bash
-python scripts/generate_readme.py . --output /tmp/note-index.md
+python scripts/generate_readme.py . --check --require-markers
 ```
 
-检查 README 中的生成区：
+根据 metadata 重写生成区：
 
 ```bash
-python scripts/generate_readme.py . --check
+python scripts/generate_readme.py . --write
 ```
 
-当前 README 还没有生成标记，因此 `--check` 只会给出 warning，不会失败。Stage 3 或后续索引迁移时，应加入：
+生成器只替换下面两个标记之间的内容：
 
 ```markdown
 <!-- BEGIN GENERATED NOTE INDEX -->
@@ -128,25 +123,15 @@ python scripts/generate_readme.py . --check
 <!-- END GENERATED NOTE INDEX -->
 ```
 
-标记存在后，可以执行：
+生成表格包含：
 
-```bash
-python scripts/generate_readme.py . --write
-```
-
-或者在 CI 中强制要求标记：
-
-```bash
-python scripts/generate_readme.py . --check --require-markers
-```
-
-生成器会：
-
-- 从 `notes/*.md` 读取 metadata；
-- 根据 boundary-study 标签或边界主题拆分主要笔记和边界研究；
-- 按年份降序、标题升序生成稳定表格；
-- 输出类型、主题和 Venue / 状态；
-- 只替换标记区，不改 README 其他内容。
+- 论文和笔记链接；
+- 论文类型；
+- 进化或分析对象；
+- 学习阶段；
+- 是否更新参数；
+- 是否跨任务；
+- Venue 和当前状态。
 
 ## 6. 单元测试
 
@@ -154,33 +139,23 @@ python scripts/generate_readme.py . --check --require-markers
 python -m unittest discover -s tests -v
 ```
 
-测试覆盖：
-
-- metadata 标量和列表解析；
-- 重复字段和缺失注释错误；
-- schema 1.0 URL、tag 和章节校验；
-- 旧 metadata 的过渡 warning；
-- README 本地链接；
-- README 索引确定性生成。
+测试覆盖 metadata 解析、严格与过渡校验、本地链接和 README 索引确定性生成。
 
 ## 7. 推荐的本地检查顺序
 
 ```bash
 python -m compileall -q scripts tests
 python -m unittest discover -s tests -v
-python scripts/validate_notes.py .
+python scripts/validate_notes.py . --require-schema
 python scripts/check_links.py .
-python scripts/generate_readme.py . --check --output /tmp/generated-note-index.md
+python scripts/generate_readme.py . --check --require-markers --output /tmp/generated-note-index.md
 ```
 
-## 8. Stage 3 后的严格模式
+## 8. 新增或修改笔记后的流程
 
-当全部笔记迁移到 schema 1.0，并且 README 使用生成标记后，CI 应调整为：
-
-```bash
-python scripts/validate_notes.py . --strict
-python scripts/check_links.py .
-python scripts/generate_readme.py . --check --require-markers
-```
-
-在此之前，不应让历史技术债阻塞所有 PR；但任何新建的 schema 1.0 笔记会从一开始接受严格字段和结构检查。
+1. 按 `docs/metadata-schema.md` 修改 metadata；
+2. 更新 `last_verified` 和 `updated`；
+3. 运行 `python scripts/generate_readme.py . --write`；
+4. 运行完整检查；
+5. 查看 README diff，确认分类和状态正确；
+6. 再提交 PR。
