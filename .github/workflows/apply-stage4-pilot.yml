@@ -1,11 +1,11 @@
 name: Apply stage 4 pilot
 
 on:
-  push:
+  pull_request:
+    types:
+      - opened
     branches:
-      - codex/add-pilot-quick-read
-    paths:
-      - '.github/workflows/apply-stage4-pilot.yml'
+      - codex/migrate-note-metadata
 
 permissions:
   contents: write
