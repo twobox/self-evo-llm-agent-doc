@@ -1,0 +1,60 @@
+name: Verify stage 3
+
+on:
+  push:
+    branches:
+      - codex/migrate-note-metadata
+    paths:
+      - '.github/workflows/verify-stage3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out stage 3 branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/migrate-note-metadata
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Stage 3 checks
+        run: |
+          python -m compileall -q scripts tests
+          python -m unittest discover -s tests -v
+          python scripts/validate_notes.py . --require-schema
+          python scripts/check_links.py .
+          python scripts/generate_readme.py . --check --require-markers
+
+      - name: Record successful verification
+        run: |
+          mkdir -p maintenance
+          cat > maintenance/stage3-validation.md <<'EOF'
+          # Stage 3 验证记录
+
+          - 验证日期：2026-06-24
+          - 分支：`codex/migrate-note-metadata`
+          - 范围：11 篇笔记 metadata、README 生成索引、维护脚本和本地链接
+
+          已通过：
+
+          - Python 编译检查
+          - 单元测试
+          - `validate_notes.py --require-schema`
+          - 本地 Markdown 链接检查
+          - `generate_readme.py --check --require-markers`
+
+          正文“30 秒读懂”和机制卡片仍处于 warning 阶段，将在 Stage 4 完成后启用 `--require-structure --strict`。
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add maintenance/stage3-validation.md
+          git commit -m 'record stage 3 validation'
+          git push origin HEAD:codex/migrate-note-metadata
