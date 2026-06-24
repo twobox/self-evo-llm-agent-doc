@@ -25,6 +25,22 @@ DISPLAY = {
     "no": "否",
     "auxiliary-only": "仅辅助模块",
     "conditional": "有条件",
+    "method": "方法",
+    "system": "系统",
+    "analysis": "分析",
+    "diagnostic": "诊断",
+    "evaluation": "评测",
+    "survey": "综述",
+    "position": "Position",
+    "benchmark": "Benchmark",
+    "dataset": "数据集",
+    "theory": "理论",
+    "preprint": "预印本",
+    "submitted": "投稿中",
+    "accepted": "已接收",
+    "published": "已发表",
+    "withdrawn": "已撤稿",
+    "unknown": "未知",
 }
 
 
@@ -40,7 +56,7 @@ def _display_status(metadata: dict[str, Any]) -> str:
     if metadata.get("schema_version") == "1.0":
         parts = [part for part in (venue, track) if part]
         if status in {"preprint", "submitted", "accepted", "withdrawn", "unknown"}:
-            parts.append(status)
+            parts.append(_show(status))
         return " · ".join(parts) or "—"
     return venue or status or "—"
 
