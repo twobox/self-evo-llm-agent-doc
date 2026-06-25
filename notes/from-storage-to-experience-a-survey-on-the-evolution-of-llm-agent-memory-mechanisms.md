@@ -72,7 +72,7 @@ metadata:
     - 'notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md'
     - 'notes/harness-updating-is-not-harness-benefit.md'
   created: '2026-06-10'
-  updated: '2026-06-24'
+  updated: '2026-06-25'
 -->
 
 # 《From Storage to Experience: A Survey on the Evolution of LLM Agent Memory Mechanisms》读书笔记
@@ -85,6 +85,60 @@ metadata:
 > 官方资源列表 / 论文列表：<https://github.com/FeishuLuo/Evolving-LLM-Agent-Memory-Survey>  
 > 代码仓库：这是一篇综述论文，暂未找到单独实验代码；官方 GitHub 主要维护相关论文、benchmark 和资源列表。  
 > 当前状态：arXiv:2605.06716v1，2026-05-07 提交；论文信息标注 **Accepted by ACL 2026 Findings**。
+
+---
+
+
+## 30 秒读懂
+
+> **一句话总结：** 这篇综述用 Storage → Reflection → Experience 组织 Agent Memory 的演化：从保存原始轨迹，到纠错和提纯轨迹，再到主动探索并跨多条轨迹抽象可迁移的规则、技能或策略。
+
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | Agent Memory 分类综述 |
+| 核心问题 | 不同 memory 工作到底是在保存历史、修正历史，还是已经形成可迁移经验？ |
+| 核心框架 | Storage、Reflection、Experience 三阶段 taxonomy |
+| 分析对象 | 轨迹保存、轨迹提纯、跨轨迹抽象与主动探索 |
+| 学习阶段 | 不适用；覆盖多类训练时和测试时方法 |
+| 是否跨任务 | 不适用；被综述方法各不相同 |
+| 是否更新模型参数 | 不适用；分类同时覆盖外部记忆与参数化经验 |
+| 最重要结论 | “经验”不应等同于任何历史记录，而应强调从多条交互中抽象出可迁移策略先验 |
+| 最大局限 | 三阶段之间存在重叠，taxonomy 不能替代统一 benchmark、成本和真实长期记忆评测 |
+
+### 不要误读
+
+Storage 中保存一个成功案例并不自动等于 Experience。论文所说的 Experience 更强调主动获取信息和跨轨迹抽象，而不是简单检索相似历史。
+
+---
+
+## 论文定位
+
+这是一篇 **Agent Memory / Self-Evolving Agent 的总纲型综述**。它提供的价值不是新算法，而是一套判断坐标：
+
+```text
+Storage：记住发生过什么
+Reflection：判断哪些轨迹可信、应怎样修正
+Experience：从多条轨迹抽象以后可迁移的策略
+```
+
+用这套框架可以区分：SE-Agent 更接近任务内轨迹保存和反思，ACE 把经验维护成 playbook，EvolveR 维护经验原则并训练策略，MemoPilot 则学习 memory update policy。
+
+## 研究问题
+
+> LLM Agent Memory 如何从被动存储演化为能主动探索、抽象规律并支持持续适应的经验系统？
+
+## 分析框架卡片
+
+| 维度 | 内容 |
+|---|---|
+| 被澄清的常见混淆 | 任何历史日志、反思文本或相似案例都被统一称为 experience |
+| 研究对象 | LLM Agent 的 memory 写入、管理、检索和经验形成机制 |
+| 第一层 | Storage：线性、向量或结构化保存轨迹 |
+| 第二层 | Reflection：内省、外部反馈或交互反馈驱动的轨迹修正与提纯 |
+| 第三层 | Experience：主动探索与跨轨迹抽象形成可迁移先验 |
+| 核心区分 | 全局 memory repository 不等于某次推理实际检索到的 memory |
+| 综述证据 | 对相关方法、benchmark 和研究趋势的分类综合 |
+| 结论边界 | 分类边界可重叠，尚缺统一长期、动态和成本敏感评测 |
 
 ---
 
@@ -476,3 +530,12 @@ Gödel Agent 更进一步，把 agent 的程序本身也变成可读、可改、
 | Evaluation | benchmark 是否评估长期泛化，而不是只评估单次检索准确率？ |
 
 这篇文章本身不是最复杂的算法论文，但它的概念密度很高。适合反复用来校准我们对 Agent Memory、Experience Base、Context Engineering、自演化 Agent 等工作的理解边界。
+
+---
+
+## 参考资料
+
+- arXiv：<https://arxiv.org/abs/2605.06716>
+- PDF：<https://arxiv.org/pdf/2605.06716>
+- HTML：<https://arxiv.org/html/2605.06716v1>
+- 资源列表：<https://github.com/FeishuLuo/Evolving-LLM-Agent-Memory-Survey>

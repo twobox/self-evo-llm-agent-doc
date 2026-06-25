@@ -9,7 +9,7 @@ Stage 3 完成后：
 - 全部 `notes/*.md` 已迁移到 metadata schema 1.0；
 - README 笔记索引由 metadata 生成，并受生成标记保护；
 - CI 强制拒绝旧 metadata；
-- “30 秒读懂”和机制卡片等正文结构暂时只报告 warning，Stage 4 完成后再设为强制要求。
+- 全部笔记已具备“30 秒读懂”、论文定位、研究问题和适用的机制 / 分析卡片；
 
 所有工具只依赖 Python 标准库，不需要安装 PyYAML 或 Markdown 解析器。
 
@@ -34,10 +34,10 @@ python scripts/parse_metadata.py . --pretty
 当前 CI 使用：
 
 ```bash
-python scripts/validate_notes.py . --require-schema
+python scripts/validate_notes.py . --require-schema --require-structure --strict
 ```
 
-这会强制所有笔记使用 schema 1.0，同时继续把尚未完成的正文结构迁移报告为 warning。
+这会同时强制 schema 1.0、统一正文入口，并把所有 warning 视为失败。
 
 机器可读输出：
 
@@ -64,7 +64,7 @@ python scripts/validate_notes.py . --require-schema --require-structure --strict
 
 ### 正文结构检查
 
-当前检查但不阻塞：
+当前强制检查：
 
 - “30 秒读懂”；
 - 论文定位；
@@ -73,7 +73,6 @@ python scripts/validate_notes.py . --require-schema --require-structure --strict
 - 方法 / 系统论文的进化机制卡片；
 - 分析 / 诊断 / 评测论文的分析框架卡片。
 
-传入 `--require-structure` 后，这些项目会变成 error。
 
 ## 4. 本地链接检查
 
@@ -146,7 +145,7 @@ python -m unittest discover -s tests -v
 ```bash
 python -m compileall -q scripts tests
 python -m unittest discover -s tests -v
-python scripts/validate_notes.py . --require-schema
+python scripts/validate_notes.py . --require-schema --require-structure --strict
 python scripts/check_links.py .
 python scripts/generate_readme.py . --check --require-markers --output /tmp/generated-note-index.md
 ```

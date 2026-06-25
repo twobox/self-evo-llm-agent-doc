@@ -70,7 +70,7 @@ metadata:
     - 'notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
     - 'notes/harness-updating-is-not-harness-benefit.md'
   created: '2026-06-08'
-  updated: '2026-06-24'
+  updated: '2026-06-25'
 -->
 
 # 《Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models》读书笔记
@@ -84,6 +84,70 @@ metadata:
 > 官方代码仓库：<https://github.com/ace-agent/ace>  
 > 模型权重：暂未找到 ACE 单独发布的模型权重；论文实验主要使用 **DeepSeek-V3.1-671B** 作为基础模型。  
 > 当前状态：ICLR 2026 conference paper / poster；arXiv v3 最后修订于 2026-03-29；OpenReview 页面最后修改于 2026-04-11。
+
+---
+
+
+## 30 秒读懂
+
+> **一句话总结：** ACE 不更新模型参数，而是把任务轨迹和反馈持续整理成一个结构化 playbook；Generator 使用经验，Reflector 提取增量，Curator 去重和维护，从而避免反复重写整份上下文造成的 context collapse。
+
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | Context Engineering 系统论文 |
+| 核心问题 | 上下文能否像模型参数一样持续积累能力，同时避免越总结越短、越改越丢细节？ |
+| 核心机制 | Generator / Reflector / Curator 三角色，以增量方式维护 evolving playbook |
+| 更新对象 | 外部 Context / Playbook 条目 |
+| 学习阶段 | 混合，可在历史任务批量整理，也可随任务流持续更新 |
+| 是否跨任务 | 是，前序任务经验进入后续任务上下文 |
+| 是否更新模型参数 | 否 |
+| 最重要结论 | 结构化增量更新比整份上下文反复重写更能保留细粒度经验，并支持后续任务改进 |
+| 最大局限 | Playbook 会持续增长，效果仍依赖检索、上下文预算以及执行模型能否正确使用条目 |
+
+### 不要误读
+
+ACE 不是模型微调，也不只是把完整历史塞进长上下文。它演化的是一份经过反思、去重和组织的外部上下文资产。
+
+---
+
+## 论文定位
+
+ACE 位于 **Agentic Context Engineering、Agent Memory 与 Test-Time Adaptation** 的交叉处。它把 self-improvement 的主要载体从模型参数转移到可维护的 playbook：
+
+```text
+当前 Playbook + 新任务
+    ↓
+Generator 执行并产生轨迹
+    ↓
+Reflector 提取有用与有害经验
+    ↓
+Curator 增量写入、合并和去重
+    ↓
+后续任务继续使用更新后的 Playbook
+```
+
+相比普通 RAG，ACE 保存的主要不是外部事实，而是任务策略和操作经验；相比 EvolveR，它不通过 SFT / RL 更新 executor；相比简单反思，它强调增量维护而不是整体重写。
+
+## 研究问题
+
+> 在冻结基础模型的条件下，怎样让上下文从连续任务反馈中持续改进，并避免 brevity bias 和 context collapse？
+
+## 进化机制卡片
+
+| 维度 | 内容 |
+|---|---|
+| 初始 Agent | 读取当前 playbook 执行任务的 Generator |
+| 学习信号来源 | 任务轨迹、环境反馈、成功与失败结果 |
+| 被更新的对象 | 结构化 context items / playbook |
+| 经验形式 | 可复用策略、边界条件、工具规则、正负证据及具体注意事项 |
+| 存储位置 | 外部 playbook，作为后续请求的上下文资产 |
+| 更新时间 | 完成任务或一批任务后，由 Reflector 与 Curator 增量维护 |
+| 后续使用方式 | Generator 在新任务中读取相关条目并据此推理或调用工具 |
+| 作用范围 | 跨任务持续积累 |
+| 是否更新模型参数 | 否 |
+| 是否需要明确奖励 | 不要求统一标量奖励，但需要结果或反馈判断经验是否有用 |
+| 是否依赖教师模型 | 不要求固定教师；不同角色可由 LLM 实现 |
+| 主要计算与 Token 成本 | 额外反思和整理调用、不断增长的 playbook、长上下文推理成本 |
 
 ---
 
@@ -432,7 +496,7 @@ ACE 支持长上下文，但不是把所有历史轨迹原样塞进去。它强�
 
 ---
 
-## 12. 参考链接
+## 12. 参考资料与链接
 
 - arXiv：<https://arxiv.org/abs/2510.04618>
 - PDF：<https://arxiv.org/pdf/2510.04618>

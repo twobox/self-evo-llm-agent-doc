@@ -72,10 +72,73 @@ metadata:
     - 'notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
     - 'notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md'
   created: '2026-06-15'
-  updated: '2026-06-24'
+  updated: '2026-06-25'
 -->
 
 # 《MLEvolve: A Self-Evolving Framework for Automated Machine Learning Algorithm Discovery》读书笔记
+
+## 30 秒读懂
+
+> **一句话总结：** MLEvolve 把自动机器学习工程建模成长期方案搜索：用 Monte Carlo Graph Search 连接不同代码分支，以 Retrospective Memory 保存计划、代码、分数和失败分析，再用分层规划与自适应代码生成持续产生更好的 ML pipeline。
+
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | MLE / AutoML Agent 系统论文 |
+| 核心问题 | 长时程 ML 工程搜索中，怎样让不同分支共享发现、保存可解释经验，并避免每轮粗暴重写全部代码？ |
+| 核心机制 | Progressive MCGS、Retrospective Memory、Hierarchical Planning 与 Adaptive Code Generation |
+| 更新对象 | Solution Graph、Retrospective Memory 与候选代码方案 |
+| 学习阶段 | 测试时长程搜索 |
+| 是否跨任务 | 核心机制主要服务当前 MLE 任务，不等于跨任务长期学习 |
+| 是否更新模型参数 | 否 |
+| 最重要结论 | 图搜索和结构化回顾让 Agent 能跨分支引用有效方案，并根据反馈更稳定地迭代代码 |
+| 最大局限 | 单任务预算可达小时级，计算和模型调用成本高；最终提升同时受到基础模型、搜索预算和执行基础设施影响 |
+
+### 不要误读
+
+MLEvolve 不是在训练一个新的通用 AutoML 模型，也不是像 Gödel Agent 那样改写 Agent 框架本身。它演化的是当前任务的 ML 解法、搜索图和外部经验。
+
+---
+
+## 论文定位
+
+MLEvolve 位于 **Machine Learning Engineering Agent、Algorithm Discovery 与 Self-Evolving Search** 的交叉处。它面向需要反复运行代码和读取硬指标的 Kaggle-style 任务：
+
+```text
+规划候选方案
+    ↓
+生成 / 修改并执行代码
+    ↓
+读取 metric、报错和分析
+    ↓
+写入 Solution Graph 与 Retrospective Memory
+    ↓
+跨分支参考、融合或继续探索
+```
+
+相比纯树搜索，图结构允许非父子分支互相引用；相比只回传标量 reward，它保存“为什么成功或失败”；相比整文件重写，它根据改动范围选择 full rewrite、模块生成或 diff patch。
+
+## 研究问题
+
+> 如何让 MLE Agent 在有限时间预算内跨分支共享信息、复用执行经验，并根据任务状态选择合适粒度的规划与代码修改？
+
+## 进化机制卡片
+
+| 维度 | 内容 |
+|---|---|
+| 初始 Agent | 可规划、编写和运行 ML pipeline 的 MLE Agent |
+| 学习信号来源 | 本地验证指标、submission 代理分数、运行错误和执行反馈 |
+| 被更新的对象 | Candidate solution graph、retrospective memory 和代码候选 |
+| 经验形式 | Plan、code、metric、outcome、错误分析、feedback 与分支引用关系 |
+| 存储位置 | Monte Carlo solution graph 与全局 retrospective memory |
+| 更新时间 | 当前任务的长期搜索与每次代码执行之后 |
+| 后续使用方式 | 支持节点选择、跨分支融合、规划、调试和下一版代码生成 |
+| 作用范围 | 单个 MLE / 算法发现任务内部 |
+| 是否更新模型参数 | 否 |
+| 是否需要明确奖励 | 是，依赖可执行的模型评价指标 |
+| 是否依赖教师模型 | 不要求独立教师，但依赖强代码与规划模型 |
+| 主要计算与 Token 成本 | 多分支代码生成、模型训练运行、指标评估和小时级搜索预算 |
+
+---
 
 ## 1. 基本信息
 
@@ -636,7 +699,7 @@ MLEvolve 会在一个任务内积累经验并优化方案，但它是否能把�
 6. 如果把 MLEvolve 的历史节点蒸馏成训练数据，是否能进一步形成参数级 MLE Agent？
 7. 如何把 cross-branch reference 的信息来源解释给用户，方便人工审计和调试？
 
-## 15. 参考信息
+## 15. 参考资料与链接
 
 - arXiv abs：<https://arxiv.org/abs/2606.06473>
 - arXiv PDF：<https://arxiv.org/pdf/2606.06473>

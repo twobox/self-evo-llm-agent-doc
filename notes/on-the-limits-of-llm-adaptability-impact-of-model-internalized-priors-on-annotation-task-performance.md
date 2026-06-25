@@ -59,10 +59,57 @@ metadata:
     - 'notes/harness-updating-is-not-harness-benefit.md'
     - 'notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md'
   created: '2026-06-11'
-  updated: '2026-06-24'
+  updated: '2026-06-25'
 -->
 
 # 《On the Limits of LLM Adaptability》读书笔记
+
+## 30 秒读懂
+
+> **一句话总结：** 这篇论文发现 LLM 在标注任务中不是可被 prompt 任意重写的空白分类器；模型内部概念与任务定义越对齐，表现通常越好，而当二者冲突时，补充定义和 few-shot 示例也常受 decision stickiness 限制。
+
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | LLM 可适应性边界 / 诊断论文 |
+| 核心问题 | 用户提供的定义和示例能否稳定覆盖模型在训练中形成的内部概念先验？ |
+| 核心机制 | 用 Definition-Specific Familiarity、文本熟悉度和行为干预分析内部先验与 prompt steerability |
+| 分析对象 | Model-Internalized Priors、标注定义与决策粘性 |
+| 学习阶段 | 不适用；研究的是推理时提示适应能力 |
+| 是否跨任务 | 不适用 |
+| 是否更新模型参数 | 不适用 |
+| 最重要结论 | 性能更受模型内部概念与定义的对齐程度影响，而不只是文本记忆；既有决策可能难被定义和示例纠正 |
+| 最大局限 | 结论主要来自特定标注概念、数据集、模型和提示干预，不能直接外推到所有领域或参数训练 |
+
+### 不要误读
+
+论文不是说 prompt 和 few-shot 永远无效，也不是说模型完全不能适应。它说明适应能力有边界，并且边界与模型已经内化的概念和决策惯性有关。
+
+---
+
+## 论文定位
+
+这篇文章不属于核心 Self-Evolving Agent 方法，而是一篇重要的 **外部文本更新有效性边界研究**。它质疑一个常见假设：只要把新定义、规则或示例写进 prompt，模型就会按照新标准行动。
+
+这一结论与 Harness Updating 的问题直接相关：外部 memory、skill 或定义被写入上下文后，Task-Solver 是否真正改变行为，取决于外部信息与模型内部先验的关系以及模型的可操控性。
+
+## 研究问题
+
+> 当标注定义与模型内部已经形成的概念边界不一致时，定义说明和 few-shot 示例在多大程度上能纠正模型判断？
+
+## 分析框架卡片
+
+| 维度 | 内容 |
+|---|---|
+| 被质疑的常见假设 | LLM 是服从 prompt 的通用标注器，只要定义清楚就会采用用户标准 |
+| 研究对象 | LLM-as-Annotator / Judge、内部概念先验和提示干预 |
+| 关键变量 | Definition-Specific Familiarity、定义对齐程度、示例与原始决策 |
+| 对照因素 | 文本熟悉度、数据集层混杂和不同提示设置 |
+| 主要诊断指标 | 标注性能、DSF 相关性、提示纠错效果和 decision stickiness |
+| 核心发现 | 概念定义的内部熟悉度比简单文本相似或记忆更能解释表现 |
+| 行为边界 | 与内部先验冲突的决策不一定能被新增定义或 few-shot 稳定翻转 |
+| 结论边界 | 不直接覆盖参数微调、所有任务类型或开放式 Agent 长程行为 |
+
+---
 
 ## 1. 基本信息
 
@@ -590,3 +637,11 @@ misaligned definition 实验说明，错误外部信息可能让模型更自信�
 一句话总结：
 
 > 这篇论文把 LLM 标注任务中的失败，从“prompt 没写好”提升到了“模型内部先验与任务定义不对齐”的层面，说明 prompt-based adaptation 存在天然边界。
+
+---
+
+## 参考资料
+
+- arXiv：<https://arxiv.org/abs/2606.00467>
+- PDF：<https://arxiv.org/pdf/2606.00467>
+- HTML：<https://arxiv.org/html/2606.00467v1>

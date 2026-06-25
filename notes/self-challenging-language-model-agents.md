@@ -58,10 +58,75 @@ metadata:
     - 'notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
     - 'notes/harness-updating-is-not-harness-benefit.md'
   created: '2026-06-06'
-  updated: '2026-06-24'
+  updated: '2026-06-25'
 -->
 
 # 《Self-Challenging Language Model Agents》读书笔记
+
+## 30 秒读懂
+
+> **一句话总结：** Self-Challenging Agent 先探索工具环境并生成带可执行验证器的 Code-as-Task，再让 executor 解这些自生成任务，用验证结果进行强化学习或蒸馏，从而把“缺少人工训练任务”转化为 Agent 自己出题并训练自己的闭环。
+
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | 自生成任务 + RL 训练方法论文 |
+| 核心问题 | 没有大量人工任务和人工评分时，怎样规模化训练多轮工具使用 Agent？ |
+| 核心机制 | Challenger 生成 instruction、verification function、example solution 和 failure cases，Executor 解题并由验证器给奖励 |
+| 更新对象 | Synthetic Tasks 与 Executor Policy 参数 |
+| 学习阶段 | 训练时 |
+| 是否跨任务 | 是，自生成任务集用于提升通用工具执行能力 |
+| 是否更新模型参数 | 是 |
+| 最重要结论 | 可执行验证器让自生成任务具备可过滤、可训练的硬奖励，减少对人工标注任务的依赖 |
+| 最大局限 | 依赖能写出可靠验证器的环境；验证器漏洞、任务偏差和自生成数据分布会限制提升 |
+
+### 不要误读
+
+这不是部署阶段的在线自我反思，也不是只生成自然语言问题。核心资产是带验证代码和正反例约束的训练任务，最终改进来自 executor 参数训练。
+
+---
+
+## 论文定位
+
+Self-Challenging 位于 **Synthetic Task Generation、Tool-use Agent 与 RL for Agent** 的交叉处。它把同一个系统拆成两个角色：
+
+```text
+Task Challenger 探索环境
+    ↓
+生成 Code-as-Task 与验证器
+    ↓
+自动过滤不可行或验证器失效的任务
+    ↓
+Task Executor 采样多轮工具轨迹
+    ↓
+验证器给出可复现奖励
+    ↓
+RL / Distillation 更新 Executor
+```
+
+相比经验库方法，它不主要保存过去策略，而是制造新的可验证练习题；相比普通 benchmark 生成，它直接把任务转化为训练闭环。
+
+## 研究问题
+
+> Agent 能否在缺少人工任务集和人工评价标准时，自主生成可行、有难度、可自动判分的工具使用任务，并据此提升自己的 executor？
+
+## 进化机制卡片
+
+| 维度 | 内容 |
+|---|---|
+| 初始 Agent | 能探索工具环境的 Challenger 与待训练的 Executor |
+| 学习信号来源 | Code-as-Task 中 verification function 的可执行结果 |
+| 被更新的对象 | Synthetic task distribution 与 Executor Policy 参数 |
+| 经验形式 | Instruction、验证函数、示例解、失败样例和 executor 轨迹 |
+| 存储位置 | 过滤后的任务集、训练轨迹和更新后的模型参数 |
+| 更新时间 | 训练阶段分批生成任务、采样轨迹并更新 executor |
+| 后续使用方式 | 新任务作为 RL / 蒸馏训练数据，提升多轮工具调用策略 |
+| 作用范围 | 跨任务能力训练 |
+| 是否更新模型参数 | 是 |
+| 是否需要明确奖励 | 是，依赖可执行验证器 |
+| 是否依赖教师模型 | 不依赖人工教师标签为核心，但任务和验证器质量受基础模型能力约束 |
+| 主要计算与 Token 成本 | 环境探索、任务生成与过滤、多轮 rollout、验证执行和 RL 训练 |
+
+---
 
 ## 1. 基本信息
 
@@ -353,7 +418,7 @@ SCA 能工作，一个核心原因是它把 reward 绑定到 verification functi
 
 不过，这篇论文也说明自演化还没有完全解决。SCA 更像是第一步：它能在特定工具环境中提高能力，但还没有证明可以跨环境形成通用 Agent 能力。后续更重要的问题可能是：如何让 challenger 生成更抽象、更跨环境、更接近真实需求的任务；以及如何在没有明确代码验证器的开放任务中构造可靠 reward。
 
-## 13. 参考链接
+## 13. 参考资料与链接
 
 - arXiv 页面：<https://arxiv.org/abs/2506.01716>
 - PDF：<https://arxiv.org/pdf/2506.01716>

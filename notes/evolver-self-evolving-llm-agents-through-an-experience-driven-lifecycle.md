@@ -72,7 +72,7 @@ metadata:
   related_notes:
     - 'notes/harness-updating-is-not-harness-benefit.md'
   created: '2026-06-05'
-  updated: '2026-06-24'
+  updated: '2026-06-25'
 -->
 
 # 《EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle》读书笔记
@@ -84,6 +84,72 @@ metadata:
 > 官方代码仓库：<https://github.com/Edaizi/EvolveR>，当前会跳转到 <https://github.com/KnowledgeXLab/EvolveR>  
 > 模型权重：<https://huggingface.co/Edaizi/EvolveR>  
 > 当前状态：arXiv v3，最后修订时间为 2026-05-16；arXiv 页面备注为 **Accepted by ICML 2026**。
+
+---
+
+
+## 30 秒读懂
+
+> **一句话总结：** EvolveR 把 Agent 的成功与失败轨迹自蒸馏成经验原则，存入可检索的 experience base，再用检索到的经验辅助新任务，并通过 SFT / GRPO 更新 executor，形成“交互—抽象—检索—训练—再交互”的经验驱动生命周期。
+
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | 方法 / 系统论文 |
+| 核心问题 | Agent 做完任务后怎样真正吸收操作经验，而不是下次继续从零开始？ |
+| 核心机制 | 轨迹自蒸馏、经验库治理、经验检索与策略参数训练闭环 |
+| 更新对象 | Experience Base 与 Executor Policy |
+| 学习阶段 | 混合：离线经验整理和训练，在线任务中检索与继续采集轨迹 |
+| 是否跨任务 | 是 |
+| 是否更新模型参数 | 是，包含 cold-start SFT 和 GRPO 等策略更新 |
+| 最重要结论 | 经验不仅可以外挂检索，也能作为策略训练信号，推动搜索 Agent 在生命周期中持续改进 |
+| 最大局限 | 系统组件和计算链路较重，效果难完全拆分为经验质量、检索质量或额外训练预算 |
+
+### 不要误读
+
+EvolveR 不是单纯的向量数据库，也不是只在 prompt 中拼接历史轨迹。它同时维护显式经验库并更新 executor 参数。
+
+---
+
+## 论文定位
+
+EvolveR 是一套 **经验驱动的 Self-Evolving Search Agent 生命周期**。它将经验从原始轨迹提升为可治理、可检索的原则，并进一步进入策略训练：
+
+```text
+任务交互产生轨迹
+    ↓
+从成功与失败中自蒸馏经验原则
+    ↓
+经验去重、合并、过滤并写入 Experience Base
+    ↓
+新任务检索相关经验辅助推理
+    ↓
+SFT / GRPO 更新 Executor Policy
+    ↓
+产生更好的新轨迹与新经验
+```
+
+相比 ACE，EvolveR 会更新模型参数；相比 MemoPilot，它既维护经验内容，又训练主 executor；相比 SE-Agent，它面向跨任务生命周期，而不是只优化当前任务的轨迹池。
+
+## 研究问题
+
+> 怎样把 Agent 的交互轨迹转化为可复用经验，并让经验检索与参数训练共同形成持续自我改进闭环？
+
+## 进化机制卡片
+
+| 维度 | 内容 |
+|---|---|
+| 初始 Agent | 可搜索外部知识并执行多步推理的 Search Agent |
+| 学习信号来源 | 成功 / 失败轨迹、任务奖励与检索后的下游表现 |
+| 被更新的对象 | Experience Base、训练数据和 Executor Policy 参数 |
+| 经验形式 | 从轨迹自蒸馏出的策略原则，以及与任务关联的执行经验 |
+| 存储位置 | 外部 experience base / 向量检索系统，以及更新后的模型参数 |
+| 更新时间 | 轨迹收集后离线整理，并在生命周期迭代中周期更新 |
+| 后续使用方式 | 相似任务检索经验进入上下文，同时用于 SFT / GRPO 策略训练 |
+| 作用范围 | 跨任务持续积累 |
+| 是否更新模型参数 | 是 |
+| 是否需要明确奖励 | 是，GRPO 和经验筛选依赖任务反馈 |
+| 是否依赖教师模型 | 不以固定更强教师为必要条件，但经验抽象依赖 LLM 自蒸馏能力 |
+| 主要计算与 Token 成本 | 轨迹生成、经验抽取、embedding / VDB 检索、SFT 与多轮 RL rollout |
 
 ---
 
@@ -833,3 +899,13 @@ self-distill 在 3B 上超过 teacher-distill；
 > 自演化 Agent 的关键到底是“写经验”，还是“用经验”？
 
 EvolveR 的答案是两者都重要，而且需要 RL 把它们连接起来。
+
+---
+
+## 参考资料
+
+- arXiv：<https://arxiv.org/abs/2510.16079>
+- PDF：<https://arxiv.org/pdf/2510.16079>
+- HTML：<https://arxiv.org/html/2510.16079v3>
+- 代码：<https://github.com/KnowledgeXLab/EvolveR>
+- 模型：<https://huggingface.co/Edaizi/EvolveR>

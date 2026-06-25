@@ -66,10 +66,57 @@ metadata:
     - 'notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
     - 'notes/harness-updating-is-not-harness-benefit.md'
   created: '2026-06-06'
-  updated: '2026-06-24'
+  updated: '2026-06-25'
 -->
 
 # 《Position: Agents Should Invoke External Tools ONLY When Epistemically Necessary》读书笔记
+
+## 30 秒读懂
+
+> **一句话总结：** Theory of Agent 提出一个规范性原则：只有当 Agent 现有参数、上下文、记忆和内部推理不足以可靠消除任务所需的不确定性时，外部工具调用才是 epistemically necessary。
+
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | Position / 理论框架论文 |
+| 核心问题 | Agent 什么时候应该继续内部推理，什么时候才应该搜索、执行代码或调用外部系统？ |
+| 核心观点 | 以知识边界和 epistemic necessity 判断外部工具调用，而不是只看最终答案是否正确 |
+| 分析对象 | Internal reasoning 与 external acting 的选择边界 |
+| 学习阶段 | 不适用；论文主要提出原则与研究议程 |
+| 是否跨任务 | 不适用 |
+| 是否更新模型参数 | 不适用 |
+| 最重要结论 | 过度推理、过度行动和过度委托都可能损害效率、自主性与长期能力发展 |
+| 最大局限 | 核心概念仍需被操作化为可测量信号，并通过更系统的训练和 benchmark 验证 |
+
+### 不要误读
+
+论文不是反对工具使用，也不是要求 Agent 尽量少调用工具。它要求调用发生在**内部认知资源确实不足、外部交互能带来必要新信息或状态变化**的时候。
+
+---
+
+## 论文定位
+
+这篇论文为 Tool-use Agent 提供的是一条 **决策原则**，而不是新的工具调用算法。它将 reasoning、reflection、planning 等视为内部认知工具，将搜索、API、代码执行器和环境操作视为外部物理工具，并追问每一步努力是否与真实知识缺口一致。
+
+其研究意义在于：Agent 评测不能只奖励“最后答对”，还应区分是否 overthinking、overacting 或 over-delegation，以及外部工具是否真的带来了模型内部无法获得的信息。
+
+## 研究问题
+
+> 如何根据 Agent 当前的知识边界，判断一次外部工具调用是否在知识论上必要，并让训练目标鼓励 effort-consistent 的推理与行动？
+
+## 分析框架卡片
+
+| 维度 | 内容 |
+|---|---|
+| 被质疑的常见假设 | 工具越多、调用越频繁，只要最终成功就越好 |
+| 研究对象 | 内部推理、外部行动、知识边界和任务不确定性 |
+| 关键变量 | Agent 已有知识、可通过推理获得的信息、外部工具新增信息、调用成本 |
+| 主要失配 | Overthinking、Overacting / Tool Overuse、Over-delegation |
+| 规范目标 | 让认知与行动投入和真实 epistemic gap 一致 |
+| 证据性质 | 理论论证、案例与相关实证工作的综合，而非单一 SOTA 主实验 |
+| 核心命题 | 外部工具应在内部能力不足以可靠解决任务时使用 |
+| 结论边界 | 如何估计知识边界、必要性和长期能力变化仍是开放问题 |
+
+---
 
 ## 1. 基本信息
 
@@ -471,3 +518,12 @@ ToA 给出的提醒是：Agent 的智能不只体现在“能不能解决任务�
 - Hongru Wang 个人主页：<https://hrwise-nlp.github.io/>
 - Cheng Qian 个人主页：<https://qiancheng0.github.io/>
 - Manling Li 个人主页：<https://limanling.github.io/>
+
+---
+
+## 参考资料
+
+- arXiv：<https://arxiv.org/abs/2506.00886>
+- PDF：<https://arxiv.org/pdf/2506.00886>
+- HTML：<https://arxiv.org/html/2506.00886v4>
+- 项目页：<https://hrwise-nlp.github.io/assets/websites/theory-of-agent/>

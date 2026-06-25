@@ -67,10 +67,73 @@ metadata:
     - 'notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md'
     - 'notes/self-challenging-language-model-agents.md'
   created: '2026-06-10'
-  updated: '2026-06-24'
+  updated: '2026-06-25'
 -->
 
 # 《Gödel Agent: A Self-Referential Agent Framework for Recursive Self-Improvement》读书笔记
+
+## 30 秒读懂
+
+> **一句话总结：** Gödel Agent 把 Agent 当成可读写的运行时程序，让它检查自身代码、与环境交互、修改策略和自我改进逻辑，再递归运行修改后的版本，从固定 pipeline 扩展到 Agent 程序级设计搜索。
+
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | 自指 / 程序自修改方法论文 |
+| 核心问题 | Agent 能否修改的不只是任务策略，还包括负责“如何改进自己”的程序逻辑？ |
+| 核心机制 | self-inspect、环境交互、self-update 与递归调用，使用 monkey patching 修改运行时代码 |
+| 更新对象 | Agent Code、Policy、Action Set 与 Self-Improvement Loop |
+| 学习阶段 | 测试时 / 优化运行时 |
+| 是否跨任务 | 核心实验更接近给定任务或任务集内的递归搜索，不是长期经验库 |
+| 是否更新模型参数 | 否 |
+| 最重要结论 | 允许 Agent 改写自身程序可以探索比固定 meta-learning routine 更大的 agent design space |
+| 最大局限 | 自修改容易过拟合评估、引入不可控代码错误和高昂反复执行成本，必须在沙箱中验证 |
+
+### 不要误读
+
+Gödel Agent 不是具有形式证明保证的 Gödel Machine，也不是模型权重递归自训练。它是由 LLM 驱动、依赖环境反馈和代码执行的工程化程序自修改框架。
+
+---
+
+## 论文定位
+
+Gödel Agent 将 self-evolution 的对象推进到 **Agent 程序本身**。与固定的人类 pipeline 或固定 meta-learning 更新器不同，它允许新的 agent 版本成为下一轮自我修改的主体：
+
+```text
+读取当前 Agent Code
+    ↓
+执行任务并观察反馈
+    ↓
+生成并应用代码修改
+    ↓
+运行与评估新 Agent
+    ↓
+新版本继续检查和修改自己
+```
+
+它与 SE-Agent 的任务内轨迹优化不同，也与 ACE / EvolveR 的外部经验维护不同：这里直接改变执行逻辑和更新逻辑。
+
+## 研究问题
+
+> 如果固定的 agent pipeline 和 meta-learning algorithm 本身也可能成为能力上限，能否让 Agent 读写自身代码，递归搜索更大的设计空间？
+
+## 进化机制卡片
+
+| 维度 | 内容 |
+|---|---|
+| 初始 Agent | 带有限基础 action functions 的可执行 Agent 程序 |
+| 学习信号来源 | 环境交互结果、任务性能和新版本评估 |
+| 被更新的对象 | Agent policy、工具 / 动作集合、代码结构和自我更新逻辑 |
+| 经验形式 | 代码补丁、运行日志、评估结果和改进假设 |
+| 存储位置 | 运行时代码、monkey-patched 模块和生成后的 Agent 版本 |
+| 更新时间 | 每轮递归自我改进时 |
+| 后续使用方式 | 修改后的程序直接成为下一轮执行与自修改主体 |
+| 作用范围 | 当前优化任务或评估任务集内部 |
+| 是否更新模型参数 | 否 |
+| 是否需要明确奖励 | 需要可比较的任务性能或 fitness 判断版本是否更好 |
+| 是否依赖教师模型 | 不要求独立教师，但依赖基础 LLM 生成和理解代码 |
+| 主要计算与 Token 成本 | 多轮代码生成、执行、评估、回滚和递归搜索 |
+
+---
 
 ## 1. 基本信息
 
@@ -423,7 +486,7 @@ Gödel Agent 本文主要强调自修改代码；EvolveR / ACE 强调经验库�
 
 所以，这篇论文适合作为 self-evolving LLM agent 方向中的一个“边界型”工作来读：它把问题推到最激进的位置——**如果 agent 能改自己，那么 agent design 本身也可以成为搜索空间。**
 
-## 14. 参考链接
+## 14. 参考资料与链接
 
 - arXiv abstract：<https://arxiv.org/abs/2410.04444>
 - arXiv PDF：<https://arxiv.org/pdf/2410.04444>
