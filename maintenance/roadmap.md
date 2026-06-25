@@ -45,6 +45,8 @@
 
 分支：`codex/build-research-gap-map`
 
+活动 PR：[#15](https://github.com/twobox/self-evo-llm-agent-doc/pull/15)
+
 持久化 Issue：[#13](https://github.com/twobox/self-evo-llm-agent-doc/issues/13)
 
 计划输出：
