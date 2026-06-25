@@ -1,0 +1,96 @@
+name: New paper note
+description: Track a new paper note or a substantial update to an existing note.
+title: "[paper] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to preserve the task across conversations. Do not create a partial note when the primary source is unavailable.
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Work type
+      options:
+        - New note
+        - Update existing note
+        - Correct facts or figures
+        - Candidate paper for later review
+    validations:
+      required: true
+
+  - type: input
+    id: paper_url
+    attributes:
+      label: Primary paper URL
+      description: arXiv, OpenReview, proceedings, journal, or another primary source.
+      placeholder: https://arxiv.org/abs/...
+    validations:
+      required: true
+
+  - type: input
+    id: existing_note
+    attributes:
+      label: Existing note path
+      description: Required for an update; leave empty for a new note.
+      placeholder: notes/example-paper.md
+
+  - type: input
+    id: project_url
+    attributes:
+      label: Official project URL
+      placeholder: https://example.github.io/project/
+
+  - type: input
+    id: code_url
+    attributes:
+      label: Official code URL
+      placeholder: https://github.com/owner/repository
+
+  - type: textarea
+    id: relevance
+    attributes:
+      label: Why it belongs in this repository
+      description: Explain the connection to self-evolving agents, memory, harness, tools, RL, context engineering, or capability boundaries.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_comparisons
+    attributes:
+      label: Closest existing notes
+      description: List likely related notes or papers that must be compared.
+      placeholder: |
+        - notes/example-a.md
+        - notes/example-b.md
+
+  - type: dropdown
+    id: figures
+    attributes:
+      label: Figure handling
+      options:
+        - Review paper figures and licenses
+        - No figures expected
+        - Existing figure reference needs correction
+    validations:
+      required: true
+
+  - type: textarea
+    id: questions
+    attributes:
+      label: Questions to answer
+      description: Record the main reading or research questions so they survive a new chat session.
+
+  - type: checkboxes
+    id: completion
+    attributes:
+      label: Completion scope
+      options:
+        - label: Check for duplicate notes before creating a file.
+          required: true
+        - label: Verify current external facts from primary sources.
+          required: true
+        - label: Update README and experimental comparison when the note is accepted.
+          required: true
+        - label: Apply image licensing and full CI rules.
+          required: true
