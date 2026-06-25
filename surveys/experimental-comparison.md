@@ -25,7 +25,7 @@ metadata:
 |---|---|---|---|---|---|---|---|
 | [ACE](../notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md) | 系统 | Context Engineering / Tool-use Agent | Context / Playbook | 混合 | 否 | 是 | Generator / Reflector / Curator；delta context update；offline / online adaptation |
 | [EvolveR](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 方法 | Search / QA Agent | Experience Base / Executor Policy | 混合 | 是 | 是 | 轨迹经验自蒸馏、经验库检索与治理、SFT / LoRA、GRPO |
-| [Harness Updating](../notes/harness-updating-is-not-harness-benefit.md) | 诊断 | Harness / Memory / Skill Diagnostic | Harness Updating / Harness Benefit | 不适用 | 否 | 是 | 固定 Task-Solver 替换 Evolver，或固定 Evolver 替换 Task-Solver的交叉实验 |
+| [Harness Updating](../notes/harness-updating-is-not-harness-benefit.md) | 诊断 | Harness / Memory / Skill Diagnostic | Harness Updating / Harness Benefit | 不适用 | 否 | 是 | 固定 Task-Solver 替换 Evolver，或固定 Evolver 替换 Task-Solver 的交叉实验 |
 | [Theory of Agent](../notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md) | 立场 / 理论 | Tool-use Calibration / Theory | Tool-use Decision Boundary | 不适用 | 不适用 | 不适用 | Internal Task Set、World Task Set、Knowledge Boundary、Epistemic Effort |
 | [SE-Agent](../notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md) | 方法 | Code Agent / Test-Time Search | Trajectory Pool | 测试时 | 否 | 否 | 多策略轨迹池；Revision、Recombination、Refinement |
 | [Self-Challenging](../notes/self-challenging-language-model-agents.md) | 方法 | Tool-use / Synthetic-task Agent | Synthetic Tasks / Executor Policy | 训练时 | 是 | 是 | Challenger 主动探索；Code-as-Task；自动 verifier；RL / distillation |
@@ -53,7 +53,7 @@ metadata:
 | [From Storage to Experience](../notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md) | 综述 / 分类 | — | 只按数据结构或检索方式分类的 memory taxonomy | 无新增主实验；提出 Storage → Reflection → Experience，并区分 global repository 与时刻 t 的 retrieved memory。 | 文献覆盖与概念整合证据，不是统一 benchmark 实证。 | 三个阶段可能是并行模块而非线性演化；Experience 定义存在方法间重叠。 |
 | [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 方法实证 | TextArena RPS；RLCard LHE；StreamBench CoSQL；StreamBench DS-1000 | No Memory、Full History、Human Counter-Strategy、prompt-based memory updater | Qwen2.5-14B Player：RPS@5 / LHE@5 = 3.28 / 2.03；No Memory = 0.43 / -1.36。 | 较强：主结果、结构消融、奖励消融、跨 Player 与 StreamBench 迁移。 | 依赖可计算奖励和可重复交互；对手切换越频繁性能越低，StreamBench held-out episodes 数量有限。 |
 | [MLEvolve](../notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md) | 系统实证 | MLE-Bench 75 tasks；AlphaEvolve 15 optimization tasks | AIDE、ML-Master、AIRA-Dojo、MARS+、AlphaEvolve | MLE-Bench：overall medal 65.3±0.8%，valid submission 100%，above median 76.0±2.3%；15 个算法任务中 14 个匹配或超过 AlphaEvolve。 | 较强工程证据：75 个任务、组件消融与算法发现迁移。 | baseline 使用不同模型或 24h 设置，不能做严格同预算比较；结果证明高预算 scaffold 能力，不代表低成本 AutoML 已解决。 |
-| [On the Limits](../notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md) | 实证诊断 | multiple toxicity / hate-speech annotation datasets | ROUGE-L、BERTScore、embedding cosine 等文本熟悉度指标；多种 prompt / definition / few-shot 设置 | 控制 dataset-level confounds 后 DSF 与性能 partial r = +0.41；zero-shot 错误总体 rescue rate 仅 34.8%。 | 中强诊断证据：相关分析、错误级 rescue 分析和错误定义实验互相补充。 | 相关性不等于因果；社会概念标注任务可能放大定义冲突，不能直接推广到代码、数学或所有 Agent memory 场景。 |
+| [On the Limits](../notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md) | 实证诊断 | 多套 toxicity / hate-speech 标注数据集 | ROUGE-L、BERTScore、embedding cosine 等文本熟悉度指标；多种 prompt / definition / few-shot 设置 | 控制 dataset-level confounds 后 DSF 与性能 partial r = +0.41；zero-shot 错误总体 rescue rate 仅 34.8%。 | 中强诊断证据：相关分析、错误级 rescue 分析和错误定义实验互相补充。 | 相关性不等于因果；社会概念标注任务可能放大定义冲突，不能直接推广到代码、数学或所有 Agent memory 场景。 |
 
 ---
 
@@ -63,13 +63,13 @@ metadata:
 |---|---|---|---|
 | [ACE](../notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md) | 不训练参数，但需要多角色 LLM 调用；论文报告相对 GEPA / Dynamic Cheatsheet 的 latency、rollout 和 token 成本优势。 | 官方代码与项目资源公开；基础模型和部分服务成本仍依赖 API / 推理环境。 | 中 |
 | [EvolveR](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 高：需要轨迹生成、经验抽取、向量检索、SFT 与 GRPO；论文未给统一 wall-clock / token 总成本。 | 官方代码、模型与数据资源公开；完整复现仍需要训练 GPU、检索服务和 RL rollout。 | 高 |
-| [Harness Updating](../notes/harness-updating-is-not-harness-benefit.md) | 中高：需要多模型、多 benchmark 的交叉组合；没有统一训练成本，但推理实验规模较大。 | 官方代码公开；完整结果依赖多种闭源 / 开源模型和 benchmark 环境。 | 高 |
+| [Harness Updating](../notes/harness-updating-is-not-harness-benefit.md) | 中高：需要多模型、多 benchmark 的交叉组合；没有统一训练成本，但推理实验规模较大。 | 官方代码公开；完整结果依赖多种闭源 / 开源模型和 benchmark 环境。 | 中高 |
 | [Theory of Agent](../notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md) | 不适用：position paper 未训练新系统。 | 概念与形式化定义可复核；缺少统一实现、数据集和 process reward 实验。 | 无系统复现 / 概念复核 |
 | [SE-Agent](../notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md) | 高推理成本：多候选轨迹、长上下文与 evaluator；约 10 条候选后边际收益下降。 | 官方代码公开并基于 SWE-Agent；环境安装、模型 API 和多轨迹预算仍较重。 | 高 |
 | [Self-Challenging](../notes/self-challenging-language-model-agents.md) | 高：约 12k rollout、自动任务生成、验证和后续 SFT / RL；在线 RL 稳定性敏感。 | 实验结构清晰，但当前笔记未确认完整官方代码发布；复现依赖多环境和训练资源。 | 高 |
 | [Gödel Agent](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 高：6 个 cycle、每 cycle 最多 30 次迭代；需要代码执行、validation 与 LLM 调用。 | 官方 MIT 代码公开；依赖 OpenAI API、任务环境和验证集。 | 高 |
 | [From Storage to Experience](../notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md) | 不适用：综述不训练新系统。 | 官方资源列表公开；分类可复核，但文献覆盖会随时间变化。 | 无系统复现 / 概念复核 |
-| [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 中高：冻结 Player，但需训练 memory updater 并执行多轮 rollout；memory budget 512 tokens。 | 论文称代码公开，但当前笔记仍缺明确仓库链接；博弈环境易复现，完整训练流程待核验。 | 高 |
+| [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 中高：冻结 Player，但需训练 memory updater 并执行多轮 rollout；memory budget 512 tokens。 | 论文称代码公开，但当前笔记仍缺明确仓库链接；博弈环境易复现，完整训练流程待核验。 | 中高 |
 | [MLEvolve](../notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md) | 很高：每任务最多 12 小时、500 expansion、H200 GPU，并包含大量代码执行与评估。 | 官方 MIT 代码公开；闭源 backbone、H200 环境和长预算使完整复现成本高。 | 高 |
 | [On the Limits](../notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md) | 中：主要是多模型、多 prompt 条件的推理与统计分析，不涉及参数训练。 | 实验定义和统计方法清晰；结果依赖具体模型版本、数据集与 confidence 获取方式。 | 中 |
 
@@ -95,7 +95,6 @@ metadata:
 | MGSM | [Gödel Agent](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 阅读理解、数学、多领域知识、科学问答和 Game of 24 |
 | MLE-Bench 75 tasks | [MLEvolve](../notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md) | Kaggle-style 机器学习工程与数学算法优化 |
 | MMLU | [Gödel Agent](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 阅读理解、数学、多领域知识、科学问答和 Game of 24 |
-| multiple toxicity / hate-speech annotation datasets | [On the Limits](../notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md) | Toxicity / hate-speech annotation under changing definitions and prompts |
 | MuSiQue | [EvolveR](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 开放域与多跳问答、搜索增强推理 |
 | Natural Questions | [EvolveR](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 开放域与多跳问答、搜索增强推理 |
 | PopQA | [EvolveR](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 开放域与多跳问答、搜索增强推理 |
@@ -108,6 +107,7 @@ metadata:
 | TauBench Retail | [Self-Challenging](../notes/self-challenging-language-model-agents.md) | 计算、网页浏览、零售和航空工具环境 |
 | TextArena RPS | [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 连续博弈与流式数据库 / 代码任务 |
 | TriviaQA | [EvolveR](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 开放域与多跳问答、搜索增强推理 |
+| 多套 toxicity / hate-speech 标注数据集 | [On the Limits](../notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md) | Toxicity / hate-speech annotation under changing definitions and prompts |
 | 无新增 benchmark | Theory of Agent、From Storage to Experience | 理论框架与综述分类 |
 
 ---

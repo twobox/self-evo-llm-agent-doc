@@ -241,11 +241,10 @@ def render_cost(records: list[dict[str, Any]]) -> list[str]:
     ]
     for record in records:
         cost = record["cost_profile"]
-        lowered = cost.lower()
-        if "很高" in cost or "高：" in cost or "高推理" in cost:
-            difficulty = "高"
-        elif "中高" in cost:
+        if "中高" in cost:
             difficulty = "中高"
+        elif "很高" in cost or "高：" in cost or "高推理" in cost:
+            difficulty = "高"
         elif "中：" in cost:
             difficulty = "中"
         elif "不适用" in cost:
