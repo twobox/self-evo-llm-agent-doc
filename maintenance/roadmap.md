@@ -10,16 +10,7 @@
 - `main` 提交：`eebf9145a45d6e60352f583abc734ed5e2d56e07`
 - 完成日期：2026-06-25
 
-完成能力：
-
-- metadata schema 1.0；
-- 单篇笔记模板和写作规范；
-- README 自动生成；
-- 严格 metadata / 正文结构校验；
-- 图片许可、manifest 和完整性治理；
-- 11 篇笔记统一快速阅读层与证据层；
-- 结构化横向实验对比；
-- 单元测试和 GitHub Actions。
+完成能力：metadata schema、笔记结构、README 生成、严格校验、图片治理、11 篇笔记迁移和横向实验对比。
 
 ### Persistent Note Maintenance Workflow
 
@@ -27,61 +18,28 @@
 - `main` 提交：`e12d9f7969c56781be4349c2cc33b4f710b3b9b3`
 - 完成日期：2026-06-25
 
+完成能力：`AGENTS.md`、跨会话 roadmap、新笔记工作流、Note Maintainer Skill、脚手架、Issue / PR 模板和专用 CI。
+
+### Research Gap Map
+
+- 完成 PR：[#15](https://github.com/twobox/self-evo-llm-agent-doc/pull/15)
+- 持久化 Issue：[#13](https://github.com/twobox/self-evo-llm-agent-doc/issues/13)
+- 完成日期：2026-06-25
+
 完成能力：
 
-- `AGENTS.md` 新会话入口；
-- roadmap 持久化项目状态；
-- 新笔记完整接入流程；
-- 仓库内 Note Maintainer Skill；
-- 新笔记脚手架；
-- Issue / PR 模板；
-- 维护入口专用测试和 CI。
+- 覆盖全部 11 篇笔记的证据地图；
+- 截至 2026-06 的外部补充检索；
+- 7 类研究 gap；
+- 4 个候选小课题；
+- 对失败经验、大小模型协同、长期遗忘和 Harness 修复的新颖性判断进行收窄；
+- research gap map 自动回归测试。
 
 ## 当前活动阶段
 
-### Stage 11：Research Gap Map
+暂无正在执行的阶段。
 
-状态：`in progress`
-
-分支：`codex/build-research-gap-map`
-
-活动 PR：[#15](https://github.com/twobox/self-evo-llm-agent-doc/pull/15)
-
-持久化 Issue：[#13](https://github.com/twobox/self-evo-llm-agent-doc/issues/13)
-
-计划输出：
-
-```text
-surveys/research-gap-map.md
-```
-
-目标：
-
-- 将仓库 11 篇笔记的证据映射为可检验研究空白；
-- 补充截至 2026-06 的最新相关工作，避免使用过时的新颖性判断；
-- 区分概念、算法、评测、工程和成本缺口；
-- 为每个 gap 写出已有证据、剩余实验、反证条件和风险；
-- 提出适合 1–2 个月研究周期的候选小课题。
-
-重点主题：
-
-- 失败经验利用；
-- 轨迹经验库与跨轨迹抽象；
-- 大小模型协同；
-- token / rollout / wall-clock 成本；
-- 跨任务持久性；
-- Harness 写入、检索、激活、遵循与真实收益；
-- 参数更新与外挂经验的贡献拆分；
-- 错误经验、冲突、过期和遗忘治理。
-
-验收条件：
-
-- 覆盖仓库全部 11 篇笔记；
-- 至少形成 5 个明确 research gap；
-- 至少提出 3 个可执行小课题；
-- 每个小课题包含假设、最小实验、baseline、指标、预算和失败风险；
-- 记录最新外部工作并据此收窄 gap；
-- 通过链接、单元测试和完整仓库 CI。
+仓库当前处于可稳定维护状态。新任务开始时，应先创建或选择 GitHub Issue，再在本节登记 active stage、分支和 PR。
 
 ## 下一阶段
 
@@ -89,7 +47,7 @@ surveys/research-gap-map.md
 
 状态：`planned`
 
-使用一篇新论文完整演练：
+目标：使用一篇新论文完整演练持续维护流程：
 
 ```text
 输入论文链接
@@ -104,6 +62,8 @@ surveys/research-gap-map.md
 ```
 
 目的不是增加数量，而是验证维护系统能否在新会话中独立运行。
+
+启动方式：收到下一篇新论文后创建对应 Issue，并将本阶段切换为 `in progress`。
 
 ## 后续候选阶段
 
@@ -127,16 +87,17 @@ surveys/research-gap-map.md
 | 2026-06-25 | 先完成持续维护入口，再开始 Research Gap Map | 确保下一阶段可跨会话恢复，并能作为后续维护的正式流程 |
 | 2026-06-25 | 新笔记必须更新横向数据和图片清单 | 防止单篇笔记、README、综述和资源状态再次漂移 |
 | 2026-06-25 | Research Gap 必须结合最新外部工作收窄 | “已有论文没做”不自动等于当前仍有新颖性 |
+| 2026-06-25 | 优先研究固定预算下的失败经验效用 | 它连接失败归因、memory、Harness Benefit、rescue 和成本，且适合 1–2 个月最小实验 |
 
 ## 新会话恢复步骤
 
 1. 读取 `AGENTS.md`；
 2. 读取本文件；
-3. 找到“当前活动阶段”；
-4. 打开对应 GitHub Issue 或 PR；
+3. 检查“当前活动阶段”；
+4. 如果没有活动阶段，根据用户任务创建或选择 Issue；
 5. 读取 `docs/new-note-workflow.md` 和 `skills/note-maintainer/SKILL.md`；
 6. 检查最新 `main` 与 open PR；
-7. 从未完成的验收项继续。
+7. 将新阶段、分支和 PR 写回本文件。
 
 ## 更新规则
 
