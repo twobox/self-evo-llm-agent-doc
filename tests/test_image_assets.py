@@ -19,10 +19,10 @@ class ImageAssetTests(unittest.TestCase):
         inventory = json.loads(
             (ROOT / "maintenance" / "image-inventory.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(inventory["total_images"], 28)
-        self.assertEqual(inventory["localized_images"], 15)
+        self.assertEqual(inventory["total_images"], 27)
+        self.assertEqual(inventory["localized_images"], 14)
         self.assertEqual(inventory["external_images"], 13)
-        self.assertEqual(inventory["by_status"]["localized"], 15)
+        self.assertEqual(inventory["by_status"]["localized"], 14)
         self.assertEqual(inventory["by_status"]["deferred-license"], 13)
 
     def test_deferred_images_have_explicit_license_reason(self) -> None:
@@ -42,13 +42,22 @@ class ImageAssetTests(unittest.TestCase):
             (ROOT / "assets" / "images" / "manifest.json").read_text(encoding="utf-8")
         )
         allowed = {"Apache-2.0", "MIT", "CC BY 4.0", "CC BY-NC-ND 4.0"}
-        self.assertEqual(len(manifest["images"]), 15)
+        self.assertEqual(len(manifest["images"]), 14)
         for item in manifest["images"]:
             with self.subTest(image=item["id"]):
                 self.assertIn(item["license"], allowed)
                 self.assertFalse(item["modified"])
                 self.assertEqual(len(item["sha256"]), 64)
                 self.assertGreater(item["size_bytes"], 0)
+
+    def test_invalid_on_limits_figure_two_reference_is_removed(self) -> None:
+        note = (
+            ROOT
+            / "notes"
+            / "on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md"
+        ).read_text(encoding="utf-8")
+        self.assertNotIn("https://arxiv.org/html/2606.00467v1/x2.png", note)
+        self.assertIn("论文当前版本的 Figure 2 是置信度输出模板", note)
 
 
 if __name__ == "__main__":
