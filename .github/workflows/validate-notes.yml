@@ -7,6 +7,9 @@ on:
       - 'notes/**'
       - 'surveys/**'
       - 'docs/**'
+      - 'assets/**'
+      - 'maintenance/image-inventory.json'
+      - 'maintenance/image-inventory.md'
       - 'scripts/**'
       - 'tests/**'
       - '.github/workflows/validate-notes.yml'
@@ -18,6 +21,9 @@ on:
       - 'notes/**'
       - 'surveys/**'
       - 'docs/**'
+      - 'assets/**'
+      - 'maintenance/image-inventory.json'
+      - 'maintenance/image-inventory.md'
       - 'scripts/**'
       - 'tests/**'
       - '.github/workflows/validate-notes.yml'
@@ -48,6 +54,9 @@ jobs:
 
       - name: Check local Markdown links
         run: python scripts/check_links.py .
+
+      - name: Check localized image assets
+        run: python scripts/check_images.py .
 
       - name: Check generated README note index
         run: python scripts/generate_readme.py . --check --require-markers --output /tmp/generated-note-index.md
