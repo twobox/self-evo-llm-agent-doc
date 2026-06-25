@@ -1,0 +1,51 @@
+name: Validate maintenance entrypoints
+
+on:
+  pull_request:
+    paths:
+      - 'AGENTS.md'
+      - 'maintenance/roadmap.md'
+      - 'docs/new-note-workflow.md'
+      - 'skills/**'
+      - 'scripts/scaffold_note.py'
+      - 'tests/test_maintenance_workflow.py'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/pull_request_template.md'
+      - '.github/workflows/validate-maintenance-entrypoints.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'AGENTS.md'
+      - 'maintenance/roadmap.md'
+      - 'docs/new-note-workflow.md'
+      - 'skills/**'
+      - 'scripts/scaffold_note.py'
+      - 'tests/test_maintenance_workflow.py'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/pull_request_template.md'
+      - '.github/workflows/validate-maintenance-entrypoints.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile scaffold and test
+        run: python -m compileall -q scripts/scaffold_note.py tests/test_maintenance_workflow.py
+
+      - name: Run maintenance workflow tests
+        run: python -m unittest tests.test_maintenance_workflow -v
+
+      - name: Check scaffold CLI
+        run: python scripts/scaffold_note.py --help
