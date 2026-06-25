@@ -71,7 +71,7 @@ metadata:
   related_notes:
     - 'notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
   created: '2026-06-05'
-  updated: '2026-06-24'
+  updated: '2026-06-25'
 -->
 
 # 《Harness Updating Is Not Harness Benefit》读书笔记
@@ -155,105 +155,7 @@ Task-Solver 激活并遵循更新
 
 ---
 
-## 1. 论文外部信息
-
-### 1.1 投稿与发表状态
-
-这篇论文目前是 **arXiv 预印本**，编号为 **arXiv:2605.30621**，分类为 **Computer Science > Artificial Intelligence (cs.AI)**。arXiv 页面显示论文提交时间为 **2026 年 5 月 28 日**，评论信息为 **24 pages, 9 figures, 12 tables**。
-
-目前 arXiv 页面没有显示会议或期刊录用信息，因此现阶段更准确的说法是：
-
-> 这是一篇新近公开的 arXiv 预印本，还不能称为已经正式发表在某个会议或期刊上。
-
-如果后续需要正式引用，可以暂时写成：
-
-```bibtex
-@article{lin2026harness,
-  title={Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents},
-  author={Lin, Minhua and Wu, Juncheng and Wang, Zijun and Shi, Zhan and Sang, Yisi and He, Bing and Liu, Zewen and Wei, Tianxin and Wu, Zongyu and Zhang, Zhiwei and Wang, Dakuo and Zhang, Xiang and Dumoulin, Benoit and Xie, Cihang and Zhou, Yuyin and Wang, Suhang and Lu, Hanqing},
-  journal={arXiv preprint arXiv:2605.30621},
-  year={2026}
-}
-```
-
-### 1.2 作者与机构
-
-论文作者共 17 位，来自高校和工业界团队：
-
-| 作者 | 机构 |
-|---|---|
-| Minhua Lin | The Pennsylvania State University |
-| Juncheng Wu | UC Santa Cruz |
-| Zijun Wang | UC Santa Cruz |
-| Zhan Shi | Amazon |
-| Yisi Sang | Amazon |
-| Bing He | Amazon |
-| Zewen Liu | Emory University |
-| Tianxin Wei | UIUC |
-| Zongyu Wu | The Pennsylvania State University |
-| Zhiwei Zhang | The Pennsylvania State University |
-| Dakuo Wang | Northeastern University |
-| Xiang Zhang | The Pennsylvania State University |
-| Benoit Dumoulin | Amazon |
-| Cihang Xie | UC Santa Cruz |
-| Yuyin Zhou | UC Santa Cruz |
-| Suhang Wang | The Pennsylvania State University |
-| Hanqing Lu | Amazon |
-
-论文首页脚注说明：**Minhua Lin 和 Juncheng Wu 为共同一作**。
-
-从机构组成看，这篇论文是一个比较典型的 **高校研究组 + 工业界大模型/Agent 团队** 合作。Penn State、UC Santa Cruz、UIUC、Northeastern 等高校侧更偏研究问题定义、实验分析和方法论总结；Amazon 作者的参与说明这个问题也和实际 Agent 系统部署、工具调用、长期任务执行等工程问题密切相关。
-
-### 1.3 作者背景简要观察
-
-这篇论文的作者群体大致可以分成几类：
-
-1. **Agent / LLM / Trustworthy AI 方向的学生作者**：例如 Minhua Lin、Juncheng Wu、Zijun Wang、Tianxin Wei 等，主要承担问题定义、实验设计和论文实现工作。
-2. **机器学习、NLP、数据挖掘方向的高校导师作者**：例如 Suhang Wang、Xiang Zhang、Cihang Xie、Yuyin Zhou、Dakuo Wang 等，方向覆盖 LLM Agent、可信 AI、机器学习、HCI、视觉和医疗 AI 等。
-3. **Amazon 工业界作者**：例如 Zhan Shi、Yisi Sang、Bing He、Benoit Dumoulin、Hanqing Lu 等，和大模型系统、搜索推荐、对话 AI、工具调用、真实产品中的 Agent 部署问题相关。
-
-因此，这篇论文不是单纯的理论分析工作，而是带有较强的 **Agent 系统评测和工程诊断** 色彩。
-
-### 1.4 所属研究方向
-
-这篇论文属于以下几个交叉方向：
-
-```text
-LLM
-└── LLM Agent
-    └── Self-Evolving Agent
-        └── Harness Evolution / Harness Engineering
-            ├── Prompt 更新
-            ├── Skill 更新
-            ├── Memory 更新
-            ├── Tool 使用方式更新
-            └── Workflow / 执行策略优化
-```
-
-其中最关键的概念是 **harness**。在这篇论文中，harness 可以理解为：
-
-> 不改模型参数，而是围绕模型构建的一套外部工作系统，包括 prompt、skills、memory、tools、workflow 等。
-
-也就是说，大模型本身像“人”，harness 像这个人做任务时使用的 **操作手册、工具箱、记忆本和流程规范**。
-
-### 1.5 在研究圈子里的定位
-
-这篇论文不是典型的“提出一个新算法并刷榜”的文章，而更像是一篇 **分析型、诊断型、评测型论文**。
-
-以往很多自演化 Agent 工作主要关注端到端性能：
-
-> 加了反思、记忆、skill 更新之后，Agent 最后分数有没有提高？
-
-但这篇论文认为这个问题太粗，因为最终性能提升可能来自两个不同环节：
-
-1. **Evolver 写出了更好的更新**；
-2. **Task-Solver 更会使用这些更新**。
-
-因此，它的贡献在于把自演化 Agent 的能力拆开研究，而不是只看最终结果。
-
----
-
-## 2. 研究背景
+## 问题背景：为什么要解耦写更新与用更新
 
 现在很多 LLM Agent 系统不仅依赖模型本身，还依赖外部组件，例如：
 
@@ -453,6 +355,29 @@ Harness Benefit  = 会不会用好攻略
 
 ---
 
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| Harness Updating 与 Harness Benefit 是两种不同能力 | 固定 Task-Solver 替换 Evolver，以及固定 Evolver 替换 Task-Solver 的交叉实验 | 只看端到端自演化收益 | 能把更新生成端与更新使用端的瓶颈分开诊断 | 不能把一次性能变化完全归因到单个模块，接口、检索和任务难度仍会共同影响结果 |
+| 更强 Evolver 不一定稳定写出更有用的外部更新 | Qwen3.5-9B 生成的更新在部分场景接近 Claude Opus 4.6；三个 benchmark 上没有模型始终领先 | 不同能力等级的 Evolver，在同一 Task-Solver 下比较 | 支持当前外部 prompt / skill / memory 更新能力随基础模型能力提升较平坦 | 不能推广到参数训练、不同更新格式或所有模型家族，也不等于 Evolver 完全不重要 |
+| Harness Benefit 与模型能力不是单调关系 | 固定更新后比较不同 Task-Solver，呈现弱模型收益小、中等模型收益大、强模型受天花板限制的模式 | 同一 harness 下不同能力的 Task-Solver | 说明“提升空间大”不等于“能吃到更新红利” | 不能给出所有任务上的统一最佳模型规模，曲线会受 benchmark 与 harness 接口影响 |
+| 弱模型主要败在 activation 与 adherence | SkillsBench 等案例中观察到未加载相关 skill，以及加载后没有持续遵循 fallback 流程 | 已成功激活并遵循相同 harness 的轨迹 | 揭示外部经验从“存在”到“被执行”之间的两个具体故障点 | 案例和自动诊断不能证明所有弱模型失败都来自这两类原因 |
+
+### 我的判断
+
+这篇论文最强的贡献是实验拆解，而不是某个绝对分数。它把“反思器写得好不好”和“求解器会不会用”分开后，说明很多系统可能错把求解端故障归因给经验生成端。
+
+结论应限定在冻结参数、外部 harness 演化和论文覆盖的三个 Agent benchmark。它没有证明 Evolver 永远不是瓶颈，也没有覆盖参数级持续训练。
+
+### 其他可能解释
+
+- 较强 Evolver 的优势可能被固定格式、有限更新预算或 Task-Solver 的使用上限压缩。
+- Harness Benefit 的非单调曲线也可能受基础成功率、任务难度和上下文长度共同影响。
+- Activation / adherence 的自动判断可能带有 evaluator 或 LLM Judge 偏好。
+
+---
+
 ## 6. 对 Agent 工程实践的启发
 
 ### 6.1 不要盲目把预算砸给 Evolver
@@ -578,6 +503,104 @@ Task-Solver 正确加载、理解、遵循更新
 一句话总结：
 
 > 这篇论文告诉我们：自演化 Agent 的性能瓶颈往往不在“写攻略”的 Evolver，而在“能不能按攻略执行”的 Task-Solver。
+
+---
+
+## 论文外部信息
+
+### 投稿与发表状态
+
+这篇论文目前是 **arXiv 预印本**，编号为 **arXiv:2605.30621**，分类为 **Computer Science > Artificial Intelligence (cs.AI)**。arXiv 页面显示论文提交时间为 **2026 年 5 月 28 日**，评论信息为 **24 pages, 9 figures, 12 tables**。
+
+目前 arXiv 页面没有显示会议或期刊录用信息，因此现阶段更准确的说法是：
+
+> 这是一篇新近公开的 arXiv 预印本，还不能称为已经正式发表在某个会议或期刊上。
+
+如果后续需要正式引用，可以暂时写成：
+
+```bibtex
+@article{lin2026harness,
+  title={Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents},
+  author={Lin, Minhua and Wu, Juncheng and Wang, Zijun and Shi, Zhan and Sang, Yisi and He, Bing and Liu, Zewen and Wei, Tianxin and Wu, Zongyu and Zhang, Zhiwei and Wang, Dakuo and Zhang, Xiang and Dumoulin, Benoit and Xie, Cihang and Zhou, Yuyin and Wang, Suhang and Lu, Hanqing},
+  journal={arXiv preprint arXiv:2605.30621},
+  year={2026}
+}
+```
+
+### 作者与机构
+
+论文作者共 17 位，来自高校和工业界团队：
+
+| 作者 | 机构 |
+|---|---|
+| Minhua Lin | The Pennsylvania State University |
+| Juncheng Wu | UC Santa Cruz |
+| Zijun Wang | UC Santa Cruz |
+| Zhan Shi | Amazon |
+| Yisi Sang | Amazon |
+| Bing He | Amazon |
+| Zewen Liu | Emory University |
+| Tianxin Wei | UIUC |
+| Zongyu Wu | The Pennsylvania State University |
+| Zhiwei Zhang | The Pennsylvania State University |
+| Dakuo Wang | Northeastern University |
+| Xiang Zhang | The Pennsylvania State University |
+| Benoit Dumoulin | Amazon |
+| Cihang Xie | UC Santa Cruz |
+| Yuyin Zhou | UC Santa Cruz |
+| Suhang Wang | The Pennsylvania State University |
+| Hanqing Lu | Amazon |
+
+论文首页脚注说明：**Minhua Lin 和 Juncheng Wu 为共同一作**。
+
+从机构组成看，这篇论文是一个比较典型的 **高校研究组 + 工业界大模型/Agent 团队** 合作。Penn State、UC Santa Cruz、UIUC、Northeastern 等高校侧更偏研究问题定义、实验分析和方法论总结；Amazon 作者的参与说明这个问题也和实际 Agent 系统部署、工具调用、长期任务执行等工程问题密切相关。
+
+### 作者背景简要观察
+
+这篇论文的作者群体大致可以分成几类：
+
+1. **Agent / LLM / Trustworthy AI 方向的学生作者**：例如 Minhua Lin、Juncheng Wu、Zijun Wang、Tianxin Wei 等，主要承担问题定义、实验设计和论文实现工作。
+2. **机器学习、NLP、数据挖掘方向的高校导师作者**：例如 Suhang Wang、Xiang Zhang、Cihang Xie、Yuyin Zhou、Dakuo Wang 等，方向覆盖 LLM Agent、可信 AI、机器学习、HCI、视觉和医疗 AI 等。
+3. **Amazon 工业界作者**：例如 Zhan Shi、Yisi Sang、Bing He、Benoit Dumoulin、Hanqing Lu 等，和大模型系统、搜索推荐、对话 AI、工具调用、真实产品中的 Agent 部署问题相关。
+
+因此，这篇论文不是单纯的理论分析工作，而是带有较强的 **Agent 系统评测和工程诊断** 色彩。
+
+### 所属研究方向
+
+这篇论文属于以下几个交叉方向：
+
+```text
+LLM
+└── LLM Agent
+    └── Self-Evolving Agent
+        └── Harness Evolution / Harness Engineering
+            ├── Prompt 更新
+            ├── Skill 更新
+            ├── Memory 更新
+            ├── Tool 使用方式更新
+            └── Workflow / 执行策略优化
+```
+
+其中最关键的概念是 **harness**。在这篇论文中，harness 可以理解为：
+
+> 不改模型参数，而是围绕模型构建的一套外部工作系统，包括 prompt、skills、memory、tools、workflow 等。
+
+也就是说，大模型本身像“人”，harness 像这个人做任务时使用的 **操作手册、工具箱、记忆本和流程规范**。
+
+### 在研究圈子里的定位
+
+这篇论文不是典型的“提出一个新算法并刷榜”的文章，而更像是一篇 **分析型、诊断型、评测型论文**。
+
+以往很多自演化 Agent 工作主要关注端到端性能：
+
+> 加了反思、记忆、skill 更新之后，Agent 最后分数有没有提高？
+
+但这篇论文认为这个问题太粗，因为最终性能提升可能来自两个不同环节：
+
+1. **Evolver 写出了更好的更新**；
+2. **Task-Solver 更会使用这些更新**。
+
+因此，它的贡献在于把自演化 Agent 的能力拆开研究，而不是只看最终结果。
 
 ---
 

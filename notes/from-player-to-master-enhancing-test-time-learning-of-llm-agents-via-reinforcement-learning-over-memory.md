@@ -71,7 +71,7 @@ metadata:
     - 'notes/harness-updating-is-not-harness-benefit.md'
     - 'notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md'
   created: '2026-06-15'
-  updated: '2026-06-24'
+  updated: '2026-06-25'
 -->
 
 # 《From Player to Master: Enhancing Test-Time Learning of LLM Agents via Reinforcement Learning over Memory》读书笔记
@@ -178,73 +178,7 @@ Updater 生成新记忆 m_t
 
 ---
 
-## 1. 论文外部信息
-
-### 1.1 投稿与发表状态
-
-这篇论文在 arXiv 上的编号是 **arXiv:2606.08656**，分类为 **Computation and Language (cs.CL)**。arXiv 页面显示提交时间为 **2026-06-07**，comments 中写明：
-
-> Accepted by ICML 2026
-
-所以它不是只停留在普通预印本状态，而是可以暂时定位为：
-
-> 一篇已经被 **ICML 2026** 接收的 Agent Memory / Test-Time Learning / RL for Agent 方向论文，arXiv 版本是公开稿。
-
-如果后续正式会议页面、OpenReview 页面、代码仓库或模型权重发布，可以再补充到本笔记和 README 索引中。
-
-```bibtex
-@misc{cai2026fromplayertomaster,
-  title={From Player to Master: Enhancing Test-Time Learning of LLM Agents via Reinforcement Learning over Memory},
-  author={Yishuo Cai and Xingyu Guo and Xuancheng Huang and Jinhua Du and Can Huang and Wenxuan Huang and Wenhan Ma and Yuyang Hu and Aohan Zeng and Jie Tang and Xu Sun},
-  year={2026},
-  eprint={2606.08656},
-  archivePrefix={arXiv},
-  primaryClass={cs.CL},
-  url={https://arxiv.org/abs/2606.08656}
-}
-```
-
-### 1.2 作者与机构
-
-arXiv 页面可以确认论文作者列表，PDF 首页则已经给出了完整作者机构。另一个需要区分的点是：论文致谢部分提到 **This work was done during the first author’s internship at Zhipu AI**，这说明第一作者在智谱 AI 实习期间完成了该工作，但并不等于整篇论文只有这一个机构来源。
-
-| 作者 | 机构 / 备注 |
-|---|---|
-| Yishuo Cai | Peking University |
-| Xingyu Guo | Central South University |
-| Xuancheng Huang | Zhipu AI |
-| Jinhua Du | Tsinghua University |
-| Can Huang | Zhipu AI |
-| Wenxuan Huang | East China Normal University |
-| Wenhan Ma | Peking University |
-| Yuyang Hu | Renmin University of China |
-| Aohan Zeng | Tsinghua University |
-| Jie Tang | Tsinghua University |
-| Xu Sun | Peking University |
-
-这也说明这篇工作更准确的外部定位应当是：以北大、清华、智谱等机构共同参与的多方合作论文，而不是“机构暂不明确，只知道第一作者和智谱 AI 有关联”。
-
-### 1.3 作者背景和研究圈子观察
-
-由于当前可查页面没有完整机构列表，这里只能做**粗略判断**，不要把下面内容当作最终作者履历。
-
-从论文题目、方法和实验看，这篇工作处在以下几个研究圈子的交叉处：
-
-1. **LLM Agent Memory / Experience Learning**：论文直接研究 agent 如何在测试时通过显式 memory 吸收连续交互经验。
-2. **RL for Agent / GRPO 训练**：论文不是只用 prompt 让模型写记忆，而是把 memory updater 当成可训练策略，用 multi-turn GRPO 优化。
-3. **Test-Time Learning / Lifelong Agent Evaluation**：论文把 agent 面对连续任务流时的性能提升作为核心问题，而不是只看单次任务成功率。
-4. **Agent 系统工程**：论文采用“冻结 player + 外部 memory copilot”的设计，这和真实系统中外挂 memory / advisor / context module 的工程方式很接近。
-
-这篇论文可以和仓库中已有几篇文章建立关系：
-
-- 和 **From Storage to Experience** 的关系：它是“从存储到经验”这条线上的一个具体方法，把 memory update 从启发式规则推进到可训练策略。
-- 和 **EvolveR** 的关系：两者都关注经验驱动改进，也都用 RL；但 EvolveR 更像问答 / search agent 的 experience base 生命周期，MemoPilot 更集中在“训练 memory 更新器，使冻结 agent 在连续交互中变强”。
-- 和 **Harness Updating Is Not Harness Benefit** 的关系：Harness Updating 提醒我们“写了 memory 不等于 solver 会用”；MemoPilot 的目标正是通过下游奖励训练 memory，让 memory 更可执行、更能被 frozen player 用起来。
-- 和 **Agentic Context Engineering** 的关系：ACE 把 context playbook 当成可维护资产，MemoPilot 则进一步把 memory 的写入策略作为 RL policy 来训练。
-
----
-
-## 2. 研究方向与论文定位
+## 与相邻路线的关系
 
 ### 2.1 所属方向
 
@@ -288,7 +222,7 @@ memory model 用 multi-turn GRPO 学习“怎么写 memory 才能提高后续表
 
 ---
 
-## 3. 核心问题
+## 问题背景：从完整历史到可训练 Memory Policy
 
 论文的核心问题可以拆成三层。
 
@@ -658,6 +592,30 @@ LHE@5 的 memory format ablation：
 
 ---
 
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| 训练得到的 memory updater 比完整历史或提示式 memory 更能帮助冻结 Player | Qwen2.5-14B Player 上，MemoPilot 的 RPS@5 / LHE@5 为 3.28 / 2.03；No Memory 为 0.43 / -1.36，Full History 为 0.02 / -1.22，提示式 Qwen2.5-14B memory 为 0.21 / -0.23 | No Memory、Full History、Human-Written Counter-Strategy、prompt-based memory updater | 在可控连续博弈中，RL 对齐的 memory 写入策略能显著改变后续行动收益 | 不能证明所有真实 Agent 流程都能提供同样清晰的奖励和可重复交互 |
+| Memory 的可执行性比只描述正确事实更重要 | Ground-Truth Opponent Strategy 只有 0.75 / -0.48，Human Counter-Strategy 为 1.00 / 1.08，MemoPilot 为 3.28 / 2.07 | 正确对手描述、人工反制策略、重写后的 MemoPilot memory | 支持 memory 必须转换成 frozen Player 能执行的行动指导 | 不能说明当前三层文本结构是所有模型和任务的最优表达 |
+| 结构化 memory 与 RL 训练具有互补性 | LHE@5：3-tier w/o RL 为 -0.23，free-form w/ RL 为 1.04，3-tier w/ RL 为 2.03 | 仅结构、仅 RL、完整组合 | 说明提升不只来自格式，也不只来自策略训练 | 不完全排除训练样本量和生成长度差异带来的影响 |
+| 下一轮奖励更适合评价当前 memory update | LHE@5 中 cumulative reward 为 0.61，one-step proxy reward 为 2.03 | 累计回报式 credit assignment | 支持把第 t 次更新主要归因到第 t+1 轮，有助于降低跨轮信用分配噪声 | 不能证明一步代理奖励适合长延迟、跨多轮才生效的所有记忆 |
+| Updater 能迁移到不同 Player 和非游戏任务 | 接到 Qwen3-235B 后为 3.27 / 1.31；StreamBench CoSQL / DS-1000 为 73.5 / 56.3，高于 No Memory 的 69.5 / 50.0 | 原训练 Player、No Memory、Full History、其他强模型 updater | 提供跨 Player 和有限真实任务流的迁移证据 | StreamBench 仅 32 个 held-out episodes，不能代表开放式 Web、Code 或 Office Agent |
+
+### 我的判断
+
+MemoPilot 的证据链较完整：主结果、结构消融、奖励消融和跨 Player 迁移共同支持“memory writer 可以作为独立策略训练”。尤其是 ground-truth strategy 不如可执行 counter-strategy，直接回应了 Harness Benefit 问题。
+
+它的适用前提也很强：需要可计算 reward、多轮 rollout 和相对稳定的可复用规律。对手切换越频繁，LHE@5 从 2.03 下降到 1.76 和 1.21，说明非平稳环境仍是明显边界。
+
+### 其他可能解释
+
+- 博弈环境的奖励密集且可控，可能高估了真实 Agent 中 memory RL 的可训练性。
+- MemoPilot 与部分 baseline 的训练预算、模型调用和优化程度未必完全等价。
+- 512-token memory budget 有利于公平比较，但可能限制其他方法的最佳表现。
+
+---
+
 ## 7. 工程启发
 
 ### 7.1 Memory 应该被看作可训练的 policy，而不是只看作数据库
@@ -808,6 +766,72 @@ MemoPilot 的贡献在于把 memory update 从 prompt engineering 推向了 **re
 
 > MemoPilot 把“经验记忆”从手写反思模板变成了一个可以用多轮奖励训练的外部策略模块，让冻结 LLM agent 在连续任务中真正表现出 test-time learning。
 
+
+---
+
+## 论文外部信息
+
+### 投稿与发表状态
+
+这篇论文在 arXiv 上的编号是 **arXiv:2606.08656**，分类为 **Computation and Language (cs.CL)**。arXiv 页面显示提交时间为 **2026-06-07**，comments 中写明：
+
+> Accepted by ICML 2026
+
+所以它不是只停留在普通预印本状态，而是可以暂时定位为：
+
+> 一篇已经被 **ICML 2026** 接收的 Agent Memory / Test-Time Learning / RL for Agent 方向论文，arXiv 版本是公开稿。
+
+如果后续正式会议页面、OpenReview 页面、代码仓库或模型权重发布，可以再补充到本笔记和 README 索引中。
+
+```bibtex
+@misc{cai2026fromplayertomaster,
+  title={From Player to Master: Enhancing Test-Time Learning of LLM Agents via Reinforcement Learning over Memory},
+  author={Yishuo Cai and Xingyu Guo and Xuancheng Huang and Jinhua Du and Can Huang and Wenxuan Huang and Wenhan Ma and Yuyang Hu and Aohan Zeng and Jie Tang and Xu Sun},
+  year={2026},
+  eprint={2606.08656},
+  archivePrefix={arXiv},
+  primaryClass={cs.CL},
+  url={https://arxiv.org/abs/2606.08656}
+}
+```
+
+### 作者与机构
+
+arXiv 页面可以确认论文作者列表，PDF 首页则已经给出了完整作者机构。另一个需要区分的点是：论文致谢部分提到 **This work was done during the first author’s internship at Zhipu AI**，这说明第一作者在智谱 AI 实习期间完成了该工作，但并不等于整篇论文只有这一个机构来源。
+
+| 作者 | 机构 / 备注 |
+|---|---|
+| Yishuo Cai | Peking University |
+| Xingyu Guo | Central South University |
+| Xuancheng Huang | Zhipu AI |
+| Jinhua Du | Tsinghua University |
+| Can Huang | Zhipu AI |
+| Wenxuan Huang | East China Normal University |
+| Wenhan Ma | Peking University |
+| Yuyang Hu | Renmin University of China |
+| Aohan Zeng | Tsinghua University |
+| Jie Tang | Tsinghua University |
+| Xu Sun | Peking University |
+
+这也说明这篇工作更准确的外部定位应当是：以北大、清华、智谱等机构共同参与的多方合作论文，而不是“机构暂不明确，只知道第一作者和智谱 AI 有关联”。
+
+### 作者背景和研究圈子观察
+
+由于当前可查页面没有完整机构列表，这里只能做**粗略判断**，不要把下面内容当作最终作者履历。
+
+从论文题目、方法和实验看，这篇工作处在以下几个研究圈子的交叉处：
+
+1. **LLM Agent Memory / Experience Learning**：论文直接研究 agent 如何在测试时通过显式 memory 吸收连续交互经验。
+2. **RL for Agent / GRPO 训练**：论文不是只用 prompt 让模型写记忆，而是把 memory updater 当成可训练策略，用 multi-turn GRPO 优化。
+3. **Test-Time Learning / Lifelong Agent Evaluation**：论文把 agent 面对连续任务流时的性能提升作为核心问题，而不是只看单次任务成功率。
+4. **Agent 系统工程**：论文采用“冻结 player + 外部 memory copilot”的设计，这和真实系统中外挂 memory / advisor / context module 的工程方式很接近。
+
+这篇论文可以和仓库中已有几篇文章建立关系：
+
+- 和 **From Storage to Experience** 的关系：它是“从存储到经验”这条线上的一个具体方法，把 memory update 从启发式规则推进到可训练策略。
+- 和 **EvolveR** 的关系：两者都关注经验驱动改进，也都用 RL；但 EvolveR 更像问答 / search agent 的 experience base 生命周期，MemoPilot 更集中在“训练 memory 更新器，使冻结 agent 在连续交互中变强”。
+- 和 **Harness Updating Is Not Harness Benefit** 的关系：Harness Updating 提醒我们“写了 memory 不等于 solver 会用”；MemoPilot 的目标正是通过下游奖励训练 memory，让 memory 更可执行、更能被 frozen player 用起来。
+- 和 **Agentic Context Engineering** 的关系：ACE 把 context playbook 当成可维护资产，MemoPilot 则进一步把 memory 的写入策略作为 RL policy 来训练。
 
 ---
 

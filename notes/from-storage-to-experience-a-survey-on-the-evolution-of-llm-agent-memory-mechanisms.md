@@ -142,47 +142,7 @@ Experience：从多条轨迹抽象以后可迁移的策略
 
 ---
 
-## 1. 一句话总结
-
-这篇综述把 **LLM Agent 的记忆机制** 从“存储历史记录”的工程问题，重新组织成一条从 **Storage → Reflection → Experience** 的演化路径：先保存轨迹，再反思和清洗轨迹，最后从多条轨迹中抽象出可迁移的经验、规则、技能或参数化能力。
-
-我的理解：这篇文章非常适合作为理解 **Agent Memory / Experience Base / Self-Evolving Agent** 的总框架。它的核心价值不是提出一个新 agent，而是给现有工作提供一个统一坐标系：一篇论文到底是在做“轨迹存储”、 “轨迹反思”，还是已经进入“跨轨迹经验抽象”。
-
----
-
-## 2. 论文外部信息
-
-### 2.1 投稿与发表状态
-
-- arXiv 编号：**arXiv:2605.06716**。
-- arXiv v1 提交时间：**2026-05-07**。
-- 论文标注：**Accepted by ACL 2026 Findings**。
-- 主题分类：**Artificial Intelligence (cs.AI)**、**Computation and Language (cs.CL)**。
-- 官方资源列表：作者维护了 `FeishuLuo/Evolving-LLM-Agent-Memory-Survey`，其中整理了 LLM Agent memory 相关论文与 benchmarks。
-
-### 2.2 作者与机构
-
-论文作者：Jinghao Luo、Yuchen Tian、Chuxue Cao、Ziyang Luo、Hongzhan Lin、Kaixin Li、Chuyi Kong、Ruichao Yang、Jing Ma。
-
-论文首页列出的机构包括：
-
-- **Hong Kong Baptist University**
-- **South China Normal University**
-- **Hong Kong University of Science and Technology**
-- **National University of Singapore**
-- **University of Science and Technology Beijing**
-
-论文首页脚注显示 Jinghao Luo 与 Yuchen Tian 为 equal contribution，Yuchen Tian 为 project leader，Jing Ma 为 corresponding author。
-
-### 2.3 作者背景和研究圈子
-
-从机构与参考文献脉络看，这篇论文处在 **NLP / LLM Agent / Agent Memory / Self-Evolving Agent** 的交叉研究圈子中。作者团队以香港浸会大学相关研究者为核心，并联动华南师范大学、香港科技大学、新加坡国立大学和北京科技大学等机构。
-
-需要注意：我暂未逐一核验所有作者的个人主页、长期研究方向和导师关系；本节只基于论文首页、arXiv 信息和官方资源列表做保守整理，不扩展未确认背景。
-
----
-
-## 3. 所属研究方向与论文定位
+## 与相邻路线的关系
 
 这篇论文属于以下几个方向：
 
@@ -201,7 +161,7 @@ Experience：从多条轨迹抽象以后可迁移的策略
 
 ---
 
-## 4. 核心问题
+## 三个分类问题
 
 这篇综述想回答三个问题：
 
@@ -478,6 +438,29 @@ Experience 阶段的两个关键能力是主动探索和跨轨迹抽象。它们
 
 ---
 
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| Agent Memory 可以按 Storage → Reflection → Experience 理解 | 对线性、向量、结构化存储，内省 / 外部 / 交互反馈，以及显式 / 隐式 / 混合经验方法的文献分类 | 只按 memory 数据结构或检索方式分类 | 提供一个跨方法比较“保存、纠错、抽象”的统一坐标 | Taxonomy 是解释框架，不是经过实验验证的自然阶段，也不能保证类别互斥 |
+| Experience 不等于保存成功案例 | 综述强调主动探索、跨轨迹抽象和可迁移策略先验，并区分 raw trajectory、reflection 与 experience | 把所有历史日志、摘要和案例统一称为经验 | 澄清经验形成需要比存储和单轨反思更强的抽象机制 | 不同论文中 experience 的定义仍有重叠，无法仅凭名称判断机制层级 |
+| 全局记忆库与某一步真正检索到的记忆必须分开分析 | 形式化区分 global memory repository 与 retrieved memory at time t | 只报告“系统有 memory”而不追踪实际使用 | 支持把写入、检索、激活和收益拆成不同评测环节 | 综述本身未提供统一日志协议或因果指标来测量每一环节 |
+| 当前 benchmark 尚不足以评估长期 Experience | 对现有 benchmark 的整理，以及对任务流、分布变化、跨轨迹抽象、写入 / 删除全过程的未来评测建议 | 单任务成功率或静态检索准确率 | 明确指出长期、动态、成本敏感评测的研究缺口 | 这些 benchmark 设计仍是研究议程，尚未通过实证证明可预测真实长期能力 |
+
+### 我的判断
+
+这篇综述最有价值的是概念校准：它迫使读者回答一个方法到底只是保存轨迹、在修正轨迹，还是已经抽象出跨任务策略。它也为 EvolveR、ACE、SE-Agent 和 MemoPilot 提供了共同语言。
+
+其证据主要是文献覆盖与分类一致性，而不是统一实验。使用这套 taxonomy 时，应允许混合系统跨越多个阶段，并继续检查实际检索、使用收益、成本和长期退化。
+
+### 其他可能解释
+
+- Storage、Reflection、Experience 也可以被看作并行模块而不是线性演化阶段。
+- 近期论文和预印本占比较高，分类可能受时间窗口与作者选文范围影响。
+- 参数化经验、RL 和 meta-learning 与 memory 的边界具有定义依赖性。
+
+---
+
 ## 13. 和已有笔记的关系
 
 ### 13.1 和 EvolveR 的关系
@@ -506,6 +489,14 @@ Gödel Agent 更进一步，把 agent 的程序本身也变成可读、可改、
 
 ## 14. 我的理解与总结
 
+### 核心理解
+
+这篇综述把 **LLM Agent 的记忆机制** 从“存储历史记录”的工程问题，重新组织成一条从 **Storage → Reflection → Experience** 的演化路径：先保存轨迹，再反思和清洗轨迹，最后从多条轨迹中抽象出可迁移的经验、规则、技能或参数化能力。
+
+我的理解：这篇文章非常适合作为理解 **Agent Memory / Experience Base / Self-Evolving Agent** 的总框架。它的核心价值不是提出一个新 agent，而是给现有工作提供一个统一坐标系：一篇论文到底是在做“轨迹存储”、 “轨迹反思”，还是已经进入“跨轨迹经验抽象”。
+
+### 进一步总结
+
 这篇综述让我更清楚地区分了几个容易混淆的概念：
 
 - **memory** 不等于 vector database；
@@ -530,6 +521,38 @@ Gödel Agent 更进一步，把 agent 的程序本身也变成可读、可改、
 | Evaluation | benchmark 是否评估长期泛化，而不是只评估单次检索准确率？ |
 
 这篇文章本身不是最复杂的算法论文，但它的概念密度很高。适合反复用来校准我们对 Agent Memory、Experience Base、Context Engineering、自演化 Agent 等工作的理解边界。
+
+---
+
+## 论文外部信息
+
+### 投稿与发表状态
+
+- arXiv 编号：**arXiv:2605.06716**。
+- arXiv v1 提交时间：**2026-05-07**。
+- 论文标注：**Accepted by ACL 2026 Findings**。
+- 主题分类：**Artificial Intelligence (cs.AI)**、**Computation and Language (cs.CL)**。
+- 官方资源列表：作者维护了 `FeishuLuo/Evolving-LLM-Agent-Memory-Survey`，其中整理了 LLM Agent memory 相关论文与 benchmarks。
+
+### 作者与机构
+
+论文作者：Jinghao Luo、Yuchen Tian、Chuxue Cao、Ziyang Luo、Hongzhan Lin、Kaixin Li、Chuyi Kong、Ruichao Yang、Jing Ma。
+
+论文首页列出的机构包括：
+
+- **Hong Kong Baptist University**
+- **South China Normal University**
+- **Hong Kong University of Science and Technology**
+- **National University of Singapore**
+- **University of Science and Technology Beijing**
+
+论文首页脚注显示 Jinghao Luo 与 Yuchen Tian 为 equal contribution，Yuchen Tian 为 project leader，Jing Ma 为 corresponding author。
+
+### 作者背景和研究圈子
+
+从机构与参考文献脉络看，这篇论文处在 **NLP / LLM Agent / Agent Memory / Self-Evolving Agent** 的交叉研究圈子中。作者团队以香港浸会大学相关研究者为核心，并联动华南师范大学、香港科技大学、新加坡国立大学和北京科技大学等机构。
+
+需要注意：我暂未逐一核验所有作者的个人主页、长期研究方向和导师关系；本节只基于论文首页、arXiv 信息和官方资源列表做保守整理，不扩展未确认背景。
 
 ---
 

@@ -135,63 +135,7 @@ Gödel Agent 将 self-evolution 的对象推进到 **Agent 程序本身**。与�
 
 ---
 
-## 1. 基本信息
-
-- 论文标题：Gödel Agent: A Self-Referential Agent Framework for Recursive Self-Improvement
-- ACL Anthology：<https://aclanthology.org/2025.acl-long.1354/>
-- arXiv：<https://arxiv.org/abs/2410.04444>
-- PDF：<https://arxiv.org/pdf/2410.04444>
-- arXiv HTML：<https://arxiv.org/html/2410.04444v4>
-- 代码仓库：<https://github.com/Arvid-pku/Godel_Agent>
-- 模型权重：暂未找到官方公开模型权重。
-
-标题说明：arXiv 页面标题使用 **Recursive Self-Improvement**，ACL Anthology 页面标题写作 **Recursively Self-Improvement**。本笔记文件名采用用户提供标题与 arXiv 标题中的 `recursive-self-improvement`，正文中以 Gödel Agent 简称。
-
-这篇论文研究的是：**能不能让 LLM Agent 不只是改 prompt、改 memory、改外部经验库，而是让 Agent 读取和修改自己的运行时代码，包括负责“如何改自己”的逻辑，从而形成递归自我改进。**
-
-我理解这篇文章的关键词是：**自指 Agent**、**递归自我改进**、**Agent 设计空间搜索**、**运行时代码自修改**、**monkey patching**。
-
-> 图表选择说明：本文只放两张最能解释核心思想的官方图：一张比较 hand-designed / meta-learning optimized / self-referential 三类 agent，一张解释 Gödel Agent 如何通过 monkey patching 读写自身运行时代码。主实验表和消融表已经转写成 Markdown，便于检索和横向对比。
-
-## 2. 投稿 / 发表状态
-
-- arXiv 编号：`2410.04444`。
-- arXiv v1 提交时间为 2024-10-06；当前可见版本为 v4，提交时间为 2025-05-31。
-- ACL Anthology 显示该论文收录于 **ACL 2025 Long Papers**，会议地点为 Vienna, Austria，页码为 27890–27913，DOI 为 `10.18653/v1/2025.acl-long.1354`。
-- 官方 GitHub 仓库已公开，README 显示为 MIT License。
-
-因此，这篇文章目前可以看作 **ACL 2025 Long Paper + arXiv 预印本 + 官方代码已开源**。
-
-## 3. 作者与机构
-
-论文作者为：Xunjian Yin, Xinyi Wang, Liangming Pan, Li Lin, Xiaojun Wan, William Yang Wang。
-
-arXiv v4 HTML 首页给出的机构为：
-
-- Peking University / 北京大学
-- University of California, Santa Barbara / 加州大学圣塔芭芭拉分校
-- University of Arizona / 亚利桑那大学
-
-从署名和机构看，这篇论文主要来自 **北大 + UCSB NLP + Arizona NLP / Agent 研究圈**。
-
-## 4. 作者背景和研究圈子
-
-Xunjian Yin 个人主页显示，他目前是 Duke University CS PhD student，由 Shuyan Zhou 和 Bhuwan Dhingra 共同指导；此前经历包括 Peking University、Microsoft Research 和 UCSB NLP Group。主页还明确写到，他研究 AI systems 如何在 long horizon 上 recursively self-improve，重点包括 self-referential agents 和 world models。
-
-William Yang Wang 是 UCSB NLP Group 的核心学者，长期研究 NLP、机器学习、推理、生成式智能和可信 AI。Xunjian Yin 的主页也把 UCSB NLP Group 和 William Yang Wang 列为其此前研究经历之一。
-
-Xiaojun Wan 是北京大学 NLP / 信息管理方向的学者，Xunjian Yin 主页也显示其此前在 Peking University 期间与 Xiaojun Wan 有关联。Liangming Pan 署名机构为 University of Arizona，此前也参与过 LLM self-correction 相关综述工作。
-
-所以，这篇论文不是单纯做一个 prompt trick，而是延续了几条研究线：
-
-1. **LLM Agent 自动设计**：从人工设计 agent，到自动搜索 agent design。
-2. **Self-correction / Self-improvement**：让模型或系统利用反馈修正自己。
-3. **Recursive Self-Improvement**：不仅改任务求解策略，也改“如何改策略”的机制。
-4. **Agent 系统工程**：把 agent 看成可运行、可修改、可评估的程序系统。
-
-我暂未找到所有作者稳定个人主页的完整履历，因此作者背景部分主要依据 arXiv / ACL 页面、Xunjian Yin 个人主页和公开项目信息进行概括。
-
-## 5. 所属研究方向与论文定位
+## 与相邻路线的关系
 
 这篇论文属于 **Self-Evolving LLM Agent** 方向，但它和仓库里已有几篇笔记的“进化对象”不一样。
 
@@ -206,7 +150,7 @@ Xiaojun Wan 是北京大学 NLP / 信息管理方向的学者，Xunjian Yin 主�
 
 这篇文章的定位可以概括为：**把 agent 本身当成一个可以被 agent 读取、评估、修改、递归调用的程序系统，尝试突破固定 pipeline 或固定 meta-learning algorithm 对 agent design space 的限制。**
 
-## 6. 核心问题
+## 问题背景：固定 Agent Design Space 的限制
 
 论文要解决的问题是：
 
@@ -394,6 +338,32 @@ Game of 24 案例展示了 Gödel Agent 的一个有意思现象：
 
 这个案例说明，Gödel Agent 的价值不只是“把某个 prompt 改好一点”，而是可能从一个方法族跳到另一个方法族：例如从语言模型直接推理切换到搜索、验证、程序化求解。
 
+---
+
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| 自指程序修改能超过固定 hand-designed 与固定 meta-learning Agent | 公平设置中 Gödel-base：DROP 80.9、MGSM 64.2、MMLU 70.9、GPQA 34.9；Meta Agent Search 为 79.4、53.4、69.6、34.6 | Meta Agent Search，以及多种固定 Agent pipeline | 支持允许修改 policy 和更新逻辑能扩大有效 Agent design space | 不能证明所有任务都显著受益；GPQA 提升很小，结果依赖 validation feedback 与基础 LLM |
+| 基础动作与错误恢复对递归自改至关重要 | MGSM 消融：完整 64.2，w/o thinking 50.8，w/o error handling 49.4，w/o code running 57.1，w/o LLM calling 60.4 | 去掉各初始 action function 的版本 | 说明规划和容错不是附属功能，而是避免坏 patch 终止递归过程的核心机制 | 不能说明当前 action set 是最小或最优集合 |
+| 自我改进不是单调稳定过程 | 100 次 MGSM optimization trials 中 Temporary Drop 92%、Optimization Failure 14%、Accidental Termination 4% | 只报告最终最好结果的评测方式 | 直接展示递归自修改需要回滚、沙箱和版本选择 | 统计来自特定任务与实现，不能估计真实生产系统的安全风险 |
+| 无约束环境展示更高潜力 | Gödel-free 达到 DROP 90.5、MGSM 90.6、MMLU 87.9、GPQA 55.7 | Gödel-base 与固定资源 baseline | 展示 Agent 会主动寻求更强模型、工具和算法的开放搜索能力 | 不能作为公平同算力比较；额外模型和资源是性能来源之一 |
+| 程序级自修改可以跨方法族 | Game of 24 case study 中从普通 LLM 解法改写为 search algorithm，或加入代码验证和多次尝试 | 只调 Prompt 的局部修改 | 说明搜索空间可以包含算法结构变化，而不只是文本提示变化 | 个案不能证明系统会稳定发现最优算法，也可能过拟合 validation set |
+
+### 我的判断
+
+Gödel Agent 给出了程序级 self-evolution 的可行性证据，并且主动报告 temporary drop 与 failure，使结果比只展示最好版本更可信。公平设置下对 MGSM 的提升最明显，证明该框架在可验证推理任务上具有潜力。
+
+但它仍是 proof-of-concept。Gödel-free 的高分不能与固定资源方法直接比较；长期稳定性、安全权限、跨任务经验积累和 reward hacking 都没有被解决。
+
+### 其他可能解释
+
+- 六个 cycle、每个最多 30 次迭代带来较高搜索预算，部分提升可能来自反复试验。
+- GPT-4o 驱动自修改，而测试任务使用较弱模型，改进能力与执行能力并非同一来源。
+- Validation utility 可能诱导对特定任务集过拟合，跨分布表现需要独立验证。
+
+---
+
 ## 10. 主要结论
 
 我认为论文最重要的结论有四个：
@@ -485,6 +455,68 @@ Gödel Agent 本文主要强调自修改代码；EvolveR / ACE 强调经验库�
 - Gödel Agent：自指程序级自修改。
 
 所以，这篇论文适合作为 self-evolving LLM agent 方向中的一个“边界型”工作来读：它把问题推到最激进的位置——**如果 agent 能改自己，那么 agent design 本身也可以成为搜索空间。**
+
+---
+
+## 论文外部信息
+
+### 基本信息与资源
+
+- 论文标题：Gödel Agent: A Self-Referential Agent Framework for Recursive Self-Improvement
+- ACL Anthology：<https://aclanthology.org/2025.acl-long.1354/>
+- arXiv：<https://arxiv.org/abs/2410.04444>
+- PDF：<https://arxiv.org/pdf/2410.04444>
+- arXiv HTML：<https://arxiv.org/html/2410.04444v4>
+- 代码仓库：<https://github.com/Arvid-pku/Godel_Agent>
+- 模型权重：暂未找到官方公开模型权重。
+
+标题说明：arXiv 页面标题使用 **Recursive Self-Improvement**，ACL Anthology 页面标题写作 **Recursively Self-Improvement**。本笔记文件名采用用户提供标题与 arXiv 标题中的 `recursive-self-improvement`，正文中以 Gödel Agent 简称。
+
+这篇论文研究的是：**能不能让 LLM Agent 不只是改 prompt、改 memory、改外部经验库，而是让 Agent 读取和修改自己的运行时代码，包括负责“如何改自己”的逻辑，从而形成递归自我改进。**
+
+我理解这篇文章的关键词是：**自指 Agent**、**递归自我改进**、**Agent 设计空间搜索**、**运行时代码自修改**、**monkey patching**。
+
+> 图表选择说明：本文只放两张最能解释核心思想的官方图：一张比较 hand-designed / meta-learning optimized / self-referential 三类 agent，一张解释 Gödel Agent 如何通过 monkey patching 读写自身运行时代码。主实验表和消融表已经转写成 Markdown，便于检索和横向对比。
+
+### 投稿与发表状态
+
+- arXiv 编号：`2410.04444`。
+- arXiv v1 提交时间为 2024-10-06；当前可见版本为 v4，提交时间为 2025-05-31。
+- ACL Anthology 显示该论文收录于 **ACL 2025 Long Papers**，会议地点为 Vienna, Austria，页码为 27890–27913，DOI 为 `10.18653/v1/2025.acl-long.1354`。
+- 官方 GitHub 仓库已公开，README 显示为 MIT License。
+
+因此，这篇文章目前可以看作 **ACL 2025 Long Paper + arXiv 预印本 + 官方代码已开源**。
+
+### 作者与机构
+
+论文作者为：Xunjian Yin, Xinyi Wang, Liangming Pan, Li Lin, Xiaojun Wan, William Yang Wang。
+
+arXiv v4 HTML 首页给出的机构为：
+
+- Peking University / 北京大学
+- University of California, Santa Barbara / 加州大学圣塔芭芭拉分校
+- University of Arizona / 亚利桑那大学
+
+从署名和机构看，这篇论文主要来自 **北大 + UCSB NLP + Arizona NLP / Agent 研究圈**。
+
+### 作者背景和研究圈子
+
+Xunjian Yin 个人主页显示，他目前是 Duke University CS PhD student，由 Shuyan Zhou 和 Bhuwan Dhingra 共同指导；此前经历包括 Peking University、Microsoft Research 和 UCSB NLP Group。主页还明确写到，他研究 AI systems 如何在 long horizon 上 recursively self-improve，重点包括 self-referential agents 和 world models。
+
+William Yang Wang 是 UCSB NLP Group 的核心学者，长期研究 NLP、机器学习、推理、生成式智能和可信 AI。Xunjian Yin 的主页也把 UCSB NLP Group 和 William Yang Wang 列为其此前研究经历之一。
+
+Xiaojun Wan 是北京大学 NLP / 信息管理方向的学者，Xunjian Yin 主页也显示其此前在 Peking University 期间与 Xiaojun Wan 有关联。Liangming Pan 署名机构为 University of Arizona，此前也参与过 LLM self-correction 相关综述工作。
+
+所以，这篇论文不是单纯做一个 prompt trick，而是延续了几条研究线：
+
+1. **LLM Agent 自动设计**：从人工设计 agent，到自动搜索 agent design。
+2. **Self-correction / Self-improvement**：让模型或系统利用反馈修正自己。
+3. **Recursive Self-Improvement**：不仅改任务求解策略，也改“如何改策略”的机制。
+4. **Agent 系统工程**：把 agent 看成可运行、可修改、可评估的程序系统。
+
+我暂未找到所有作者稳定个人主页的完整履历，因此作者背景部分主要依据 arXiv / ACL 页面、Xunjian Yin 个人主页和公开项目信息进行概括。
+
+---
 
 ## 14. 参考资料与链接
 

@@ -140,88 +140,7 @@ MLEvolve 位于 **Machine Learning Engineering Agent、Algorithm Discovery 与 S
 
 ---
 
-## 1. 基本信息
-
-- 论文标题：MLEvolve: A Self-Evolving Framework for Automated Machine Learning Algorithm Discovery
-- arXiv：<https://arxiv.org/abs/2606.06473>
-- PDF：<https://arxiv.org/pdf/2606.06473>
-- arXiv HTML：<https://arxiv.org/html/2606.06473>
-- 项目主页：<https://internscience.github.io/MLEvolve/>
-- 官方代码仓库：<https://github.com/InternScience/MLEvolve>
-- 模型权重：暂未找到官方单独发布的模型权重。
-
-这篇论文研究的是：**如何让 LLM Agent 在端到端机器学习工程任务中持续搜索、执行、评估、复用经验，并自动发现更好的 ML pipeline / 算法方案。** 它不是一个单轮代码生成器，而是一个围绕 MLE-Bench 和数学优化任务构建的长时程自演化系统。
-
-我的一句话理解是：
-
-> MLEvolve 把自动机器学习算法发现建模成“多分支代码方案搜索 + 运行反馈 + 经验记忆 + 自适应代码生成”的闭环，让 Agent 像参加 Kaggle 比赛一样持续试方案、看分数、吸收经验、融合分支，再生成更好的下一版方案。
-
-## 2. 投稿 / 发布状态
-
-arXiv 页面显示：
-
-- arXiv 编号：**2606.06473**
-- 分类：Computer Science > Artificial Intelligence，同时也列在 Computation and Language
-- v1 提交时间：**2026-06-04**
-- DOI：arXiv DOI pending / arXiv DataCite DOI 页面可用
-
-官方 GitHub README 和项目主页显示：
-
-- 论文于 **2026-06-05** 在 arXiv 发布；
-- 代码仓库已公开；
-- README 标注项目为 MIT License；
-- 项目页称 MLEvolve 在 MLE-Bench 全量 75 个任务上以 12 小时预算达到 65.3% medal rate。
-
-因此，截至 2026-06-15，这篇论文应写作：**arXiv 预印本 + 官方代码已开源**。我暂未找到会议接收状态或正式出版信息。
-
-## 3. 作者与机构
-
-论文作者共 14 位：
-
-| 作者 | 机构 |
-|---|---|
-| Shangheng Du | Shanghai Artificial Intelligence Laboratory; East China Normal University |
-| Xiangchao Yan | Shanghai Artificial Intelligence Laboratory |
-| Jinxin Shi | Shanghai Artificial Intelligence Laboratory; East China Normal University |
-| Zongsheng Cao | Shanghai Artificial Intelligence Laboratory |
-| Shiyang Feng | Shanghai Artificial Intelligence Laboratory |
-| Zichen Liang | Shanghai Artificial Intelligence Laboratory |
-| Boyuan Sun | Shanghai Artificial Intelligence Laboratory |
-| Tianshuo Peng | Shanghai Artificial Intelligence Laboratory |
-| Yifan Zhou | Shanghai Artificial Intelligence Laboratory |
-| Xin Li | Shanghai Artificial Intelligence Laboratory |
-| Jie Zhou | Shanghai Artificial Intelligence Laboratory; East China Normal University |
-| Liang He | Shanghai Artificial Intelligence Laboratory; East China Normal University |
-| Bo Zhang | Shanghai Artificial Intelligence Laboratory |
-| Lei Bai | Shanghai Artificial Intelligence Laboratory |
-
-论文首页脚注标注通信邮箱为 `yanxiangchao@pjlab.org.cn`、`zhangbo@pjlab.org.cn`、`bailei@pjlab.org.cn`，因此 Xiangchao Yan、Bo Zhang、Lei Bai 可以视作通信作者线索。
-
-## 4. 作者背景和研究圈子
-
-从机构、项目名和 README 引用关系看，这篇论文主要来自 **Shanghai AI Lab / InternScience / InternAgent** 相关研究圈子。项目 README 明确提到：
-
-- MLEvolve 是 AutoMLGen 的高级版本；
-- MLEvolve 也作为 InternAgent 系统中的 coding / algorithm optimization module；
-- README 的 citation 同时列出 AutoMLGen 和 InternAgent-1.5。
-
-只做一个粗略判断的话，这个圈子的关注点不是单个 benchmark 的 prompt trick，而是 **AI for Science / MLE Agent / 长时程自主科研系统**：
-
-1. **机器学习工程自动化**：让 Agent 自动处理数据理解、特征工程、模型选择、训练、调参、提交文件生成。
-2. **长时程 Agent 搜索**：任务预算以小时计，Agent 需要持续试错和重新分配搜索资源。
-3. **多 Agent / 多模块协作**：planner、coder、debugger、fusion 等角色分工明显。
-4. **自演化经验复用**：不只是保留最优分数，而是把 plan、code、metric、analysis、失败反馈等写入全局记忆。
-
-这篇论文和仓库里已有几篇笔记的关系可以这样放：
-
-| 对比对象 | 共同点 | 差异 |
-|---|---|---|
-| EvolveR | 都强调 experience / memory 和自演化闭环 | EvolveR 面向搜索增强 QA，并训练模型策略；MLEvolve 面向 MLE / 算法发现，主要通过外层搜索、记忆和代码生成模式演化 |
-| SE-Agent | 都把多条轨迹 / 分支当成可复用资源 | SE-Agent 更偏当前任务内 trajectory pool 和代码修复；MLEvolve 更偏 ML pipeline 搜索图、跨分支引用和长时程 leaderboard 优化 |
-| Agentic Context Engineering | 都把经验沉淀到外部结构中供后续使用 | ACE 的进化对象是 context playbook；MLEvolve 的进化对象是 candidate solution graph、global memory 和代码方案 |
-| Gödel Agent | 都讨论 self-improvement / self-evolution | Gödel Agent 修改 agent 程序逻辑；MLEvolve 不强调自改代码框架本身，而是演化 ML 解法和搜索过程 |
-
-## 5. 研究方向与论文定位
+## 与相邻路线的关系
 
 MLEvolve 属于 **Self-Evolving LLM Agent**，但更准确地说，它是：
 
@@ -245,7 +164,7 @@ Self-Evolving LLM Agent
 
 所以它和很多问答型、网页型、工具调用型 Agent 的区别是：**评价信号更硬，搜索空间更大，运行成本更高，且每次代码变更都要经过执行验证。**
 
-## 6. 核心问题
+## 问题背景：分支隔离、经验缺失与代码重写
 
 论文认为现有 MLE Agent 有三个主要瓶颈。
 
@@ -540,6 +459,32 @@ MLE-Bench 主指标包括：
 
 这个结果支持一个判断：MLEvolve 的核心贡献更偏 **agent scaffold / search framework**，而不是只依赖某一个闭源模型。
 
+---
+
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| 长时程图搜索与经验维护能在 MLE-Bench 上产生高质量方案 | 75 个任务中 overall medal rate 65.3±0.8、valid submission 100%、above median 76.0±2.3、gold 34.7 | MLE-Bench leaderboard 上的 proprietary / open-source MLE Agents | 说明系统在真实 Kaggle-style 工程任务上兼顾可运行性与竞争性 | Baseline 多来自不同模型和 24 小时预算，不能视为完全同设置因果比较 |
+| Progressive MCGS、Retrospective Memory 和 Adaptive Coding 都有贡献 | MLE-Bench Lite：完整 81.82% medal；去 MCGS / Memory 为 68.18%，去 Adaptive Coding 为 72.73% | 三个组件级消融 | 支持提升不是单一 backbone 或单一模块造成 | Lite 仅 22 个任务，组件之间存在交互，不能精确得到独立贡献之和 |
+| 分支内演化、跨分支共享和动态经验对长期搜索重要 | 9 个任务细粒度消融：w/o Evolution medal 33.33%，w/o Cross-branch 55.56%，w/o Knowledge Base 与 w/o Global Memory 均为 44.44%，完整为 66.67% | 去掉具体机制的版本 | 支持图关系和两类 memory 对搜索质量均有影响 | 样本较小，结果可能受任务选择和高预算随机性影响 |
+| 框架能迁移到算法发现 | 15 个 AlphaEvolve 数学优化任务中 14 个匹配或超过 AlphaEvolve | AlphaEvolve、AlphaEvolve-v2、SimpleTES、TTT-Discover、OpenEvolve | 提供从 Kaggle pipeline 到可执行算法优化的跨域证据 | 不能说明已经形成通用数学发现能力，任务仍共享“候选—执行—评分”结构 |
+| 贡献偏 scaffold 而非单一闭源模型 | Gemini、GPT-5.5、DeepSeek-v4-Pro、Kimi-K2.6 在同一 pipeline 的 8 个任务上均有竞争性结果 | 不同 backbone | 说明系统机制不只绑定单一模型 | 仅 8 个代表任务，且多个模型闭源，预算和版本难完全复现 |
+
+### 我的判断
+
+MLEvolve 的实验证据在工程规模上很强：75 个 MLE-Bench 任务、100% valid submission 和组件消融共同说明它不是只在少数样例上工作。Retrospective Memory 与跨分支图结构也有较明确的消融支持。
+
+解释性能时必须同时写出成本和公平性：每个任务最多 500 expansion、12 小时、H200 GPU；不少 baseline 来自不同模型或 24 小时 leaderboard 设置。它证明了高预算 Agent scaffold 的能力，而不是低成本通用 AutoML 已解决。
+
+### 其他可能解释
+
+- 强闭源 backbone、H200 执行资源和大量代码运行可能贡献了相当部分收益。
+- 本地验证指标与 Kaggle medal 阈值之间的相关性会影响搜索方向。
+- 图搜索和 memory 的优势可能在短任务或低预算设置下减弱。
+
+---
+
 ## 10. 主要结论
 
 我把论文结论概括成四点：
@@ -698,6 +643,93 @@ MLEvolve 会在一个任务内积累经验并优化方案，但它是否能把�
 5. 在较弱开源模型上，三种 coding mode 的切换是否仍然稳定？
 6. 如果把 MLEvolve 的历史节点蒸馏成训练数据，是否能进一步形成参数级 MLE Agent？
 7. 如何把 cross-branch reference 的信息来源解释给用户，方便人工审计和调试？
+
+---
+
+## 论文外部信息
+
+### 基本信息与资源
+
+- 论文标题：MLEvolve: A Self-Evolving Framework for Automated Machine Learning Algorithm Discovery
+- arXiv：<https://arxiv.org/abs/2606.06473>
+- PDF：<https://arxiv.org/pdf/2606.06473>
+- arXiv HTML：<https://arxiv.org/html/2606.06473>
+- 项目主页：<https://internscience.github.io/MLEvolve/>
+- 官方代码仓库：<https://github.com/InternScience/MLEvolve>
+- 模型权重：暂未找到官方单独发布的模型权重。
+
+这篇论文研究的是：**如何让 LLM Agent 在端到端机器学习工程任务中持续搜索、执行、评估、复用经验，并自动发现更好的 ML pipeline / 算法方案。** 它不是一个单轮代码生成器，而是一个围绕 MLE-Bench 和数学优化任务构建的长时程自演化系统。
+
+我的一句话理解是：
+
+> MLEvolve 把自动机器学习算法发现建模成“多分支代码方案搜索 + 运行反馈 + 经验记忆 + 自适应代码生成”的闭环，让 Agent 像参加 Kaggle 比赛一样持续试方案、看分数、吸收经验、融合分支，再生成更好的下一版方案。
+
+### 投稿与发布状态
+
+arXiv 页面显示：
+
+- arXiv 编号：**2606.06473**
+- 分类：Computer Science > Artificial Intelligence，同时也列在 Computation and Language
+- v1 提交时间：**2026-06-04**
+- DOI：arXiv DOI pending / arXiv DataCite DOI 页面可用
+
+官方 GitHub README 和项目主页显示：
+
+- 论文于 **2026-06-05** 在 arXiv 发布；
+- 代码仓库已公开；
+- README 标注项目为 MIT License；
+- 项目页称 MLEvolve 在 MLE-Bench 全量 75 个任务上以 12 小时预算达到 65.3% medal rate。
+
+因此，截至 2026-06-15，这篇论文应写作：**arXiv 预印本 + 官方代码已开源**。我暂未找到会议接收状态或正式出版信息。
+
+### 作者与机构
+
+论文作者共 14 位：
+
+| 作者 | 机构 |
+|---|---|
+| Shangheng Du | Shanghai Artificial Intelligence Laboratory; East China Normal University |
+| Xiangchao Yan | Shanghai Artificial Intelligence Laboratory |
+| Jinxin Shi | Shanghai Artificial Intelligence Laboratory; East China Normal University |
+| Zongsheng Cao | Shanghai Artificial Intelligence Laboratory |
+| Shiyang Feng | Shanghai Artificial Intelligence Laboratory |
+| Zichen Liang | Shanghai Artificial Intelligence Laboratory |
+| Boyuan Sun | Shanghai Artificial Intelligence Laboratory |
+| Tianshuo Peng | Shanghai Artificial Intelligence Laboratory |
+| Yifan Zhou | Shanghai Artificial Intelligence Laboratory |
+| Xin Li | Shanghai Artificial Intelligence Laboratory |
+| Jie Zhou | Shanghai Artificial Intelligence Laboratory; East China Normal University |
+| Liang He | Shanghai Artificial Intelligence Laboratory; East China Normal University |
+| Bo Zhang | Shanghai Artificial Intelligence Laboratory |
+| Lei Bai | Shanghai Artificial Intelligence Laboratory |
+
+论文首页脚注标注通信邮箱为 `yanxiangchao@pjlab.org.cn`、`zhangbo@pjlab.org.cn`、`bailei@pjlab.org.cn`，因此 Xiangchao Yan、Bo Zhang、Lei Bai 可以视作通信作者线索。
+
+### 作者背景和研究圈子
+
+从机构、项目名和 README 引用关系看，这篇论文主要来自 **Shanghai AI Lab / InternScience / InternAgent** 相关研究圈子。项目 README 明确提到：
+
+- MLEvolve 是 AutoMLGen 的高级版本；
+- MLEvolve 也作为 InternAgent 系统中的 coding / algorithm optimization module；
+- README 的 citation 同时列出 AutoMLGen 和 InternAgent-1.5。
+
+只做一个粗略判断的话，这个圈子的关注点不是单个 benchmark 的 prompt trick，而是 **AI for Science / MLE Agent / 长时程自主科研系统**：
+
+1. **机器学习工程自动化**：让 Agent 自动处理数据理解、特征工程、模型选择、训练、调参、提交文件生成。
+2. **长时程 Agent 搜索**：任务预算以小时计，Agent 需要持续试错和重新分配搜索资源。
+3. **多 Agent / 多模块协作**：planner、coder、debugger、fusion 等角色分工明显。
+4. **自演化经验复用**：不只是保留最优分数，而是把 plan、code、metric、analysis、失败反馈等写入全局记忆。
+
+这篇论文和仓库里已有几篇笔记的关系可以这样放：
+
+| 对比对象 | 共同点 | 差异 |
+|---|---|---|
+| EvolveR | 都强调 experience / memory 和自演化闭环 | EvolveR 面向搜索增强 QA，并训练模型策略；MLEvolve 面向 MLE / 算法发现，主要通过外层搜索、记忆和代码生成模式演化 |
+| SE-Agent | 都把多条轨迹 / 分支当成可复用资源 | SE-Agent 更偏当前任务内 trajectory pool 和代码修复；MLEvolve 更偏 ML pipeline 搜索图、跨分支引用和长时程 leaderboard 优化 |
+| Agentic Context Engineering | 都把经验沉淀到外部结构中供后续使用 | ACE 的进化对象是 context playbook；MLEvolve 的进化对象是 candidate solution graph、global memory 和代码方案 |
+| Gödel Agent | 都讨论 self-improvement / self-evolution | Gödel Agent 修改 agent 程序逻辑；MLEvolve 不强调自改代码框架本身，而是演化 ML 解法和搜索过程 |
+
+---
 
 ## 15. 参考资料与链接
 

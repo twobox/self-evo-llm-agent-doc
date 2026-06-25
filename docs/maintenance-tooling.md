@@ -4,12 +4,14 @@
 
 ## 1. 当前状态
 
-Stage 3 完成后：
+Stage 7 完成后：
 
 - 全部 `notes/*.md` 已迁移到 metadata schema 1.0；
 - README 笔记索引由 metadata 生成，并受生成标记保护；
 - CI 强制拒绝旧 metadata；
 - 全部笔记已具备“30 秒读懂”、论文定位、研究问题和适用的机制 / 分析卡片；
+- 全部笔记已具备“主张—证据—边界”“我的判断”和“其他可能解释”；
+- 作者、机构与投稿信息统一放在证据分析之后、参考资料之前；
 
 所有工具只依赖 Python 标准库，不需要安装 PyYAML 或 Markdown 解析器。
 
@@ -45,12 +47,6 @@ python scripts/validate_notes.py . --require-schema --require-structure --strict
 python scripts/validate_notes.py . --require-schema --json
 ```
 
-Stage 4 完成快速阅读层和机制卡片后，使用：
-
-```bash
-python scripts/validate_notes.py . --require-schema --require-structure --strict
-```
-
 ### Metadata 检查
 
 - 必填字段；
@@ -71,7 +67,10 @@ python scripts/validate_notes.py . --require-schema --require-structure --strict
 - 研究问题；
 - 参考资料；
 - 方法 / 系统论文的进化机制卡片；
-- 分析 / 诊断 / 评测论文的分析框架卡片。
+- 分析 / 诊断 / 评测论文的分析框架卡片；
+- “主张—证据—边界”表格；
+- 证据层中的“我的判断”和“其他可能解释”；
+- “论文外部信息”位于证据层之后、参考资料之前。
 
 
 ## 4. 本地链接检查
@@ -138,7 +137,7 @@ python scripts/generate_readme.py . --write
 python -m unittest discover -s tests -v
 ```
 
-测试覆盖 metadata 解析、严格与过渡校验、本地链接和 README 索引确定性生成。
+测试覆盖 metadata 解析、严格与过渡校验、正文证据层与章节顺序、本地链接和 README 索引确定性生成。
 
 ## 7. 推荐的本地检查顺序
 

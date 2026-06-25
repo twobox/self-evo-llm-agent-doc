@@ -118,77 +118,7 @@ metadata:
 
 ---
 
-## 1. 基本信息
-
-- 论文标题：Position: Agents Should Invoke External Tools ONLY When Epistemically Necessary
-- 副标题 / 项目页标题：Introducing the Theory of Agent (ToA)
-- arXiv：<https://arxiv.org/abs/2506.00886>
-- PDF：<https://arxiv.org/pdf/2506.00886>
-- arXiv HTML：<https://arxiv.org/html/2506.00886v4>
-- 官方项目页：<https://hrwise-nlp.github.io/assets/websites/theory-of-agent/>
-- 中文博客：官方项目页提供 Notion 中文博客入口；本文整理时未进一步核验完整博客内容。
-- 代码仓库：暂未找到官方公开代码仓库。
-- 模型权重：暂未找到官方公开模型权重。
-
-一句话概括：这篇 position paper 不是提出一个新的工具调用算法，而是给 LLM Agent 的工具调用行为提出一个规范性判断标准：**只有当内部推理无法可靠消除任务所需的不确定性时，Agent 才应该调用外部工具。**
-
-> 图源：论文官方项目页 Figure 1；论文许可证见 arXiv HTML 页面（CC BY-NC-ND 4.0）。以下图片仅用于读书笔记引用和学习说明。
-
-![Figure 1: Tool-use decisions shape the trajectory of agent intelligence](https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/toa_example.png)
-
-图 1 可以这样读：两个 Agent 可能最终都答对，但一个靠频繁外部委托维持正确率，内部能力没有增长；另一个只在必要时调用工具，把可内部化的任务留给自己练习，因此 knowledge boundary 会逐步外扩。
-
-## 2. 投稿 / 发表状态
-
-- arXiv 编号为 **2506.00886**。
-- arXiv 摘要页显示：v1 提交于 2025-06-01，当前版本 v4 修订于 2026-05-08。
-- 官方项目页标注为 **ICML 2026 · Position Paper**。
-- arXiv HTML 页面主题处标注为 Machine Learning, ICML。
-- 需要注意：这是一篇 **position / theory paper**，重点是提出理论框架和研究立场，不是典型的 benchmark + SOTA 实验论文。
-
-## 3. 作者与机构
-
-论文作者与机构如下：
-
-| 作者 | 机构 |
-|---|---|
-| Hongru Wang | University of Edinburgh；The Chinese University of Hong Kong |
-| Cheng Qian | University of Illinois Urbana-Champaign |
-| Manling Li | Northwestern University |
-| Jiahao Qiu | Princeton University |
-| Boyang Xue | The Chinese University of Hong Kong |
-| Mengdi Wang | Princeton University |
-| Heng Ji | University of Illinois Urbana-Champaign |
-| Amos Storkey | University of Edinburgh |
-| Kam-Fai Wong | The Chinese University of Hong Kong |
-
-从作者组合看，这篇论文横跨 **EdinburghNLP / EdinburghAI、CUHK、UIUC Blender Lab、Northwestern、Princeton** 等研究圈子。它不是单点工程论文，而是把 LLM Agent、工具学习、推理效率、自演化、世界模型、强化学习与认知层面的 metacognition 放在一起讨论。
-
-## 4. 作者背景和研究圈子
-
-### 4.1 Hongru Wang
-
-Hongru Wang 当前页面显示为 University of Edinburgh 的 Research Associate，方向围绕 **Theory of Agent**，尤其关注 planning、memory、self-evolving agent。他此前在 CUHK 完成博士，并与 UIUC Blender Lab、Heng Ji、Kam-Fai Wong、Mengdi Wang 等研究者有密切合作。
-
-从他个人主页列出的代表工作看，其研究线索很清楚：
-
-- Agent 如何学习：ToolRL、Self-Evolving Agents、World Models；
-- Agent 如何行为：overthinking、overacting、tool overuse、when to reason and when to act；
-- Agent 如何评估：工具使用安全、个性化、reward modeling、process-level evaluation。
-
-这篇 ToA 论文可以看作这些工作背后的理论总纲：把“什么时候推理、什么时候行动、什么时候调用外部工具”抽象成一个统一的 epistemic decision problem。
-
-### 4.2 Cheng Qian
-
-Cheng Qian 是 UIUC 的 PhD student，导师为 Heng Ji。他的主页描述其研究聚焦 **LLM agent、tool use、reasoning、alignment、creativity**，此前也在 CMU 合作过 LLM knowledge 与 tool use 相关方向。本论文中的 ToA 问题与他在 SMART、ToolRL 等工具使用 / 工具过度调用方向的研究高度相关。
-
-### 4.3 Manling Li 与其他合作者
-
-Manling Li 是 Northwestern University 计算机系助理教授，领导 Multimodal Learning with Language Lab，研究方向包括 multimodal reasoning、embodied agents、foundation agent training、world modeling、agent safety 等。她的加入使论文不仅停留在文本 Agent，还能自然延伸到 embodied agent、vision agent 和多模态交互系统。
-
-Heng Ji、Kam-Fai Wong、Amos Storkey、Mengdi Wang 等作者分别代表 NLP、信息抽取 / 语言智能、机器学习、强化学习与理论建模等背景。这种作者组合也说明：ToA 试图解决的是 Agent 领域中更基础的概念问题，而不是单一任务上的工程调参。
-
-## 5. 所属研究方向与论文定位
+## 研究坐标与相邻路线
 
 这篇论文属于：
 
@@ -218,7 +148,7 @@ Heng Ji、Kam-Fai Wong、Amos Storkey、Mengdi Wang 等作者分别代表 NLP、
 - 和 **EvolveR** 的关系：EvolveR 关注搜索增强 Agent 如何通过经验库和训练自演化；ToA 提醒我们，外部搜索不应成为绕过内部推理的默认捷径。
 - 和 **Harness Updating Is Not Harness Benefit** 的关系：Harness 论文关注外部组件是否真的被 Task-Solver 使用；ToA 进一步追问外部组件被使用时是否 epistemically necessary。
 
-## 6. 核心问题
+## 问题背景：Overthinking、Overacting 与 Over-delegation
 
 论文围绕一个核心问题展开：
 
@@ -359,6 +289,31 @@ ToA 对 alignment 的定义不是“答案正确”这么简单，而是 **effor
 ### 9.4 Tool-use alignment 应该关注 effort allocation
 
 好的 Agent 不是“尽量少调用工具”，也不是“尽量多调用工具”，而是根据自己的 knowledge boundary 来分配 internal / external effort。
+
+---
+
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| 外部工具应只在 epistemically necessary 时调用 | Internal Task Set、World Task Set 与 Knowledge Boundary 的形式化；将工具决策建模为 internal solvability 的 belief-based classification | “有工具就调用”或只按关键词路由的默认工作流 | 给出一套区分内部可解任务与必须外部交互任务的规范框架 | 尚未给出可靠估计 knowledge boundary 的统一算法或 benchmark |
+| 最终正确率不足以评价 Agent 的工具使用质量 | Epistemic effort 分解与四种行为模式：overthinking、overacting、over-delegation、calibrated behavior | 只奖励 final answer / task success 的评测 | 说明相同正确答案可能对应完全不同的能力状态、成本与依赖关系 | 主要是理论论证，尚未用长期对照实验证明该评价会预测真实能力增长 |
+| 不必要的外部委托可能抑制内部能力发展 | “闭卷能力”和“开卷完成”分离的论证，以及 capability-conditioned SFT / RL 研究议程 | 对所有模型复用同一工具轨迹的训练范式 | 揭示工具调用示范应随目标模型能力变化，不能假设统一最优轨迹 | 没有直接纵向实验验证 over-delegation 必然导致参数能力退化 |
+| Agentic RL 应奖励过程中的 effort allocation | 论文提出对调用时机、停止、真实不确定性减少和冗余调用进行过程奖励 | 只用 outcome reward 的 Tool-use RL | 提供设计 process reward 和工具调用日志的明确维度 | 尚未证明哪种奖励函数最稳定，也没有解决自评 solvability 的校准问题 |
+
+### 我的判断
+
+Theory of Agent 的价值在于提出评测和训练问题，而不是提供已完成的 SOTA 系统。它把“是否调用工具”从流程动作提升为与模型知识边界相关的决策，这对 RAG router、Search Agent 和 Tool-use RL 很有解释力。
+
+最需要保留的边界是：论文中的长期能力发展、over-delegation 伤害和 effort-consistent alignment 仍主要是理论命题。后续必须通过 capability-conditioned 数据、过程日志和纵向训练实验验证。
+
+### 其他可能解释
+
+- 在高风险任务中，即使模型内部可能会做，外部验证仍可能因安全价值而必要。
+- Knowledge boundary 会随上下文、记忆、模型版本和工具变化，静态阈值可能快速失效。
+- 减少工具调用带来的效率收益，可能与准确率、可审计性和实时性目标发生冲突。
+
+---
 
 ## 10. 对训练方法的启发
 
@@ -518,6 +473,80 @@ ToA 给出的提醒是：Agent 的智能不只体现在“能不能解决任务�
 - Hongru Wang 个人主页：<https://hrwise-nlp.github.io/>
 - Cheng Qian 个人主页：<https://qiancheng0.github.io/>
 - Manling Li 个人主页：<https://limanling.github.io/>
+
+---
+
+## 论文外部信息
+
+### 基本信息与资源
+
+- 论文标题：Position: Agents Should Invoke External Tools ONLY When Epistemically Necessary
+- 副标题 / 项目页标题：Introducing the Theory of Agent (ToA)
+- arXiv：<https://arxiv.org/abs/2506.00886>
+- PDF：<https://arxiv.org/pdf/2506.00886>
+- arXiv HTML：<https://arxiv.org/html/2506.00886v4>
+- 官方项目页：<https://hrwise-nlp.github.io/assets/websites/theory-of-agent/>
+- 中文博客：官方项目页提供 Notion 中文博客入口；本文整理时未进一步核验完整博客内容。
+- 代码仓库：暂未找到官方公开代码仓库。
+- 模型权重：暂未找到官方公开模型权重。
+
+一句话概括：这篇 position paper 不是提出一个新的工具调用算法，而是给 LLM Agent 的工具调用行为提出一个规范性判断标准：**只有当内部推理无法可靠消除任务所需的不确定性时，Agent 才应该调用外部工具。**
+
+> 图源：论文官方项目页 Figure 1；论文许可证见 arXiv HTML 页面（CC BY-NC-ND 4.0）。以下图片仅用于读书笔记引用和学习说明。
+
+![Figure 1: Tool-use decisions shape the trajectory of agent intelligence](https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/toa_example.png)
+
+图 1 可以这样读：两个 Agent 可能最终都答对，但一个靠频繁外部委托维持正确率，内部能力没有增长；另一个只在必要时调用工具，把可内部化的任务留给自己练习，因此 knowledge boundary 会逐步外扩。
+
+### 投稿与发表状态
+
+- arXiv 编号为 **2506.00886**。
+- arXiv 摘要页显示：v1 提交于 2025-06-01，当前版本 v4 修订于 2026-05-08。
+- 官方项目页标注为 **ICML 2026 · Position Paper**。
+- arXiv HTML 页面主题处标注为 Machine Learning, ICML。
+- 需要注意：这是一篇 **position / theory paper**，重点是提出理论框架和研究立场，不是典型的 benchmark + SOTA 实验论文。
+
+### 作者与机构
+
+论文作者与机构如下：
+
+| 作者 | 机构 |
+|---|---|
+| Hongru Wang | University of Edinburgh；The Chinese University of Hong Kong |
+| Cheng Qian | University of Illinois Urbana-Champaign |
+| Manling Li | Northwestern University |
+| Jiahao Qiu | Princeton University |
+| Boyang Xue | The Chinese University of Hong Kong |
+| Mengdi Wang | Princeton University |
+| Heng Ji | University of Illinois Urbana-Champaign |
+| Amos Storkey | University of Edinburgh |
+| Kam-Fai Wong | The Chinese University of Hong Kong |
+
+从作者组合看，这篇论文横跨 **EdinburghNLP / EdinburghAI、CUHK、UIUC Blender Lab、Northwestern、Princeton** 等研究圈子。它不是单点工程论文，而是把 LLM Agent、工具学习、推理效率、自演化、世界模型、强化学习与认知层面的 metacognition 放在一起讨论。
+
+### 作者背景和研究圈子
+
+### 4.1 Hongru Wang
+
+Hongru Wang 当前页面显示为 University of Edinburgh 的 Research Associate，方向围绕 **Theory of Agent**，尤其关注 planning、memory、self-evolving agent。他此前在 CUHK 完成博士，并与 UIUC Blender Lab、Heng Ji、Kam-Fai Wong、Mengdi Wang 等研究者有密切合作。
+
+从他个人主页列出的代表工作看，其研究线索很清楚：
+
+- Agent 如何学习：ToolRL、Self-Evolving Agents、World Models；
+- Agent 如何行为：overthinking、overacting、tool overuse、when to reason and when to act；
+- Agent 如何评估：工具使用安全、个性化、reward modeling、process-level evaluation。
+
+这篇 ToA 论文可以看作这些工作背后的理论总纲：把“什么时候推理、什么时候行动、什么时候调用外部工具”抽象成一个统一的 epistemic decision problem。
+
+### 4.2 Cheng Qian
+
+Cheng Qian 是 UIUC 的 PhD student，导师为 Heng Ji。他的主页描述其研究聚焦 **LLM agent、tool use、reasoning、alignment、creativity**，此前也在 CMU 合作过 LLM knowledge 与 tool use 相关方向。本论文中的 ToA 问题与他在 SMART、ToolRL 等工具使用 / 工具过度调用方向的研究高度相关。
+
+### 4.3 Manling Li 与其他合作者
+
+Manling Li 是 Northwestern University 计算机系助理教授，领导 Multimodal Learning with Language Lab，研究方向包括 multimodal reasoning、embodied agents、foundation agent training、world modeling、agent safety 等。她的加入使论文不仅停留在文本 Agent，还能自然延伸到 embodied agent、vision agent 和多模态交互系统。
+
+Heng Ji、Kam-Fai Wong、Amos Storkey、Mengdi Wang 等作者分别代表 NLP、信息抽取 / 语言智能、机器学习、强化学习与理论建模等背景。这种作者组合也说明：ToA 试图解决的是 Agent 领域中更基础的概念问题，而不是单一任务上的工程调参。
 
 ---
 

@@ -128,54 +128,7 @@ RL / Distillation 更新 Executor
 
 ---
 
-## 1. 基本信息
-
-- 论文标题：Self-Challenging Language Model Agents
-- arXiv：<https://arxiv.org/abs/2506.01716>
-- PDF：<https://arxiv.org/pdf/2506.01716>
-- arXiv HTML：<https://arxiv.org/html/2506.01716v1>
-- OpenReview / NeurIPS 页面：<https://openreview.net/forum?id=9yusqX9DpR>
-- Hugging Face Papers：<https://huggingface.co/papers/2506.01716>
-- 代码仓库：暂未找到官方公开代码仓库。
-- 模型权重：暂未找到官方公开模型权重；Hugging Face Papers 页面当前也没有关联模型记录。
-
-这篇论文关注一个很关键的问题：**LLM Agent 想靠强化学习提升多轮工具使用能力，但训练任务、工具环境和评价标准通常需要人工构造，成本很高，而且难以规模化。** 作者提出 Self-Challenging Agent（SCA）框架，让 Agent 自己生成高质量、可验证的任务，再用这些任务训练自己。
-
-## 2. 投稿 / 发表状态
-
-- arXiv 版本：arXiv:2506.01716，v1 提交时间为 2025-06-02。
-- 会议状态：OpenReview 页面显示为 **NeurIPS 2025 poster**。
-- OpenReview 信息：Published: 18 Sept 2025，Last Modified: 21 Apr 2026。
-- 许可信息：OpenReview 页面显示 CC BY 4.0。
-- 伦理审查：OpenReview 页面显示 Flagged For Ethics Review: true。
-
-## 3. 作者与机构
-
-论文作者为：
-
-- Yifei Zhou：UC Berkeley
-- Sergey Levine：UC Berkeley
-- Jason Weston：FAIR at Meta
-- Xian Li：FAIR at Meta
-- Sainbayar Sukhbaatar：FAIR at Meta
-
-论文首页脚注说明该工作完成于 FAIR at Meta，并标注 Xian Li 与 Sainbayar Sukhbaatar 为 equal advising。
-
-## 4. 作者背景和研究圈子
-
-这篇文章的作者组合比较值得关注，基本可以看成 **Berkeley RL / Agent 方向 + Meta FAIR LLM / NLP / Agent 方向** 的合作。
-
-- Yifei Zhou 近年的论文与 LLM Agent、自动化任务发现、多轮 RL、互联网 Agent 等方向关系很密切。论文参考文献中也能看到他参与的 PAE、ARChER、SWEET-RL 等相关工作。这说明本文不是孤立提出一个技巧，而是在一条“Agent 自动生成任务 / 自动改进”的研究线上继续推进。
-- Sergey Levine 是 UC Berkeley EECS 教授，研究重点包括 autonomous agents、robotics、decision making、deep reinforcement learning 等。他的研究背景使本文的“通过环境交互和奖励学习提升 Agent 能力”的思路带有明显的 RL 和自主智能体色彩。
-- Jason Weston、Xian Li、Sainbayar Sukhbaatar 都来自 Meta / FAIR 相关研究圈子，长期关注 NLP、语言模型、对话、推理、LLM 训练与 Agent 学习。Xian Li 的 OpenReview 资料显示其方向包括 deep learning、natural language processing、machine learning、machine translation；Sainbayar Sukhbaatar 的资料显示其为 Meta AI Research Scientist，并与多个 LLM reasoning / preference optimization / agent learning 工作有关。
-
-从圈子上看，这篇论文不是单纯做 benchmark 提升，而是把三个方向结合起来：
-
-1. 强化学习训练 Agent；
-2. 自动生成可训练任务；
-3. 用代码形式的验证器把奖励信号做得更可靠。
-
-## 5. 所属研究方向与论文定位
+## 与相邻路线的关系
 
 这篇论文属于 **Self-Evolving / Self-Improving LLM Agent** 方向，也可以放在 **RL for Tool-use Agent** 和 **Synthetic Task Generation for Agents** 下面。
 
@@ -189,7 +142,7 @@ RL / Distillation 更新 Executor
 
 这对后续做 LLM Agent 自演化很重要，因为很多 Agent 系统真正卡住的不是模型会不会调用一次工具，而是缺少大量高质量、多样、可自动判分的训练任务。
 
-## 6. 核心问题
+## 问题背景：任务、验证器与奖励稀缺
 
 论文要解决的问题可以概括为：
 
@@ -363,6 +316,32 @@ PAE 是重要 baseline。论文强调 SCA 和 PAE 的差别主要有三点：
 
 第五，在线 RL 可能带来更高收益，但工程代价更大。论文在 Calculation 环境中发现，PPO / GRPO 等在线 RL 能进一步提高表现，但也更不稳定，对超参数和基础设施要求更高。
 
+---
+
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| Agent 可以依靠自生成、可验证任务提升自己的工具使用能力 | Self-improvement 中 Llama-3.1-8B 平均 Pass@1 从 12.0 提升到 23.5，Pass@4 从 27.9 提升到 41.3 | 原始 Llama-3.1-8B、PAE 等自动任务生成方法 | 支持无需人工任务标签也能构造有效训练闭环 | 不能证明模型完全自主成长；环境、工具接口和验证逻辑仍由人类提供 |
+| 自动生成任务可用于强模型向弱模型蒸馏 | 70B teacher 轨迹训练后，8B-SCA 的 Pass@1 / Pass@4 达到 32.2 / 56.8 | 原始 8B 的 12.0 / 27.9 | 说明 CaT 可作为自动生成的工具使用蒸馏数据 | 这是 teacher-student 设置，不属于纯粹的自我提升，且依赖强模型成本 |
+| Code-as-Task 的正例与失败样例能提高验证器质量 | 人工标注分析显示 example solution 减少不可行任务，failure cases 进一步过滤验证器过宽造成的 false positive | 只生成 instruction 或 verification function 的简化任务 | 支持任务生成必须同时验证“正例能过、反例不能过” | 仍无法完全发现语义不完整的 instruction 和 false negative |
+| 主动探索环境比只看初始说明更适合部分可观测任务 | Challenger 先调用工具观察环境；在 Retail / Airline 等环境相对 PAE 更有优势 | 根据初始 observation 直接生成任务的 PAE | 支持环境探索有助于生成更具体、可行的任务 | 不能说明该优势适用于完全开放或无状态环境 |
+| 任务覆盖度比在少数任务上增加 rollout 更影响 OOD 泛化 | Scaling 分析中，少量任务增加轨迹可改善训练集，但 OOD 测试需要更多任务类型和覆盖 | 固定任务数、增加每任务轨迹数 | 说明自生成训练不能只在少数题上反复采样 | 没有给出自动保证任务多样性和真实需求覆盖的完整方法 |
+
+### 我的判断
+
+SCA 的核心贡献是训练数据管线：主动探索、生成 instruction + verifier + 正反例、自动过滤，再进行 RL 或蒸馏。主结果表明这种数据能显著提升 8B executor，CaT 人工分析也为验证器设计提供了直接证据。
+
+其“自演化”边界也很清楚：任务空间、工具环境和可验证目标仍由人类搭建；提升主要是环境特定技能，尚未证明跨环境形成通用 Agent 能力。
+
+### 其他可能解释
+
+- 12k rollout 和额外训练本身带来较大预算，部分收益可能来自更多交互数据。
+- 0/1 verifier 可能鼓励 reward hacking 或只学习通过 checker 的策略。
+- PPO / GRPO 能进一步提高结果但训练不稳定，论文报告 GRPO 调参不当时性能可能降到 0。
+
+---
+
 ## 10. 工程启发
 
 这篇论文对做 Agent 系统有几个很直接的启发。
@@ -417,6 +396,59 @@ SCA 能工作，一个核心原因是它把 reward 绑定到 verification functi
 从 self-evolving agent 的角度看，它补上了一个关键环节：**经验或记忆只是学习材料的一种形式，而任务生成和 reward 构造同样是自演化系统的核心能力。** 如果一个 Agent 能持续生成新的可验证任务，它就不只是“记住过去经验”，而是开始具备“主动制造训练信号”的能力。
 
 不过，这篇论文也说明自演化还没有完全解决。SCA 更像是第一步：它能在特定工具环境中提高能力，但还没有证明可以跨环境形成通用 Agent 能力。后续更重要的问题可能是：如何让 challenger 生成更抽象、更跨环境、更接近真实需求的任务；以及如何在没有明确代码验证器的开放任务中构造可靠 reward。
+
+---
+
+## 论文外部信息
+
+### 基本信息与资源
+
+- 论文标题：Self-Challenging Language Model Agents
+- arXiv：<https://arxiv.org/abs/2506.01716>
+- PDF：<https://arxiv.org/pdf/2506.01716>
+- arXiv HTML：<https://arxiv.org/html/2506.01716v1>
+- OpenReview / NeurIPS 页面：<https://openreview.net/forum?id=9yusqX9DpR>
+- Hugging Face Papers：<https://huggingface.co/papers/2506.01716>
+- 代码仓库：暂未找到官方公开代码仓库。
+- 模型权重：暂未找到官方公开模型权重；Hugging Face Papers 页面当前也没有关联模型记录。
+
+这篇论文关注一个很关键的问题：**LLM Agent 想靠强化学习提升多轮工具使用能力，但训练任务、工具环境和评价标准通常需要人工构造，成本很高，而且难以规模化。** 作者提出 Self-Challenging Agent（SCA）框架，让 Agent 自己生成高质量、可验证的任务，再用这些任务训练自己。
+
+### 投稿与发表状态
+
+- arXiv 版本：arXiv:2506.01716，v1 提交时间为 2025-06-02。
+- 会议状态：OpenReview 页面显示为 **NeurIPS 2025 poster**。
+- OpenReview 信息：Published: 18 Sept 2025，Last Modified: 21 Apr 2026。
+- 许可信息：OpenReview 页面显示 CC BY 4.0。
+- 伦理审查：OpenReview 页面显示 Flagged For Ethics Review: true。
+
+### 作者与机构
+
+论文作者为：
+
+- Yifei Zhou：UC Berkeley
+- Sergey Levine：UC Berkeley
+- Jason Weston：FAIR at Meta
+- Xian Li：FAIR at Meta
+- Sainbayar Sukhbaatar：FAIR at Meta
+
+论文首页脚注说明该工作完成于 FAIR at Meta，并标注 Xian Li 与 Sainbayar Sukhbaatar 为 equal advising。
+
+### 作者背景和研究圈子
+
+这篇文章的作者组合比较值得关注，基本可以看成 **Berkeley RL / Agent 方向 + Meta FAIR LLM / NLP / Agent 方向** 的合作。
+
+- Yifei Zhou 近年的论文与 LLM Agent、自动化任务发现、多轮 RL、互联网 Agent 等方向关系很密切。论文参考文献中也能看到他参与的 PAE、ARChER、SWEET-RL 等相关工作。这说明本文不是孤立提出一个技巧，而是在一条“Agent 自动生成任务 / 自动改进”的研究线上继续推进。
+- Sergey Levine 是 UC Berkeley EECS 教授，研究重点包括 autonomous agents、robotics、decision making、deep reinforcement learning 等。他的研究背景使本文的“通过环境交互和奖励学习提升 Agent 能力”的思路带有明显的 RL 和自主智能体色彩。
+- Jason Weston、Xian Li、Sainbayar Sukhbaatar 都来自 Meta / FAIR 相关研究圈子，长期关注 NLP、语言模型、对话、推理、LLM 训练与 Agent 学习。Xian Li 的 OpenReview 资料显示其方向包括 deep learning、natural language processing、machine learning、machine translation；Sainbayar Sukhbaatar 的资料显示其为 Meta AI Research Scientist，并与多个 LLM reasoning / preference optimization / agent learning 工作有关。
+
+从圈子上看，这篇论文不是单纯做 benchmark 提升，而是把三个方向结合起来：
+
+1. 强化学习训练 Agent；
+2. 自动生成可训练任务；
+3. 用代码形式的验证器把奖励信号做得更可靠。
+
+---
 
 ## 13. 参考资料与链接
 

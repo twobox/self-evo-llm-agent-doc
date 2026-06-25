@@ -80,7 +80,7 @@ metadata:
     - 'notes/harness-updating-is-not-harness-benefit.md'
     - 'notes/self-challenging-language-model-agents.md'
   created: '2026-06-07'
-  updated: '2026-06-24'
+  updated: '2026-06-25'
 -->
 
 # 《SE-Agent: Self-Evolution Trajectory Optimization in Multi-Step Reasoning with LLM-Based Agents》读书笔记
@@ -167,63 +167,7 @@ Revision / Recombination / Refinement
 
 ---
 
-## 1. 基本信息
-
-- 论文标题：SE-Agent: Self-Evolution Trajectory Optimization in Multi-Step Reasoning with LLM-Based Agents
-- arXiv：<https://arxiv.org/abs/2508.02085>
-- PDF：<https://arxiv.org/pdf/2508.02085>
-- arXiv HTML：<https://arxiv.org/html/2508.02085>
-- 代码仓库：<https://github.com/JARVIS-Xs/SE-Agent>
-- 项目主页 / 团队信息：<https://quantaalpha.com/>
-- 模型权重：暂未找到官方公开模型权重。
-
-这篇论文研究的是：**LLM Agent 在多步推理和工具交互中会产生完整执行轨迹，但很多方法只把轨迹当作一次独立尝试，没有充分利用多条轨迹之间的互补信息。** 作者提出 SE-Agent，把多条 reasoning / acting 轨迹放进一个 trajectory pool，再通过 revision、recombination、refinement 三类操作做测试时轨迹优化。
-
-我理解这篇论文的关键词是：**轨迹级自演化**、**代码修复 Agent**、**测试时搜索 / 优化**、**多轨迹信息融合**。
-
-> 图表选择说明：本文只补充两张最有复习价值的图：一张解释 SE-Agent 整体框架，一张解释真实代码修复案例中的轨迹差异。主结果表已经转写成 Markdown 表格，便于检索和横向对比，因此不再额外贴表格截图。
-
-## 2. 投稿 / 发表状态
-
-- arXiv 页面显示：arXiv:2508.02085，v1 提交时间为 2025-08-04，当前版本为 v6，最后修订时间为 2025-11-03。
-- PDF 首页标注：39th Conference on Neural Information Processing Systems，即 NeurIPS 2025。
-- GitHub README 的 News 中写到：SE-Agent 被 NeurIPS 2025 接收为 Poster。
-- 代码仓库已经公开，README 显示为 MIT License。
-
-因此，这篇文章目前可以看作 **NeurIPS 2025 Poster + arXiv 预印本 + 官方代码已开源**。
-
-## 3. 作者与机构
-
-论文作者为：Jiaye Lin, Yifu Guo, Yuzhen Han, Sen Hu, Ziyi Ni, Licheng Wang, Mingguang Chen, Hongzhang Liu, Ronghao Chen, Yangfan He, Daxin Jiang, Binxing Jiao, Chen Hu, Huacan Wang。
-
-论文首页给出的机构缩写包括：
-
-- THU：Tsinghua University / 清华大学
-- StepFun：阶跃星辰
-- UofT：University of Toronto / 多伦多大学
-- PKU：Peking University / 北京大学
-- UCAS：University of Chinese Academy of Sciences / 中国科学院大学
-- CASIA：Institute of Automation, Chinese Academy of Sciences / 中国科学院自动化研究所
-- UCR：University of California, Riverside / 加州大学河滨分校
-- USYD：University of Sydney / 悉尼大学
-- UMN：University of Minnesota / 明尼苏达大学
-
-从作者机构看，这是一篇 **高校 + 产业界大模型团队 + AI Agent 研究团队** 的合作论文。论文首页同时给出了 `JARVIS-Xs/SE-Agent` 代码仓库和 `quantaalpha.ai@gmail.com` 联系邮箱。
-
-## 4. 作者背景和研究圈子
-
-这篇论文背后的研究圈子比较值得关注。GitHub README 把 SE-Agent 放在 QuantaAlpha / JARVIS-Xs 生态中，并列提到 RepoMaster、GitTaskBench、SE-Agent 等项目。QuantaAlpha 团队主页将研究方向概括为 CodeAgent、DeepResearch、Agentic RL、Self-Evolving Systems 等。
-
-因此，这篇文章不是单纯做一个 SWE-bench 刷榜技巧，而是处在一个更大的研究线里：
-
-1. **Code Agent**：让 Agent 面向真实代码仓库理解 issue、定位文件、修改代码并通过测试。
-2. **Self-Evolving Agent**：不是只采样一次，而是利用历史尝试、轨迹池和反馈继续改进。
-3. **Agentic RL / Test-Time Search**：不一定训练模型参数，也可以在测试时通过多轨迹搜索、反思和重组提高任务完成率。
-4. **Repo-level Agent Infrastructure**：围绕真实 GitHub 仓库任务构建工具、benchmark 和执行框架。
-
-我暂未逐一找到所有作者的稳定个人主页或完整履历，因此作者背景部分不展开到个人级别，主要依据论文首页机构、GitHub 项目页和 QuantaAlpha 团队主页进行概括。
-
-## 5. 所属研究方向与论文定位
+## 与相邻路线的关系
 
 这篇论文属于 **Self-Evolving LLM Agent** 方向，也可以归到 **Code Agent / SWE-bench Agent / Test-Time Trajectory Optimization** 下面。
 
@@ -246,7 +190,7 @@ Revision / Recombination / Refinement
 
 这张表有助于避免一个常见混淆：**SE-Agent 的 self-evolution 主要是测试时轨迹层优化，不是长期经验库，也不是模型参数持续再训练。**
 
-## 6. 核心问题
+## 问题背景：独立轨迹无法共享信息
 
 论文要解决的问题是：
 
@@ -475,6 +419,32 @@ Input: task x, base agent A, evolution rounds R
 
 > **图 2：SE-Agent case study。** 这张图适合放在实验结果后面，因为它解释了“为什么不是简单多采样”：传统 agent 的多条路径可能都围绕相同局部文件做近似 quick fix，而 SE-Agent 通过轨迹重组探索到更接近根因的修复位置。它比单纯看 Pass@1 表格更能说明 trajectory-level recombination 的意义。
 
+---
+
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| 轨迹级演化优于独立采样和树搜索 | SWE-bench Verified 中 DeepSeek-V3：SE-Agent Pass@1 54.8%，SWE-Search 39.4%，SWE-Agent 31.6%；Claude-3.7：61.2%，对照为 47.4% / 40.6% | SWE-Agent、SWE-Search，在相同 LLM 行内比较 | 支持 revision / recombination / refinement 能提高代码修复任务的测试时搜索质量 | 不能证明收益会在网页、数据库或机器人环境中保持，也不能等同于长期学习 |
+| 多轨迹的价值来自继承和组合，而不只是更多样本 | 去掉 Revision 或 Recombination 均降低 Pass@1；case study 显示不同轨迹分别发现文件、测试与根因信息 | w/o Revision、w/o Recombination、w/o All | 支持轨迹之间的信息传递是完整系统的重要组成 | 消融仍包含多次 LLM 调用，不能精确分离重组质量与额外计算预算 |
+| 方法在不同模型家族上保持一致收益 | DeepSeek、Qwen、Llama、GPT-4o、Claude-3.7 五个模型上均高于两类 baseline | 每个模型对应的 SWE-Agent / SWE-Search | 说明 scaffold 不只依赖单一开源或闭源模型 | 所有实验仍共享 SWE-bench Verified 与相似代码工具链，不能视为跨任务类型泛化 |
+| 约 10 条候选轨迹已经接近较优性能 | 轨迹数和成本分析显示继续增加候选仍有收益，但边际收益下降；相同成本下优于对照 | 不同候选轨迹数量、SWE-Agent、SWE-Search | 支持方法不只是无限堆采样，轨迹加工提高了搜索效率 | 未给出对所有 API 价格和上下文实现都通用的最优轨迹数 |
+| 80.0% resolution 展示更强设置的上限 | Claude-4-Sonnet + 最新 SWE-Agent 对齐设置达到 80.0% | 论文首页的最新组合设置 | 展示框架在更强底座和更新基础设施上的潜力 | 不能和 Table 1 的 Claude-3.7 61.2% 或其他行做严格同设置比较 |
+
+### 我的判断
+
+SE-Agent 的主表跨五个模型都呈现一致方向，说明轨迹级 scaffold 有较强证据。它真正新增的是把完整执行过程作为可修订、可交叉和可筛选的对象，而不是再做一次 best-of-N。
+
+不过，“self-evolution”应理解为当前任务中的搜索过程。论文没有把轨迹沉淀为跨任务经验，也没有更新模型参数；多轨迹 rollout、长上下文读取和 evaluator 仍带来较高成本。
+
+### 其他可能解释
+
+- 初始五种 planning strategy 本身就增加了多样性，部分收益可能不完全来自后续重组。
+- TaskCompletion、ReasoningQuality、Efficiency 的权重和 LLM evaluator 会影响候选筛选。
+- 真实代码执行环境与 repository setup 的稳定性可能放大或削弱轨迹优化收益。
+
+---
+
 ## 10. 主要结论
 
 我把论文结论概括为四点：
@@ -580,6 +550,68 @@ SE-Agent 则把重点放在第四层：
 如果后续把这种轨迹演化结果再沉淀成经验库、训练数据或可复用 skill，就可能和 EvolveR、Self-Challenging、Harness Updating、ACE 等方向进一步连接起来。
 
 一句话总结：**SE-Agent 的核心不是“模型自己学会了”，而是“系统把多次尝试的过程保存下来，并在测试时把这些轨迹继续加工成更好的下一次尝试”。**
+
+---
+
+## 论文外部信息
+
+### 基本信息与资源
+
+- 论文标题：SE-Agent: Self-Evolution Trajectory Optimization in Multi-Step Reasoning with LLM-Based Agents
+- arXiv：<https://arxiv.org/abs/2508.02085>
+- PDF：<https://arxiv.org/pdf/2508.02085>
+- arXiv HTML：<https://arxiv.org/html/2508.02085>
+- 代码仓库：<https://github.com/JARVIS-Xs/SE-Agent>
+- 项目主页 / 团队信息：<https://quantaalpha.com/>
+- 模型权重：暂未找到官方公开模型权重。
+
+这篇论文研究的是：**LLM Agent 在多步推理和工具交互中会产生完整执行轨迹，但很多方法只把轨迹当作一次独立尝试，没有充分利用多条轨迹之间的互补信息。** 作者提出 SE-Agent，把多条 reasoning / acting 轨迹放进一个 trajectory pool，再通过 revision、recombination、refinement 三类操作做测试时轨迹优化。
+
+我理解这篇论文的关键词是：**轨迹级自演化**、**代码修复 Agent**、**测试时搜索 / 优化**、**多轨迹信息融合**。
+
+> 图表选择说明：本文只补充两张最有复习价值的图：一张解释 SE-Agent 整体框架，一张解释真实代码修复案例中的轨迹差异。主结果表已经转写成 Markdown 表格，便于检索和横向对比，因此不再额外贴表格截图。
+
+### 投稿与发表状态
+
+- arXiv 页面显示：arXiv:2508.02085，v1 提交时间为 2025-08-04，当前版本为 v6，最后修订时间为 2025-11-03。
+- PDF 首页标注：39th Conference on Neural Information Processing Systems，即 NeurIPS 2025。
+- GitHub README 的 News 中写到：SE-Agent 被 NeurIPS 2025 接收为 Poster。
+- 代码仓库已经公开，README 显示为 MIT License。
+
+因此，这篇文章目前可以看作 **NeurIPS 2025 Poster + arXiv 预印本 + 官方代码已开源**。
+
+### 作者与机构
+
+论文作者为：Jiaye Lin, Yifu Guo, Yuzhen Han, Sen Hu, Ziyi Ni, Licheng Wang, Mingguang Chen, Hongzhang Liu, Ronghao Chen, Yangfan He, Daxin Jiang, Binxing Jiao, Chen Hu, Huacan Wang。
+
+论文首页给出的机构缩写包括：
+
+- THU：Tsinghua University / 清华大学
+- StepFun：阶跃星辰
+- UofT：University of Toronto / 多伦多大学
+- PKU：Peking University / 北京大学
+- UCAS：University of Chinese Academy of Sciences / 中国科学院大学
+- CASIA：Institute of Automation, Chinese Academy of Sciences / 中国科学院自动化研究所
+- UCR：University of California, Riverside / 加州大学河滨分校
+- USYD：University of Sydney / 悉尼大学
+- UMN：University of Minnesota / 明尼苏达大学
+
+从作者机构看，这是一篇 **高校 + 产业界大模型团队 + AI Agent 研究团队** 的合作论文。论文首页同时给出了 `JARVIS-Xs/SE-Agent` 代码仓库和 `quantaalpha.ai@gmail.com` 联系邮箱。
+
+### 作者背景和研究圈子
+
+这篇论文背后的研究圈子比较值得关注。GitHub README 把 SE-Agent 放在 QuantaAlpha / JARVIS-Xs 生态中，并列提到 RepoMaster、GitTaskBench、SE-Agent 等项目。QuantaAlpha 团队主页将研究方向概括为 CodeAgent、DeepResearch、Agentic RL、Self-Evolving Systems 等。
+
+因此，这篇文章不是单纯做一个 SWE-bench 刷榜技巧，而是处在一个更大的研究线里：
+
+1. **Code Agent**：让 Agent 面向真实代码仓库理解 issue、定位文件、修改代码并通过测试。
+2. **Self-Evolving Agent**：不是只采样一次，而是利用历史尝试、轨迹池和反馈继续改进。
+3. **Agentic RL / Test-Time Search**：不一定训练模型参数，也可以在测试时通过多轨迹搜索、反思和重组提高任务完成率。
+4. **Repo-level Agent Infrastructure**：围绕真实 GitHub 仓库任务构建工具、benchmark 和执行框架。
+
+我暂未逐一找到所有作者的稳定个人主页或完整履历，因此作者背景部分不展开到个人级别，主要依据论文首页机构、GitHub 项目页和 QuantaAlpha 团队主页进行概括。
+
+---
 
 ## 14. 参考资料与链接
 

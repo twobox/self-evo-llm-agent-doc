@@ -19,6 +19,7 @@ TAG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 NOTE_LINK_RE = re.compile(r"\((notes/[^)\s]+\.md)(?:#[^)]+)?\)")
 H1_RE = re.compile(r"^#\s+(.+)$", re.MULTILINE)
 H2_RE = re.compile(r"^##\s+(.+)$", re.MULTILINE)
+H3_RE = re.compile(r"^###\s+(.+)$", re.MULTILINE)
 
 PAPER_TYPES = {
     "method", "system", "analysis", "diagnostic", "evaluation", "survey",
@@ -217,6 +218,41 @@ def _validate_schema_1(
             "analysis/diagnostic/evaluation note requires an 分析框架卡片 section",
             require_structure=require_structure,
         )
+
+
+    for heading, code in (
+        ("主张—证据—边界", "missing-evidence-layer"),
+        ("论文外部信息", "missing-external-info"),
+    ):
+        if not _has_heading(headings, heading):
+            _structure_finding(
+                reporter, path, code,
+                f"note is missing section containing: {heading}",
+                require_structure=require_structure,
+            )
+
+    subheadings = H3_RE.findall(text)
+    for heading, code in (
+        ("我的判断", "missing-evidence-judgment"),
+        ("其他可能解释", "missing-alternative-explanations"),
+    ):
+        if not _has_heading(subheadings, heading):
+            _structure_finding(
+                reporter, path, code,
+                f"evidence layer is missing subsection containing: {heading}",
+                require_structure=require_structure,
+            )
+
+    evidence_match = re.search(r"(?m)^## .*主张—证据—边界.*$", text)
+    external_match = re.search(r"(?m)^## .*论文外部信息.*$", text)
+    reference_matches = list(re.finditer(r"(?m)^## .*参考资料.*$", text))
+    if evidence_match and external_match and reference_matches:
+        if not evidence_match.start() < external_match.start() < reference_matches[-1].start():
+            _structure_finding(
+                reporter, path, "section-order",
+                "expected evidence layer before external information and external information before references",
+                require_structure=require_structure,
+            )
 
 
 def _validate_legacy(path: Path, metadata: dict[str, Any], reporter: Reporter, *, require_schema: bool) -> None:
