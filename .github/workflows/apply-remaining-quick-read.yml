@@ -1,0 +1,48 @@
+name: Apply remaining quick-read sections
+
+on:
+  push:
+    branches:
+      - codex/add-remaining-quick-read-2
+    paths:
+      - '.stage5-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out migration branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/add-remaining-quick-read-2
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Apply remaining quick-reading layers
+        run: python scripts/apply_remaining_quick_read.py
+
+      - name: Compile and run unit tests
+        run: |
+          python -m compileall -q scripts tests
+          python -m unittest discover -s tests -v
+
+      - name: Run strict repository validation
+        run: |
+          python scripts/validate_notes.py . --require-schema --require-structure --strict
+          python scripts/check_links.py .
+          python scripts/generate_readme.py . --check --require-markers
+
+      - name: Commit migrated notes and strict CI
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add notes docs/maintenance-tooling.md .github/workflows/validate-notes.yml
+          git commit -m 'add quick-reading layers to remaining notes'
+          git push origin HEAD:codex/add-remaining-quick-read-2
