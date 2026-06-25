@@ -58,6 +58,9 @@ jobs:
       - name: Check localized image assets
         run: python scripts/check_images.py .
 
+      - name: Check experimental comparison
+        run: python scripts/generate_experimental_comparison.py --check
+
       - name: Check generated README note index
         run: python scripts/generate_readme.py . --check --require-markers --output /tmp/generated-note-index.md
 
