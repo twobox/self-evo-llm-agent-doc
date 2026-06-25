@@ -29,6 +29,8 @@
 
 分支：`codex/add-note-maintenance-workflow`
 
+活动 PR：[#14](https://github.com/twobox/self-evo-llm-agent-doc/pull/14)
+
 目标：
 
 - 增加 `AGENTS.md` 作为新会话和 Agent 总入口；
