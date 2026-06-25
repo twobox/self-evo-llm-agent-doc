@@ -344,7 +344,7 @@ EvolveR 的整体框架由三个环节组成。
 
 > 图源：论文官方代码仓库 README / assets/framework.png，对应论文 Figure 2；仅用于读书笔记引用和学习说明。
 
-![Figure 2: Overview of the EvolveR experience lifecycle](https://raw.githubusercontent.com/KnowledgeXLab/EvolveR/main/assets/framework.png)
+![Figure 2: Overview of the EvolveR experience lifecycle](../assets/images/evolver/framework.png)
 
 图 2 是理解 EvolveR 方法最关键的一张图：左侧是 online phase 与 offline phase 交替运行的闭环；右上角展示 `<search_experience>` 如何从经验库中检索带分数的原则；右下角展示经验库如何通过 distill、deduplicate、update、filter 等操作持续维护。
 

@@ -187,7 +187,7 @@ Self-Evolving LLM Agent 方法论文
 
 > 图源：论文 arXiv HTML Figure 1；用于读书笔记中的学习引用和阅读辅助。
 
-![Figure 1: overview from On the Limits of LLM Adaptability](https://arxiv.org/html/2606.00467v1/x1.png)
+![Figure 1: overview from On the Limits of LLM Adaptability](../assets/images/llm-adaptability/overview.png)
 
 图 1 适合放在研究背景之后，作为整篇论文的入口：先让读者看到论文如何把“模型内部先验”“用户给出的任务定义”“prompt / few-shot 纠错”和“标注表现”联系起来。读这篇文章时，不要只把它当成一个 toxicity detection 实验，而要把它理解成一个关于 **LLM 行为能否被外部文本稳定改写** 的诊断框架。
 
@@ -231,11 +231,7 @@ Definition-Specific Familiarity：模型是否熟悉并内化了这个标注定�
 
 论文发现，控制数据集层面的混杂因素后，DSF 和模型性能呈正相关；而 ROUGE-L、BERTScore、embedding cosine similarity 等文本记忆指标并没有表现出正相关。
 
-> 图源：论文 arXiv HTML Figure 2；用于读书笔记中的学习引用和阅读辅助。
-
-![Figure 2: DSF and familiarity results from On the Limits of LLM Adaptability](https://arxiv.org/html/2606.00467v1/x2.png)
-
-图 2 适合放在 DSF 概念后面。它对应本文最关键的区分：**模型表现好，不一定是因为记住了文本，而可能是因为模型内部概念和当前任务定义更对齐**。这张图能帮助读者把 text familiarity 和 definition-specific familiarity 分开理解。
+> **图示校正：** 论文当前版本的 Figure 2 是置信度输出模板，arXiv HTML 将其直接渲染为正文，并不存在 `x2.png`。DSF 与文本熟悉度的比较主要由回归结果、Table 4 和附录 E 支撑，因此这里保留文字分析，不再引用失效图片。
 
 ### 6.3 Decision Stickiness：决策粘性
 
@@ -353,7 +349,7 @@ rescue rate = zero-shot 中做错的样本里，后来被 prompt / definition / 
 
 > 图源：论文 arXiv HTML Figure 3；用于读书笔记中的学习引用和阅读辅助。
 
-![Figure 3: decision stickiness and rescue rate from On the Limits of LLM Adaptability](https://arxiv.org/html/2606.00467v1/x3.png)
+![Figure 3: decision stickiness and rescue rate from On the Limits of LLM Adaptability](../assets/images/llm-adaptability/decision-stickiness-rescue-rate.png)
 
 图 3 适合放在 rescue rate 结论这里。它把“zero-shot 错误能否被后续 prompt / definition / few-shot 纠正”这个问题可视化了：本文不是只报告平均准确率，而是追问 **原本错的样本到底有多少被救回来**。这个视角非常适合迁移到自演化 Agent 的失败经验利用研究。
 
@@ -383,7 +379,7 @@ rescue rate = zero-shot 中做错的样本里，后来被 prompt / definition / 
 
 > 图源：论文 arXiv HTML Figure 4；用于读书笔记中的学习引用和阅读辅助。
 
-![Figure 4: misaligned definitions and confidence from On the Limits of LLM Adaptability](https://arxiv.org/html/2606.00467v1/x4.png)
+![Figure 4: misaligned definitions and confidence from On the Limits of LLM Adaptability](../assets/images/llm-adaptability/misaligned-definitions-confidence.png)
 
 图 4 适合放在 misaligned definition 结论后面。它提醒读者：模型在错误定义下改变输出，并不一定会同步降低 confidence。对 LLM-as-a-judge 或自动标注系统来说，这意味着“模型看起来很自信”不能替代任务定义检查和外部验证。
 

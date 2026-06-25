@@ -1,11 +1,17 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "generated_at": "2026-06-25",
-  "total_external_images": 28,
+  "total_images": 27,
+  "localized_images": 14,
+  "external_images": 13,
   "by_source_kind": {
-    "arxiv-html": 19,
+    "arxiv-html": 18,
     "official-github": 6,
     "project-site": 3
+  },
+  "by_status": {
+    "localized": 14,
+    "deferred-license": 13
   },
   "by_note": {
     "notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md": 3,
@@ -13,7 +19,7 @@
     "notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md": 2,
     "notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md": 2,
     "notes/harness-updating-is-not-harness-benefit.md": 4,
-    "notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md": 4,
+    "notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md": 3,
     "notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md": 3,
     "notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md": 2,
     "notes/self-challenging-language-model-agents.md": 5
@@ -25,11 +31,15 @@
       "line": 194,
       "ordinal_in_note": 1,
       "alt": "Figure 2: Context Collapse",
-      "url": "https://arxiv.org/html/2510.04618v3/x2.png",
+      "reference": "../assets/images/ace/context-collapse.png",
+      "original_url": "https://arxiv.org/html/2510.04618v3/x2.png",
+      "local_path": "assets/images/ace/context-collapse.png",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "reason": ""
     },
     {
       "id": "7ced975d07d0",
@@ -37,11 +47,15 @@
       "line": 220,
       "ordinal_in_note": 2,
       "alt": "Figure 4: The ACE Framework",
-      "url": "https://raw.githubusercontent.com/ace-agent/ace/main/assets/images/ace_framework.png",
+      "reference": "../assets/images/ace/framework.png",
+      "original_url": "https://raw.githubusercontent.com/ace-agent/ace/main/assets/images/ace_framework.png",
+      "local_path": "assets/images/ace/framework.png",
       "host": "raw.githubusercontent.com",
       "source_kind": "official-github",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/ace-agent/ace/blob/main/LICENSE.txt",
+      "reason": ""
     },
     {
       "id": "07aff7f58783",
@@ -49,11 +63,15 @@
       "line": 353,
       "ordinal_in_note": 3,
       "alt": "Figure 1: Overall Performance Results",
-      "url": "https://arxiv.org/html/2510.04618v3/x1.png",
+      "reference": "../assets/images/ace/overall-performance.png",
+      "original_url": "https://arxiv.org/html/2510.04618v3/x1.png",
+      "local_path": "assets/images/ace/overall-performance.png",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "reason": ""
     },
     {
       "id": "c957b9c06831",
@@ -61,11 +79,15 @@
       "line": 188,
       "ordinal_in_note": 1,
       "alt": "Figure 1: Four major paradigms for LLM agent learning",
-      "url": "https://arxiv.org/html/2510.16079v3/x1.png",
+      "reference": "https://arxiv.org/html/2510.16079v3/x1.png",
+      "original_url": "https://arxiv.org/html/2510.16079v3/x1.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "2bf3ba68be70",
@@ -73,11 +95,15 @@
       "line": 347,
       "ordinal_in_note": 2,
       "alt": "Figure 2: Overview of the EvolveR experience lifecycle",
-      "url": "https://raw.githubusercontent.com/KnowledgeXLab/EvolveR/main/assets/framework.png",
+      "reference": "../assets/images/evolver/framework.png",
+      "original_url": "https://raw.githubusercontent.com/KnowledgeXLab/EvolveR/main/assets/framework.png",
+      "local_path": "assets/images/evolver/framework.png",
       "host": "raw.githubusercontent.com",
       "source_kind": "official-github",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "MIT",
+      "license_url": "https://github.com/KnowledgeXLab/EvolveR/blob/main/LICENSE",
+      "reason": ""
     },
     {
       "id": "62236a3f6f4a",
@@ -85,11 +111,15 @@
       "line": 497,
       "ordinal_in_note": 3,
       "alt": "Figure 4: Performance of EvolveR across various model scales",
-      "url": "https://arxiv.org/html/2510.16079v3/img/evolver_scaling_results.png",
+      "reference": "https://arxiv.org/html/2510.16079v3/img/evolver_scaling_results.png",
+      "original_url": "https://arxiv.org/html/2510.16079v3/img/evolver_scaling_results.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "a4135f7faa3f",
@@ -97,11 +127,15 @@
       "line": 246,
       "ordinal_in_note": 1,
       "alt": "Overview of the LLM agent memory mechanisms",
-      "url": "https://arxiv.org/html/2605.06716v1/x1.png",
+      "reference": "https://arxiv.org/html/2605.06716v1/x1.png",
+      "original_url": "https://arxiv.org/html/2605.06716v1/x1.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "965229834005",
@@ -109,11 +143,15 @@
       "line": 253,
       "ordinal_in_note": 2,
       "alt": "Overview of Cross-Trajectory Abstraction",
-      "url": "https://arxiv.org/html/2605.06716v1/x3.png",
+      "reference": "https://arxiv.org/html/2605.06716v1/x3.png",
+      "original_url": "https://arxiv.org/html/2605.06716v1/x3.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "9682fbd1b4db",
@@ -121,11 +159,15 @@
       "line": 169,
       "ordinal_in_note": 1,
       "alt": "Comparison of three agent paradigms",
-      "url": "https://raw.githubusercontent.com/Arvid-pku/Godel_Agent/main/figures/compare.png",
+      "reference": "../assets/images/godel-agent/paradigm-comparison.png",
+      "original_url": "https://raw.githubusercontent.com/Arvid-pku/Godel_Agent/main/figures/compare.png",
+      "local_path": "assets/images/godel-agent/paradigm-comparison.png",
       "host": "raw.githubusercontent.com",
       "source_kind": "official-github",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "MIT",
+      "license_url": "https://github.com/Arvid-pku/Godel_Agent/blob/main/LICENSE",
+      "reason": ""
     },
     {
       "id": "090309f5a099",
@@ -133,11 +175,15 @@
       "line": 203,
       "ordinal_in_note": 2,
       "alt": "Gödel Agent implemented by Monkey Patching",
-      "url": "https://raw.githubusercontent.com/Arvid-pku/Godel_Agent/main/figures/method.png",
+      "reference": "../assets/images/godel-agent/monkey-patching-method.png",
+      "original_url": "https://raw.githubusercontent.com/Arvid-pku/Godel_Agent/main/figures/method.png",
+      "local_path": "assets/images/godel-agent/monkey-patching-method.png",
       "host": "raw.githubusercontent.com",
       "source_kind": "official-github",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "MIT",
+      "license_url": "https://github.com/Arvid-pku/Godel_Agent/blob/main/LICENSE",
+      "reason": ""
     },
     {
       "id": "a8dafb7e4b9e",
@@ -145,11 +191,15 @@
       "line": 178,
       "ordinal_in_note": 1,
       "alt": "Figure 1: Overview of harness self-evolution",
-      "url": "https://arxiv.org/html/2605.30621v1/x1.png",
+      "reference": "https://arxiv.org/html/2605.30621v1/x1.png",
+      "original_url": "https://arxiv.org/html/2605.30621v1/x1.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "adbad0db074e",
@@ -157,11 +207,15 @@
       "line": 240,
       "ordinal_in_note": 2,
       "alt": "Figure 2: Overview of main findings",
-      "url": "https://arxiv.org/html/2605.30621v1/x2.png",
+      "reference": "https://arxiv.org/html/2605.30621v1/x2.png",
+      "original_url": "https://arxiv.org/html/2605.30621v1/x2.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "f84c6f78c544",
@@ -169,11 +223,15 @@
       "line": 298,
       "ordinal_in_note": 3,
       "alt": "Figure 3: Harness-updating capability of each evolver",
-      "url": "https://arxiv.org/html/2605.30621v1/x3.png",
+      "reference": "https://arxiv.org/html/2605.30621v1/x3.png",
+      "original_url": "https://arxiv.org/html/2605.30621v1/x3.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "d6fd23f96348",
@@ -181,11 +239,15 @@
       "line": 348,
       "ordinal_in_note": 4,
       "alt": "Figure 7: Two harness-benefit failure modes",
-      "url": "https://arxiv.org/html/2605.30621v1/x7.png",
+      "reference": "https://arxiv.org/html/2605.30621v1/x7.png",
+      "original_url": "https://arxiv.org/html/2605.30621v1/x7.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "d9199e39f31f",
@@ -193,47 +255,47 @@
       "line": 190,
       "ordinal_in_note": 1,
       "alt": "Figure 1: overview from On the Limits of LLM Adaptability",
-      "url": "https://arxiv.org/html/2606.00467v1/x1.png",
+      "reference": "../assets/images/llm-adaptability/overview.png",
+      "original_url": "https://arxiv.org/html/2606.00467v1/x1.png",
+      "local_path": "assets/images/llm-adaptability/overview.png",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
-    },
-    {
-      "id": "26d526c234b5",
-      "note": "notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md",
-      "line": 236,
-      "ordinal_in_note": 2,
-      "alt": "Figure 2: DSF and familiarity results from On the Limits of LLM Adaptability",
-      "url": "https://arxiv.org/html/2606.00467v1/x2.png",
-      "host": "arxiv.org",
-      "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "reason": ""
     },
     {
       "id": "5f3d41bfccc4",
       "note": "notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md",
-      "line": 356,
-      "ordinal_in_note": 3,
+      "line": 352,
+      "ordinal_in_note": 2,
       "alt": "Figure 3: decision stickiness and rescue rate from On the Limits of LLM Adaptability",
-      "url": "https://arxiv.org/html/2606.00467v1/x3.png",
+      "reference": "../assets/images/llm-adaptability/decision-stickiness-rescue-rate.png",
+      "original_url": "https://arxiv.org/html/2606.00467v1/rescue_vs_confidence.png",
+      "local_path": "assets/images/llm-adaptability/decision-stickiness-rescue-rate.png",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "reason": ""
     },
     {
       "id": "b9e579ba9ac2",
       "note": "notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md",
-      "line": 386,
-      "ordinal_in_note": 4,
+      "line": 382,
+      "ordinal_in_note": 3,
       "alt": "Figure 4: misaligned definitions and confidence from On the Limits of LLM Adaptability",
-      "url": "https://arxiv.org/html/2606.00467v1/x4.png",
+      "reference": "../assets/images/llm-adaptability/misaligned-definitions-confidence.png",
+      "original_url": "https://arxiv.org/html/2606.00467v1/calibration_curve.png",
+      "local_path": "assets/images/llm-adaptability/misaligned-definitions-confidence.png",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "reason": ""
     },
     {
       "id": "6dd82801fec8",
@@ -241,11 +303,15 @@
       "line": 196,
       "ordinal_in_note": 1,
       "alt": "Figure 3: Internal, world and population-relative task sets",
-      "url": "https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/kb.png",
+      "reference": "../assets/images/theory-of-agent/knowledge-boundary.png",
+      "original_url": "https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/kb.png",
+      "local_path": "assets/images/theory-of-agent/knowledge-boundary.png",
       "host": "hrwise-nlp.github.io",
       "source_kind": "project-site",
-      "suggested_action": "review-license-before-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "CC BY-NC-ND 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "reason": ""
     },
     {
       "id": "aa0667551cb6",
@@ -253,11 +319,15 @@
       "line": 262,
       "ordinal_in_note": 2,
       "alt": "Figure 4: Epistemic effort decomposition for internal and external task sets",
-      "url": "https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/toa_intro.png",
+      "reference": "../assets/images/theory-of-agent/epistemic-effort.png",
+      "original_url": "https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/toa_intro.png",
+      "local_path": "assets/images/theory-of-agent/epistemic-effort.png",
       "host": "hrwise-nlp.github.io",
       "source_kind": "project-site",
-      "suggested_action": "review-license-before-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "CC BY-NC-ND 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "reason": ""
     },
     {
       "id": "14570ebeba78",
@@ -265,11 +335,15 @@
       "line": 497,
       "ordinal_in_note": 3,
       "alt": "Figure 1: Tool-use decisions shape the trajectory of agent intelligence",
-      "url": "https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/toa_example.png",
+      "reference": "../assets/images/theory-of-agent/tool-use-trajectories.png",
+      "original_url": "https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/toa_example.png",
+      "local_path": "assets/images/theory-of-agent/tool-use-trajectories.png",
       "host": "hrwise-nlp.github.io",
       "source_kind": "project-site",
-      "suggested_action": "review-license-before-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "CC BY-NC-ND 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "reason": ""
     },
     {
       "id": "996c2e23bf83",
@@ -277,11 +351,15 @@
       "line": 208,
       "ordinal_in_note": 1,
       "alt": "SE-Agent Framework",
-      "url": "https://github.com/JARVIS-Xs/SE-Agent/blob/main/static/img/framework.jpg?raw=true",
+      "reference": "../assets/images/se-agent/framework.jpg",
+      "original_url": "https://github.com/JARVIS-Xs/SE-Agent/blob/main/static/img/framework.jpg?raw=true",
+      "local_path": "assets/images/se-agent/framework.jpg",
       "host": "github.com",
       "source_kind": "official-github",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "MIT",
+      "license_url": "https://github.com/JARVIS-Xs/SE-Agent/blob/main/LICENSE",
+      "reason": ""
     },
     {
       "id": "95cacfa9cdee",
@@ -289,11 +367,15 @@
       "line": 418,
       "ordinal_in_note": 2,
       "alt": "SE-Agent Case Study",
-      "url": "https://github.com/JARVIS-Xs/SE-Agent/blob/main/static/img/se-agent-case-study.png?raw=true",
+      "reference": "../assets/images/se-agent/case-study.png",
+      "original_url": "https://github.com/JARVIS-Xs/SE-Agent/blob/main/static/img/se-agent-case-study.png?raw=true",
+      "local_path": "assets/images/se-agent/case-study.png",
       "host": "github.com",
       "source_kind": "official-github",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "localized",
+      "license": "MIT",
+      "license_url": "https://github.com/JARVIS-Xs/SE-Agent/blob/main/LICENSE",
+      "reason": ""
     },
     {
       "id": "e2582ad593af",
@@ -301,11 +383,15 @@
       "line": 165,
       "ordinal_in_note": 1,
       "alt": "Figure 1: Overview of Self-Challenging Agent",
-      "url": "https://arxiv.org/html/2506.01716v1/x1.png",
+      "reference": "https://arxiv.org/html/2506.01716v1/x1.png",
+      "original_url": "https://arxiv.org/html/2506.01716v1/x1.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "416daff5a75f",
@@ -313,11 +399,15 @@
       "line": 186,
       "ordinal_in_note": 2,
       "alt": "Figure 2: An example of a synthetic Code-as-Task",
-      "url": "https://arxiv.org/html/2506.01716v1/x2.png",
+      "reference": "https://arxiv.org/html/2506.01716v1/x2.png",
+      "original_url": "https://arxiv.org/html/2506.01716v1/x2.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "053b1e3bfab5",
@@ -325,11 +415,15 @@
       "line": 260,
       "ordinal_in_note": 3,
       "alt": "Figure 3: Ablation studies of different RL algorithms",
-      "url": "https://arxiv.org/html/2506.01716v1/x3.png",
+      "reference": "https://arxiv.org/html/2506.01716v1/x3.png",
+      "original_url": "https://arxiv.org/html/2506.01716v1/x3.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "839ba0652fa4",
@@ -337,11 +431,15 @@
       "line": 313,
       "ordinal_in_note": 4,
       "alt": "Figure 4: Human annotations of synthetic task qualities",
-      "url": "https://arxiv.org/html/2506.01716v1/x4.png",
+      "reference": "https://arxiv.org/html/2506.01716v1/x4.png",
+      "original_url": "https://arxiv.org/html/2506.01716v1/x4.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     },
     {
       "id": "dfe5ca4121c0",
@@ -349,11 +447,15 @@
       "line": 370,
       "ordinal_in_note": 5,
       "alt": "Figure 6: Scaling analysis for SCA",
-      "url": "https://arxiv.org/html/2506.01716v1/x6.png",
+      "reference": "https://arxiv.org/html/2506.01716v1/x6.png",
+      "original_url": "https://arxiv.org/html/2506.01716v1/x6.png",
+      "local_path": "",
       "host": "arxiv.org",
       "source_kind": "arxiv-html",
-      "suggested_action": "candidate-for-localization",
-      "status": "external"
+      "status": "deferred-license",
+      "license": "arXiv nonexclusive distribution license",
+      "license_url": "https://info.arxiv.org/help/license/nonexclusive-distrib.html",
+      "reason": "Paper is distributed on arXiv under the nonexclusive distribution license; keep the figure external until a separate redistribution license is verified."
     }
   ]
 }

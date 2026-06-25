@@ -166,7 +166,7 @@ Gödel Agent 将 self-evolution 的对象推进到 **Agent 程序本身**。与�
 
 ## 7. 方法：Gödel Agent 的自指递归自我改进框架
 
-![Comparison of three agent paradigms](https://raw.githubusercontent.com/Arvid-pku/Godel_Agent/main/figures/compare.png)
+![Comparison of three agent paradigms](../assets/images/godel-agent/paradigm-comparison.png)
 
 > **图 1：三类 agent 范式对比。** 左边是人类手写固定 agent，中间是固定 meta-learning 算法更新 agent，右边是 Gödel Agent：agent 可以修改自己的策略和自我改进机制，因此自由度最高。
 
@@ -200,7 +200,7 @@ Gödel Agent 的关键区别是：
 
 ### 7.3 工程实现：运行时代码检查 + monkey patching
 
-![Gödel Agent implemented by Monkey Patching](https://raw.githubusercontent.com/Arvid-pku/Godel_Agent/main/figures/method.png)
+![Gödel Agent implemented by Monkey Patching](../assets/images/godel-agent/monkey-patching-method.png)
 
 > **图 2：Gödel Agent 的 monkey patching 实现。** 论文实现让 agent 在 Python runtime 中读取当前变量、函数、类和模块，然后动态写入新代码，从而改变后续递归调用中的 agent 行为。
 

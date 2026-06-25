@@ -193,7 +193,7 @@ ToA 的第一步是统一 internal reasoning 和 external acting。
 - 对大模型可能在 knowledge boundary 之内，内部推理即可完成；
 - 对同一个模型，在上下文变多、记忆被检索出来之后，也可能从“需要工具”变成“可以内部解决”。
 
-![Figure 3: Internal, world and population-relative task sets](https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/kb.png)
+![Figure 3: Internal, world and population-relative task sets](../assets/images/theory-of-agent/knowledge-boundary.png)
 
 图 3 的作用是把 **Knowledge Boundary** 具体化：左图看单个 Agent 的内部能力边界，中间和右图看一组 Agent 的共同能力下界与能力上界。它提醒我们，同一个任务对不同 Agent 来说“是否需要工具”并不相同。
 
@@ -259,7 +259,7 @@ ToA 对 alignment 的定义不是“答案正确”这么简单，而是 **effor
 
 论文把 Agent 的行为放在“内部推理 effort × 外部工具 effort”的二维平面上看，可以得到四种典型模式：
 
-![Figure 4: Epistemic effort decomposition for internal and external task sets](https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/toa_intro.png)
+![Figure 4: Epistemic effort decomposition for internal and external task sets](../assets/images/theory-of-agent/epistemic-effort.png)
 
 图 4 是这篇论文最值得反复看的图：横轴是 internal reasoning effort，纵轴是 external acting effort。它说明工具调用不是简单的“多/少”问题，而是 effort allocation 是否落在合理前沿上。过度推理、过度行动、过度委托，本质上都是 effort 分配和 knowledge boundary 不匹配。
 
@@ -494,7 +494,7 @@ ToA 给出的提醒是：Agent 的智能不只体现在“能不能解决任务�
 
 > 图源：论文官方项目页 Figure 1；论文许可证见 arXiv HTML 页面（CC BY-NC-ND 4.0）。以下图片仅用于读书笔记引用和学习说明。
 
-![Figure 1: Tool-use decisions shape the trajectory of agent intelligence](https://hrwise-nlp.github.io/assets/websites/theory-of-agent/figures/toa_example.png)
+![Figure 1: Tool-use decisions shape the trajectory of agent intelligence](../assets/images/theory-of-agent/tool-use-trajectories.png)
 
 图 1 可以这样读：两个 Agent 可能最终都答对，但一个靠频繁外部委托维持正确率，内部能力没有增长；另一个只在必要时调用工具，把可内部化的任务留给自己练习，因此 knowledge boundary 会逐步外扩。
 

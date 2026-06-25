@@ -191,7 +191,7 @@ Curator 增量写入、合并和去重
 
 > 图源：论文 arXiv HTML Figure 2；论文许可证见 arXiv / OpenReview 页面（CC BY 4.0）。以下图片仅用于读书笔记引用和学习说明。
 
-![Figure 2: Context Collapse](https://arxiv.org/html/2510.04618v3/x2.png)
+![Figure 2: Context Collapse](../assets/images/ace/context-collapse.png)
 
 图 2 是 ACE 这篇论文最能说明“为什么需要增量更新”的图：上下文在前 60 步逐渐增长，但第 61 步突然从 18,282 tokens 坍缩成 122 tokens，准确率也随之下降。这说明让 LLM 反复重写整份上下文，会有把细节一次性抹掉的风险。
 
@@ -217,7 +217,7 @@ ACE 把上下文更新拆成三个角色：
 
 ### 5.2 关键图：ACE 框架
 
-![Figure 4: The ACE Framework](https://raw.githubusercontent.com/ace-agent/ace/main/assets/images/ace_framework.png)
+![Figure 4: The ACE Framework](../assets/images/ace/framework.png)
 
 图源：ACE 官方 GitHub 仓库 `assets/images/ace_framework.png`，对应论文 Figure 4。这张图直接解释了 ACE 的主流程：Query 和 Context Playbook 输入 Generator，产生 Trajectory；Reflector 从轨迹中提取 Insights；Curator 生成 Delta Context Items，再回写到 Playbook。
 
@@ -350,7 +350,7 @@ ACE 不是简单地无限追加 memory。它允许 playbook 逐渐变长，但�
 
 > 图源：论文 arXiv HTML Figure 1；仅用于读书笔记引用和学习说明。
 
-![Figure 1: Overall Performance Results](https://arxiv.org/html/2510.04618v3/x1.png)
+![Figure 1: Overall Performance Results](../assets/images/ace/overall-performance.png)
 
 图 1 适合放在实验结论处看：ACE 在 AppWorld、FiNER、Formula 三类任务上都超过了 Base LLM、ICL、GEPA 和 Dynamic Cheatsheet。它强调的是同一个结论：结构化、持续演化的 playbook 不只是 Agent 任务有效，对专业领域任务也有效。
 

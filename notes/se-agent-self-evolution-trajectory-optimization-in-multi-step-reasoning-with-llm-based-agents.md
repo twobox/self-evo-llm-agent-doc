@@ -205,7 +205,7 @@ SE-Agent 的核心想法是：与其只在 token 层、采样层或局部动作�
 
 ## 7. 方法：SE-Agent 的轨迹级自演化框架
 
-![SE-Agent Framework](https://github.com/JARVIS-Xs/SE-Agent/blob/main/static/img/framework.jpg?raw=true)
+![SE-Agent Framework](../assets/images/se-agent/framework.jpg)
 
 > **图 1：SE-Agent 整体框架。** 这张图最适合放在方法部分，因为它把论文核心机制压缩成一个闭环：初始轨迹池 → Revision 单轨迹修订 → Recombination 跨轨迹重组 → Refinement 评价筛选 → 更新轨迹池。读这篇文章时，先看这张图能快速抓住“轨迹级自演化”到底在演化什么。
 
@@ -415,7 +415,7 @@ Input: task x, base agent A, evolution rounds R
 
 论文通过一个代码修复案例说明：传统 ReAct / MCTS agent 可能会困在局部搜索路径里，例如过度相信某个栈跟踪位置、反复编辑局部代码，忽略真正根因。SE-Agent 通过多条轨迹之间的迭代交互和重组，有机会跳出这种局部视角。
 
-![SE-Agent Case Study](https://github.com/JARVIS-Xs/SE-Agent/blob/main/static/img/se-agent-case-study.png?raw=true)
+![SE-Agent Case Study](../assets/images/se-agent/case-study.png)
 
 > **图 2：SE-Agent case study。** 这张图适合放在实验结果后面，因为它解释了“为什么不是简单多采样”：传统 agent 的多条路径可能都围绕相同局部文件做近似 quick fix，而 SE-Agent 通过轨迹重组探索到更接近根因的修复位置。它比单纯看 Pass@1 表格更能说明 trajectory-level recombination 的意义。
 
