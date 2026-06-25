@@ -389,8 +389,6 @@ rescue rate = zero-shot 中做错的样本里，后来被 prompt / definition / 
 
 ---
 
----
-
 ## 主张—证据—边界
 
 | 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
@@ -631,8 +629,6 @@ misaligned definition 实验说明，错误外部信息可能让模型更自信�
 一句话总结：
 
 > 这篇论文把 LLM 标注任务中的失败，从“prompt 没写好”提升到了“模型内部先验与任务定义不对齐”的层面，说明 prompt-based adaptation 存在天然边界。
-
----
 
 ---
 
