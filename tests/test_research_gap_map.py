@@ -78,7 +78,7 @@ class ResearchGapMapTests(unittest.TestCase):
 
     def test_cost_and_failure_chain_are_explicit(self) -> None:
         for term in (
-            "fixed memory token",
+            "固定 memory token",
             "activation / adherence",
             "write",
             "retrieve",
