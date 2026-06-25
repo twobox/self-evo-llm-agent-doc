@@ -1,19 +1,35 @@
 <!--
 metadata:
+  schema_version: '1.0'
   title: 'Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models'
   short_title: 'ACE'
   year: 2026
   note_type: '中文读书笔记'
-  paper_type: 'method / system paper'
-  status: 'Published as ICLR 2026 conference paper / poster; arXiv v3, last revised on 2026-03-29; OpenReview last modified on 2026-04-11'
-  venue: 'ICLR 2026 / arXiv / OpenReview'
+  paper_type: 'system'
+  paper_status: 'published'
+  venue: 'ICLR 2026'
+  venue_track: 'Poster'
+  evolution_object: 'Context / Playbook'
+  learning_stage: 'mixed'
+  parameter_update: 'no'
+  cross_task: 'yes'
   arxiv_id: '2510.04618'
+  arxiv_version: 'v3'
   arxiv_url: 'https://arxiv.org/abs/2510.04618'
   pdf_url: 'https://arxiv.org/pdf/2510.04618'
   html_url: 'https://ar5iv.labs.arxiv.org/html/2510.04618v3'
+  project_url: 'https://ace-agent.github.io/'
   code_url: 'https://github.com/ace-agent/ace'
   original_code_url: ''
+  resource_url: ''
   model_url: ''
+  code_status: 'official_available'
+  model_status: 'not_found'
+  first_submitted: '2025-10-06'
+  last_revised: '2026-03-29'
+  accepted_at: ''
+  published_at: ''
+  last_verified: '2026-06-24'
   authors:
     - 'Qizheng Zhang'
     - 'Changran Hu'
@@ -54,7 +70,7 @@ metadata:
     - 'notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
     - 'notes/harness-updating-is-not-harness-benefit.md'
   created: '2026-06-08'
-  updated: '2026-06-10'
+  updated: '2026-06-25'
 -->
 
 # 《Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models》读书笔记
@@ -71,46 +87,71 @@ metadata:
 
 ---
 
-## 1. 一句话总结
 
-这篇论文提出 **ACE（Agentic Context Engineering）**：不更新模型参数，而是让 LLM 应用把 prompt、memory、工具使用经验、领域策略等上下文维护成一个会持续增长和整理的 **playbook**。它用 **Generator / Reflector / Curator** 三个角色，把任务执行轨迹和反馈转成结构化的上下文增量，从而让 Agent 或领域应用在后续任务中表现更好。
+## 30 秒读懂
 
-我的理解：ACE 不是“训练一个更强模型”，而是“训练 / 维护一个更好的上下文系统”。它把 self-improving LLM 的重点从参数更新转移到 **上下文资产的持续积累、纠错和组织**。
+> **一句话总结：** ACE 不更新模型参数，而是把任务轨迹和反馈持续整理成一个结构化 playbook；Generator 使用经验，Reflector 提取增量，Curator 去重和维护，从而避免反复重写整份上下文造成的 context collapse。
 
----
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | Context Engineering 系统论文 |
+| 核心问题 | 上下文能否像模型参数一样持续积累能力，同时避免越总结越短、越改越丢细节？ |
+| 核心机制 | Generator / Reflector / Curator 三角色，以增量方式维护 evolving playbook |
+| 更新对象 | 外部 Context / Playbook 条目 |
+| 学习阶段 | 混合，可在历史任务批量整理，也可随任务流持续更新 |
+| 是否跨任务 | 是，前序任务经验进入后续任务上下文 |
+| 是否更新模型参数 | 否 |
+| 最重要结论 | 结构化增量更新比整份上下文反复重写更能保留细粒度经验，并支持后续任务改进 |
+| 最大局限 | Playbook 会持续增长，效果仍依赖检索、上下文预算以及执行模型能否正确使用条目 |
 
-## 2. 论文外部信息
+### 不要误读
 
-### 2.1 投稿与发表状态
-
-- 会议状态：**ICLR 2026 conference paper / poster**。
-- arXiv 编号：**arXiv:2510.04618**。
-- arXiv 初始提交：2025-10-06；v3 最后修订：2026-03-29。
-- OpenReview 页面显示：Published 2026-01-26，Last Modified 2026-04-11。
-- 论文许可证：OpenReview 页面显示 **CC BY 4.0**。
-- 代码许可证：官方 GitHub 仓库中 `LICENSE.txt` 为 **Apache License 2.0**。项目页底部和仓库许可证描述存在轻微不一致，实际复现和引用时建议以仓库 `LICENSE.txt` 为准。
-
-### 2.2 作者与机构
-
-论文作者来自三个主要机构：
-
-- **Stanford University**：Qizheng Zhang、James Zou、Kunle Olukotun。
-- **SambaNova Systems, Inc.**：Changran Hu、Shubhangi Upasani、Boyuan Ma、Fenglu Hong、Vamsidhar Kamanuru、Jay Rainton、Chen Wu、Mengmeng Ji、Urmish Thakker。
-- **UC Berkeley**：Hanchen Li。
-
-从作者圈子看，这篇论文明显处在 **Stanford + SambaNova** 的交叉区域：一边是 Stanford 的 AI / Systems / Agent 研究生态，另一边是 SambaNova 的模型服务、推理系统和企业 AI 应用背景。因此它不是单纯的 prompt 技巧论文，而是很强调 **可部署性、延迟、rollout 成本、长上下文服务成本** 的系统型工作。
-
-### 2.3 作者背景和研究圈子
-
-- **James Zou** 是 Stanford 机器学习、AI for Science / AI for Health、可信 AI 等方向的重要研究者。论文中 ACE 也继承了其团队在 **Dynamic Cheatsheet / adaptive memory / test-time learning** 这一类方向上的研究脉络。
-- **Kunle Olukotun** 是 Stanford 计算机体系结构和并行计算方向的重要学者，也是 SambaNova Systems 的联合创始人之一。因此这篇论文对 **长上下文推理的成本、KV cache reuse、低延迟适配** 有比较强的系统视角。
-- **SambaNova Systems** 这边的作者占比很高，说明 ACE 很可能是面向真实 LLM 应用部署的一套上下文工程框架，而不是只追求 benchmark 分数的算法原型。
-
-暂未逐一找到所有作者的公开主页和详细背景；本笔记只基于论文、OpenReview、官方项目页和官方 GitHub 仓库整理，不对未确认信息做扩展猜测。
+ACE 不是模型微调，也不只是把完整历史塞进长上下文。它演化的是一份经过反思、去重和组织的外部上下文资产。
 
 ---
 
-## 3. 所属研究方向与论文定位
+## 论文定位
+
+ACE 位于 **Agentic Context Engineering、Agent Memory 与 Test-Time Adaptation** 的交叉处。它把 self-improvement 的主要载体从模型参数转移到可维护的 playbook：
+
+```text
+当前 Playbook + 新任务
+    ↓
+Generator 执行并产生轨迹
+    ↓
+Reflector 提取有用与有害经验
+    ↓
+Curator 增量写入、合并和去重
+    ↓
+后续任务继续使用更新后的 Playbook
+```
+
+相比普通 RAG，ACE 保存的主要不是外部事实，而是任务策略和操作经验；相比 EvolveR，它不通过 SFT / RL 更新 executor；相比简单反思，它强调增量维护而不是整体重写。
+
+## 研究问题
+
+> 在冻结基础模型的条件下，怎样让上下文从连续任务反馈中持续改进，并避免 brevity bias 和 context collapse？
+
+## 进化机制卡片
+
+| 维度 | 内容 |
+|---|---|
+| 初始 Agent | 读取当前 playbook 执行任务的 Generator |
+| 学习信号来源 | 任务轨迹、环境反馈、成功与失败结果 |
+| 被更新的对象 | 结构化 context items / playbook |
+| 经验形式 | 可复用策略、边界条件、工具规则、正负证据及具体注意事项 |
+| 存储位置 | 外部 playbook，作为后续请求的上下文资产 |
+| 更新时间 | 完成任务或一批任务后，由 Reflector 与 Curator 增量维护 |
+| 后续使用方式 | Generator 在新任务中读取相关条目并据此推理或调用工具 |
+| 作用范围 | 跨任务持续积累 |
+| 是否更新模型参数 | 否 |
+| 是否需要明确奖励 | 不要求统一标量奖励，但需要结果或反馈判断经验是否有用 |
+| 是否依赖教师模型 | 不要求固定教师；不同角色可由 LLM 实现 |
+| 主要计算与 Token 成本 | 额外反思和整理调用、不断增长的 playbook、长上下文推理成本 |
+
+---
+
+## 与相关路线的关系
 
 这篇论文属于以下几个交叉方向：
 
@@ -127,7 +168,7 @@ metadata:
 
 ---
 
-## 4. 核心问题
+## 问题背景：Brevity Bias 与 Context Collapse
 
 论文要解决的问题是：**如果不更新模型参数，只更新上下文，LLM Agent 能不能持续自我改进？如果可以，怎样避免上下文越改越短、越改越丢信息？**
 
@@ -150,7 +191,7 @@ metadata:
 
 > 图源：论文 arXiv HTML Figure 2；论文许可证见 arXiv / OpenReview 页面（CC BY 4.0）。以下图片仅用于读书笔记引用和学习说明。
 
-![Figure 2: Context Collapse](https://arxiv.org/html/2510.04618v3/x2.png)
+![Figure 2: Context Collapse](../assets/images/ace/context-collapse.png)
 
 图 2 是 ACE 这篇论文最能说明“为什么需要增量更新”的图：上下文在前 60 步逐渐增长，但第 61 步突然从 18,282 tokens 坍缩成 122 tokens，准确率也随之下降。这说明让 LLM 反复重写整份上下文，会有把细节一次性抹掉的风险。
 
@@ -176,7 +217,7 @@ ACE 把上下文更新拆成三个角色：
 
 ### 5.2 关键图：ACE 框架
 
-![Figure 4: The ACE Framework](https://raw.githubusercontent.com/ace-agent/ace/main/assets/images/ace_framework.png)
+![Figure 4: The ACE Framework](../assets/images/ace/framework.png)
 
 图源：ACE 官方 GitHub 仓库 `assets/images/ace_framework.png`，对应论文 Figure 4。这张图直接解释了 ACE 的主流程：Query 和 Context Playbook 输入 Generator，产生 Trajectory；Reflector 从轨迹中提取 Insights；Curator 生成 Delta Context Items，再回写到 Playbook。
 
@@ -309,7 +350,7 @@ ACE 不是简单地无限追加 memory。它允许 playbook 逐渐变长，但�
 
 > 图源：论文 arXiv HTML Figure 1；仅用于读书笔记引用和学习说明。
 
-![Figure 1: Overall Performance Results](https://arxiv.org/html/2510.04618v3/x1.png)
+![Figure 1: Overall Performance Results](../assets/images/ace/overall-performance.png)
 
 图 1 适合放在实验结论处看：ACE 在 AppWorld、FiNER、Formula 三类任务上都超过了 Base LLM、ICL、GEPA 和 Dynamic Cheatsheet。它强调的是同一个结论：结构化、持续演化的 playbook 不只是 Agent 任务有效，对专业领域任务也有效。
 
@@ -325,6 +366,29 @@ ACE 不是简单地无限追加 memory。它允许 playbook 逐渐变长，但�
 原因是 ACE 不需要像 GEPA 那样做大量 prompt validation / evolutionary search，也不需要像一些 adaptive memory 方法那样频繁重写整份上下文。它主要更新小的 delta，并用非 LLM 逻辑做合并、去重和剪枝。
 
 论文还讨论了长上下文的 serving cost：ACE 生成的 playbook 更长，但如果系统支持 KV cache / prompt cache，重复上下文可以复用。论文报告在 GPT-5.1 API 的 prompt-caching study 中，ACE evaluation stage 有 **91.8%** input tokens 来自 cache，从而使 billed input-token cost 相比原始 token 计数降低 **82.6%**。
+
+---
+
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| 冻结模型参数，只演化外部 Context / Playbook 也能显著提升复杂 Agent | AppWorld 中 ReAct 为 42.4，ACE offline 为 59.4，ACE online 为 59.5 | ICL 46.0、GEPA 46.4、Dynamic Cheatsheet 51.9 | 在相同基础模型和论文设置下，结构化上下文维护能带来明显任务收益 | 不能证明所有 Agent、所有基础模型或长期开放环境都同样有效 |
+| 增量式 playbook 维护比反复重写整份上下文更稳 | Context collapse 案例中上下文从 18,282 tokens 压缩到 122 tokens 后性能下降；ACE 使用 delta update、去重与局部合并 | 全量 prompt evolution / adaptive memory rewriting | 说明整体重写存在丢失细粒度经验的真实风险，局部更新具有工程合理性 | 不能单独证明收益全部来自“增量”而不是更长上下文、更多调用或整体系统设计 |
+| 没有人工标签时，自然执行反馈也可以驱动上下文改进 | AppWorld offline 无 GT 为 57.2，online 无 GT 为 59.5 | Base ReAct 42.4、DC online 51.9 | 在有可执行环境反馈的任务上，ground truth 不是唯一可用信号 | 不能推广到缺少 verifier 的任务；FiNER online 无 GT 从 70.7 降到 67.3，说明错误反馈会污染 playbook |
+| ACE 的适配过程比强 prompt optimizer 或全量记忆重写更省成本 | AppWorld offline 相比 GEPA latency 降 82.3%、rollout 降 75.1%；FiNER online 相比 DC token cost 降 83.6% | GEPA、Dynamic Cheatsheet | 在论文实现和预算下，delta update 可以降低适配开销 | 不能保证不同 API、缓存策略、并发和计费模式下仍有同样成本优势 |
+
+### 我的判断
+
+ACE 对“上下文可以成为持续改进对象”给出了较强的 benchmark 证据，也用无标签 AppWorld 和金融任务展示了不同反馈条件。最可信的结论是：**结构化增量维护比把历史原样堆进上下文或反复重写整份 Prompt 更可控。**
+
+更弱的结论是“ACE 已经解决长期自我改进”。实验仍集中在 AppWorld 与金融 XBRL，playbook 污染、任务分布漂移和长期安全治理并未被系统验证。
+
+### 其他可能解释
+
+- ACE 使用更长、更细粒度的上下文，部分收益可能来自信息量增加，而不只是更新算法本身。
+- Generator、Reflector、Curator 带来了额外模型调用；与 baseline 的计算预算未必在所有维度完全等价。
+- 成本优势依赖 prompt cache / KV cache 命中率，真实部署结果会受服务基础设施影响。
 
 ---
 
@@ -401,6 +465,14 @@ ACE 支持长上下文，但不是把所有历史轨迹原样塞进去。它强�
 
 ## 11. 我的理解与总结
 
+### 核心理解
+
+这篇论文提出 **ACE（Agentic Context Engineering）**：不更新模型参数，而是让 LLM 应用把 prompt、memory、工具使用经验、领域策略等上下文维护成一个会持续增长和整理的 **playbook**。它用 **Generator / Reflector / Curator** 三个角色，把任务执行轨迹和反馈转成结构化的上下文增量，从而让 Agent 或领域应用在后续任务中表现更好。
+
+我的理解：ACE 不是“训练一个更强模型”，而是“训练 / 维护一个更好的上下文系统”。它把 self-improving LLM 的重点从参数更新转移到 **上下文资产的持续积累、纠错和组织**。
+
+### 进一步总结
+
 这篇论文的价值在于，它把“上下文”从静态 prompt 提升为一种可以持续演化的系统组件。
 
 传统 prompt engineering 更像一次性写说明书；ACE 更像维护一份持续更新的团队 runbook：每次任务之后，把成功经验、失败教训、领域规则和工具使用细节写进去，并且保证这份 runbook 不会被反复总结到失真。
@@ -416,7 +488,38 @@ ACE 支持长上下文，但不是把所有历史轨迹原样塞进去。它强�
 
 ---
 
-## 12. 参考链接
+## 论文外部信息
+
+### 投稿与发表状态
+
+- 会议状态：**ICLR 2026 conference paper / poster**。
+- arXiv 编号：**arXiv:2510.04618**。
+- arXiv 初始提交：2025-10-06；v3 最后修订：2026-03-29。
+- OpenReview 页面显示：Published 2026-01-26，Last Modified 2026-04-11。
+- 论文许可证：OpenReview 页面显示 **CC BY 4.0**。
+- 代码许可证：官方 GitHub 仓库中 `LICENSE.txt` 为 **Apache License 2.0**。项目页底部和仓库许可证描述存在轻微不一致，实际复现和引用时建议以仓库 `LICENSE.txt` 为准。
+
+### 作者与机构
+
+论文作者来自三个主要机构：
+
+- **Stanford University**：Qizheng Zhang、James Zou、Kunle Olukotun。
+- **SambaNova Systems, Inc.**：Changran Hu、Shubhangi Upasani、Boyuan Ma、Fenglu Hong、Vamsidhar Kamanuru、Jay Rainton、Chen Wu、Mengmeng Ji、Urmish Thakker。
+- **UC Berkeley**：Hanchen Li。
+
+从作者圈子看，这篇论文明显处在 **Stanford + SambaNova** 的交叉区域：一边是 Stanford 的 AI / Systems / Agent 研究生态，另一边是 SambaNova 的模型服务、推理系统和企业 AI 应用背景。因此它不是单纯的 prompt 技巧论文，而是很强调 **可部署性、延迟、rollout 成本、长上下文服务成本** 的系统型工作。
+
+### 作者背景和研究圈子
+
+- **James Zou** 是 Stanford 机器学习、AI for Science / AI for Health、可信 AI 等方向的重要研究者。论文中 ACE 也继承了其团队在 **Dynamic Cheatsheet / adaptive memory / test-time learning** 这一类方向上的研究脉络。
+- **Kunle Olukotun** 是 Stanford 计算机体系结构和并行计算方向的重要学者，也是 SambaNova Systems 的联合创始人之一。因此这篇论文对 **长上下文推理的成本、KV cache reuse、低延迟适配** 有比较强的系统视角。
+- **SambaNova Systems** 这边的作者占比很高，说明 ACE 很可能是面向真实 LLM 应用部署的一套上下文工程框架，而不是只追求 benchmark 分数的算法原型。
+
+暂未逐一找到所有作者的公开主页和详细背景；本笔记只基于论文、OpenReview、官方项目页和官方 GitHub 仓库整理，不对未确认信息做扩展猜测。
+
+---
+
+## 12. 参考资料与链接
 
 - arXiv：<https://arxiv.org/abs/2510.04618>
 - PDF：<https://arxiv.org/pdf/2510.04618>

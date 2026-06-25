@@ -1,0 +1,73 @@
+name: Validate notes
+
+on:
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'notes/**'
+      - 'surveys/**'
+      - 'docs/**'
+      - 'assets/**'
+      - 'maintenance/image-inventory.json'
+      - 'maintenance/image-inventory.md'
+      - 'scripts/**'
+      - 'tests/**'
+      - '.github/workflows/validate-notes.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'README.md'
+      - 'notes/**'
+      - 'surveys/**'
+      - 'docs/**'
+      - 'assets/**'
+      - 'maintenance/image-inventory.json'
+      - 'maintenance/image-inventory.md'
+      - 'scripts/**'
+      - 'tests/**'
+      - '.github/workflows/validate-notes.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile tooling
+        run: python -m compileall -q scripts tests
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Require metadata and note structure
+        run: python scripts/validate_notes.py . --require-schema --require-structure --strict
+
+      - name: Check local Markdown links
+        run: python scripts/check_links.py .
+
+      - name: Check localized image assets
+        run: python scripts/check_images.py .
+
+      - name: Check experimental comparison
+        run: python scripts/generate_experimental_comparison.py --check
+
+      - name: Check generated README note index
+        run: python scripts/generate_readme.py . --check --require-markers --output /tmp/generated-note-index.md
+
+      - name: Upload generated index preview
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-note-index
+          path: /tmp/generated-note-index.md
+          if-no-files-found: ignore

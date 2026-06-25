@@ -1,19 +1,35 @@
 <!--
 metadata:
+  schema_version: '1.0'
   title: 'Self-Challenging Language Model Agents'
   short_title: 'Self-Challenging Agents'
   year: 2025
   note_type: '中文读书笔记'
-  paper_type: 'method / framework / agent training paper'
-  status: 'arXiv v1 submitted on 2025-06-02; NeurIPS 2025 poster; OpenReview published on 2025-09-18 and last modified on 2026-04-21'
-  venue: 'NeurIPS 2025 / arXiv / OpenReview'
+  paper_type: 'method'
+  paper_status: 'published'
+  venue: 'NeurIPS 2025'
+  venue_track: 'Poster'
+  evolution_object: 'Synthetic Tasks / Executor Policy'
+  learning_stage: 'training'
+  parameter_update: 'yes'
+  cross_task: 'yes'
   arxiv_id: '2506.01716'
+  arxiv_version: 'v1'
   arxiv_url: 'https://arxiv.org/abs/2506.01716'
   pdf_url: 'https://arxiv.org/pdf/2506.01716'
   html_url: 'https://arxiv.org/html/2506.01716v1'
+  project_url: ''
   code_url: ''
   original_code_url: ''
+  resource_url: ''
   model_url: ''
+  code_status: 'not_found'
+  model_status: 'not_found'
+  first_submitted: '2025-06-02'
+  last_revised: ''
+  accepted_at: ''
+  published_at: ''
+  last_verified: '2026-06-24'
   authors:
     - 'Yifei Zhou'
     - 'Sergey Levine'
@@ -31,70 +47,88 @@ metadata:
     - 'Synthetic Task Generation'
     - 'Code-as-Task'
   tags:
-    - 'LLM Agent'
+    - 'llm-agent'
     - 'self-improvement'
-    - 'multi-turn tool-use'
-    - 'reinforcement learning'
-    - 'verifiable reward'
-    - 'M3ToolEval'
-    - 'TauBench'
+    - 'multi-turn-tool-use'
+    - 'reinforcement-learning'
+    - 'verifiable-reward'
+    - 'm3tooleval'
+    - 'taubench'
   related_notes:
-    - 'evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
-    - 'harness-updating-is-not-harness-benefit.md'
+    - 'notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md'
+    - 'notes/harness-updating-is-not-harness-benefit.md'
   created: '2026-06-06'
-  updated: '2026-06-10'
+  updated: '2026-06-25'
 -->
 
 # 《Self-Challenging Language Model Agents》读书笔记
 
-## 1. 基本信息
+## 30 秒读懂
 
-- 论文标题：Self-Challenging Language Model Agents
-- arXiv：<https://arxiv.org/abs/2506.01716>
-- PDF：<https://arxiv.org/pdf/2506.01716>
-- arXiv HTML：<https://arxiv.org/html/2506.01716v1>
-- OpenReview / NeurIPS 页面：<https://openreview.net/forum?id=9yusqX9DpR>
-- Hugging Face Papers：<https://huggingface.co/papers/2506.01716>
-- 代码仓库：暂未找到官方公开代码仓库。
-- 模型权重：暂未找到官方公开模型权重；Hugging Face Papers 页面当前也没有关联模型记录。
+> **一句话总结：** Self-Challenging Agent 先探索工具环境并生成带可执行验证器的 Code-as-Task，再让 executor 解这些自生成任务，用验证结果进行强化学习或蒸馏，从而把“缺少人工训练任务”转化为 Agent 自己出题并训练自己的闭环。
 
-这篇论文关注一个很关键的问题：**LLM Agent 想靠强化学习提升多轮工具使用能力，但训练任务、工具环境和评价标准通常需要人工构造，成本很高，而且难以规模化。** 作者提出 Self-Challenging Agent（SCA）框架，让 Agent 自己生成高质量、可验证的任务，再用这些任务训练自己。
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | 自生成任务 + RL 训练方法论文 |
+| 核心问题 | 没有大量人工任务和人工评分时，怎样规模化训练多轮工具使用 Agent？ |
+| 核心机制 | Challenger 生成 instruction、verification function、example solution 和 failure cases，Executor 解题并由验证器给奖励 |
+| 更新对象 | Synthetic Tasks 与 Executor Policy 参数 |
+| 学习阶段 | 训练时 |
+| 是否跨任务 | 是，自生成任务集用于提升通用工具执行能力 |
+| 是否更新模型参数 | 是 |
+| 最重要结论 | 可执行验证器让自生成任务具备可过滤、可训练的硬奖励，减少对人工标注任务的依赖 |
+| 最大局限 | 依赖能写出可靠验证器的环境；验证器漏洞、任务偏差和自生成数据分布会限制提升 |
 
-## 2. 投稿 / 发表状态
+### 不要误读
 
-- arXiv 版本：arXiv:2506.01716，v1 提交时间为 2025-06-02。
-- 会议状态：OpenReview 页面显示为 **NeurIPS 2025 poster**。
-- OpenReview 信息：Published: 18 Sept 2025，Last Modified: 21 Apr 2026。
-- 许可信息：OpenReview 页面显示 CC BY 4.0。
-- 伦理审查：OpenReview 页面显示 Flagged For Ethics Review: true。
+这不是部署阶段的在线自我反思，也不是只生成自然语言问题。核心资产是带验证代码和正反例约束的训练任务，最终改进来自 executor 参数训练。
 
-## 3. 作者与机构
+---
 
-论文作者为：
+## 论文定位
 
-- Yifei Zhou：UC Berkeley
-- Sergey Levine：UC Berkeley
-- Jason Weston：FAIR at Meta
-- Xian Li：FAIR at Meta
-- Sainbayar Sukhbaatar：FAIR at Meta
+Self-Challenging 位于 **Synthetic Task Generation、Tool-use Agent 与 RL for Agent** 的交叉处。它把同一个系统拆成两个角色：
 
-论文首页脚注说明该工作完成于 FAIR at Meta，并标注 Xian Li 与 Sainbayar Sukhbaatar 为 equal advising。
+```text
+Task Challenger 探索环境
+    ↓
+生成 Code-as-Task 与验证器
+    ↓
+自动过滤不可行或验证器失效的任务
+    ↓
+Task Executor 采样多轮工具轨迹
+    ↓
+验证器给出可复现奖励
+    ↓
+RL / Distillation 更新 Executor
+```
 
-## 4. 作者背景和研究圈子
+相比经验库方法，它不主要保存过去策略，而是制造新的可验证练习题；相比普通 benchmark 生成，它直接把任务转化为训练闭环。
 
-这篇文章的作者组合比较值得关注，基本可以看成 **Berkeley RL / Agent 方向 + Meta FAIR LLM / NLP / Agent 方向** 的合作。
+## 研究问题
 
-- Yifei Zhou 近年的论文与 LLM Agent、自动化任务发现、多轮 RL、互联网 Agent 等方向关系很密切。论文参考文献中也能看到他参与的 PAE、ARChER、SWEET-RL 等相关工作。这说明本文不是孤立提出一个技巧，而是在一条“Agent 自动生成任务 / 自动改进”的研究线上继续推进。
-- Sergey Levine 是 UC Berkeley EECS 教授，研究重点包括 autonomous agents、robotics、decision making、deep reinforcement learning 等。他的研究背景使本文的“通过环境交互和奖励学习提升 Agent 能力”的思路带有明显的 RL 和自主智能体色彩。
-- Jason Weston、Xian Li、Sainbayar Sukhbaatar 都来自 Meta / FAIR 相关研究圈子，长期关注 NLP、语言模型、对话、推理、LLM 训练与 Agent 学习。Xian Li 的 OpenReview 资料显示其方向包括 deep learning、natural language processing、machine learning、machine translation；Sainbayar Sukhbaatar 的资料显示其为 Meta AI Research Scientist，并与多个 LLM reasoning / preference optimization / agent learning 工作有关。
+> Agent 能否在缺少人工任务集和人工评价标准时，自主生成可行、有难度、可自动判分的工具使用任务，并据此提升自己的 executor？
 
-从圈子上看，这篇论文不是单纯做 benchmark 提升，而是把三个方向结合起来：
+## 进化机制卡片
 
-1. 强化学习训练 Agent；
-2. 自动生成可训练任务；
-3. 用代码形式的验证器把奖励信号做得更可靠。
+| 维度 | 内容 |
+|---|---|
+| 初始 Agent | 能探索工具环境的 Challenger 与待训练的 Executor |
+| 学习信号来源 | Code-as-Task 中 verification function 的可执行结果 |
+| 被更新的对象 | Synthetic task distribution 与 Executor Policy 参数 |
+| 经验形式 | Instruction、验证函数、示例解、失败样例和 executor 轨迹 |
+| 存储位置 | 过滤后的任务集、训练轨迹和更新后的模型参数 |
+| 更新时间 | 训练阶段分批生成任务、采样轨迹并更新 executor |
+| 后续使用方式 | 新任务作为 RL / 蒸馏训练数据，提升多轮工具调用策略 |
+| 作用范围 | 跨任务能力训练 |
+| 是否更新模型参数 | 是 |
+| 是否需要明确奖励 | 是，依赖可执行验证器 |
+| 是否依赖教师模型 | 不依赖人工教师标签为核心，但任务和验证器质量受基础模型能力约束 |
+| 主要计算与 Token 成本 | 环境探索、任务生成与过滤、多轮 rollout、验证执行和 RL 训练 |
 
-## 5. 所属研究方向与论文定位
+---
+
+## 与相邻路线的关系
 
 这篇论文属于 **Self-Evolving / Self-Improving LLM Agent** 方向，也可以放在 **RL for Tool-use Agent** 和 **Synthetic Task Generation for Agents** 下面。
 
@@ -108,7 +142,7 @@ metadata:
 
 这对后续做 LLM Agent 自演化很重要，因为很多 Agent 系统真正卡住的不是模型会不会调用一次工具，而是缺少大量高质量、多样、可自动判分的训练任务。
 
-## 6. 核心问题
+## 问题背景：任务、验证器与奖励稀缺
 
 论文要解决的问题可以概括为：
 
@@ -282,6 +316,32 @@ PAE 是重要 baseline。论文强调 SCA 和 PAE 的差别主要有三点：
 
 第五，在线 RL 可能带来更高收益，但工程代价更大。论文在 Calculation 环境中发现，PPO / GRPO 等在线 RL 能进一步提高表现，但也更不稳定，对超参数和基础设施要求更高。
 
+---
+
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| Agent 可以依靠自生成、可验证任务提升自己的工具使用能力 | Self-improvement 中 Llama-3.1-8B 平均 Pass@1 从 12.0 提升到 23.5，Pass@4 从 27.9 提升到 41.3 | 原始 Llama-3.1-8B、PAE 等自动任务生成方法 | 支持无需人工任务标签也能构造有效训练闭环 | 不能证明模型完全自主成长；环境、工具接口和验证逻辑仍由人类提供 |
+| 自动生成任务可用于强模型向弱模型蒸馏 | 70B teacher 轨迹训练后，8B-SCA 的 Pass@1 / Pass@4 达到 32.2 / 56.8 | 原始 8B 的 12.0 / 27.9 | 说明 CaT 可作为自动生成的工具使用蒸馏数据 | 这是 teacher-student 设置，不属于纯粹的自我提升，且依赖强模型成本 |
+| Code-as-Task 的正例与失败样例能提高验证器质量 | 人工标注分析显示 example solution 减少不可行任务，failure cases 进一步过滤验证器过宽造成的 false positive | 只生成 instruction 或 verification function 的简化任务 | 支持任务生成必须同时验证“正例能过、反例不能过” | 仍无法完全发现语义不完整的 instruction 和 false negative |
+| 主动探索环境比只看初始说明更适合部分可观测任务 | Challenger 先调用工具观察环境；在 Retail / Airline 等环境相对 PAE 更有优势 | 根据初始 observation 直接生成任务的 PAE | 支持环境探索有助于生成更具体、可行的任务 | 不能说明该优势适用于完全开放或无状态环境 |
+| 任务覆盖度比在少数任务上增加 rollout 更影响 OOD 泛化 | Scaling 分析中，少量任务增加轨迹可改善训练集，但 OOD 测试需要更多任务类型和覆盖 | 固定任务数、增加每任务轨迹数 | 说明自生成训练不能只在少数题上反复采样 | 没有给出自动保证任务多样性和真实需求覆盖的完整方法 |
+
+### 我的判断
+
+SCA 的核心贡献是训练数据管线：主动探索、生成 instruction + verifier + 正反例、自动过滤，再进行 RL 或蒸馏。主结果表明这种数据能显著提升 8B executor，CaT 人工分析也为验证器设计提供了直接证据。
+
+其“自演化”边界也很清楚：任务空间、工具环境和可验证目标仍由人类搭建；提升主要是环境特定技能，尚未证明跨环境形成通用 Agent 能力。
+
+### 其他可能解释
+
+- 12k rollout 和额外训练本身带来较大预算，部分收益可能来自更多交互数据。
+- 0/1 verifier 可能鼓励 reward hacking 或只学习通过 checker 的策略。
+- PPO / GRPO 能进一步提高结果但训练不稳定，论文报告 GRPO 调参不当时性能可能降到 0。
+
+---
+
 ## 10. 工程启发
 
 这篇论文对做 Agent 系统有几个很直接的启发。
@@ -337,7 +397,60 @@ SCA 能工作，一个核心原因是它把 reward 绑定到 verification functi
 
 不过，这篇论文也说明自演化还没有完全解决。SCA 更像是第一步：它能在特定工具环境中提高能力，但还没有证明可以跨环境形成通用 Agent 能力。后续更重要的问题可能是：如何让 challenger 生成更抽象、更跨环境、更接近真实需求的任务；以及如何在没有明确代码验证器的开放任务中构造可靠 reward。
 
-## 13. 参考链接
+---
+
+## 论文外部信息
+
+### 基本信息与资源
+
+- 论文标题：Self-Challenging Language Model Agents
+- arXiv：<https://arxiv.org/abs/2506.01716>
+- PDF：<https://arxiv.org/pdf/2506.01716>
+- arXiv HTML：<https://arxiv.org/html/2506.01716v1>
+- OpenReview / NeurIPS 页面：<https://openreview.net/forum?id=9yusqX9DpR>
+- Hugging Face Papers：<https://huggingface.co/papers/2506.01716>
+- 代码仓库：暂未找到官方公开代码仓库。
+- 模型权重：暂未找到官方公开模型权重；Hugging Face Papers 页面当前也没有关联模型记录。
+
+这篇论文关注一个很关键的问题：**LLM Agent 想靠强化学习提升多轮工具使用能力，但训练任务、工具环境和评价标准通常需要人工构造，成本很高，而且难以规模化。** 作者提出 Self-Challenging Agent（SCA）框架，让 Agent 自己生成高质量、可验证的任务，再用这些任务训练自己。
+
+### 投稿与发表状态
+
+- arXiv 版本：arXiv:2506.01716，v1 提交时间为 2025-06-02。
+- 会议状态：OpenReview 页面显示为 **NeurIPS 2025 poster**。
+- OpenReview 信息：Published: 18 Sept 2025，Last Modified: 21 Apr 2026。
+- 许可信息：OpenReview 页面显示 CC BY 4.0。
+- 伦理审查：OpenReview 页面显示 Flagged For Ethics Review: true。
+
+### 作者与机构
+
+论文作者为：
+
+- Yifei Zhou：UC Berkeley
+- Sergey Levine：UC Berkeley
+- Jason Weston：FAIR at Meta
+- Xian Li：FAIR at Meta
+- Sainbayar Sukhbaatar：FAIR at Meta
+
+论文首页脚注说明该工作完成于 FAIR at Meta，并标注 Xian Li 与 Sainbayar Sukhbaatar 为 equal advising。
+
+### 作者背景和研究圈子
+
+这篇文章的作者组合比较值得关注，基本可以看成 **Berkeley RL / Agent 方向 + Meta FAIR LLM / NLP / Agent 方向** 的合作。
+
+- Yifei Zhou 近年的论文与 LLM Agent、自动化任务发现、多轮 RL、互联网 Agent 等方向关系很密切。论文参考文献中也能看到他参与的 PAE、ARChER、SWEET-RL 等相关工作。这说明本文不是孤立提出一个技巧，而是在一条“Agent 自动生成任务 / 自动改进”的研究线上继续推进。
+- Sergey Levine 是 UC Berkeley EECS 教授，研究重点包括 autonomous agents、robotics、decision making、deep reinforcement learning 等。他的研究背景使本文的“通过环境交互和奖励学习提升 Agent 能力”的思路带有明显的 RL 和自主智能体色彩。
+- Jason Weston、Xian Li、Sainbayar Sukhbaatar 都来自 Meta / FAIR 相关研究圈子，长期关注 NLP、语言模型、对话、推理、LLM 训练与 Agent 学习。Xian Li 的 OpenReview 资料显示其方向包括 deep learning、natural language processing、machine learning、machine translation；Sainbayar Sukhbaatar 的资料显示其为 Meta AI Research Scientist，并与多个 LLM reasoning / preference optimization / agent learning 工作有关。
+
+从圈子上看，这篇论文不是单纯做 benchmark 提升，而是把三个方向结合起来：
+
+1. 强化学习训练 Agent；
+2. 自动生成可训练任务；
+3. 用代码形式的验证器把奖励信号做得更可靠。
+
+---
+
+## 13. 参考资料与链接
 
 - arXiv 页面：<https://arxiv.org/abs/2506.01716>
 - PDF：<https://arxiv.org/pdf/2506.01716>

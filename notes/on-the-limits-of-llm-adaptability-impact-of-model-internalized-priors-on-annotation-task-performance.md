@@ -1,19 +1,35 @@
 <!--
 metadata:
+  schema_version: '1.0'
   title: 'On the Limits of LLM Adaptability: Impact of Model-Internalized Priors on Annotation Task Performance'
   short_title: 'On the Limits of LLM Adaptability'
   year: 2026
   note_type: '中文读书笔记'
-  paper_type: 'analysis / diagnostic / evaluation paper / boundary study'
-  status: 'Accepted at ICML 2026 (Oral & Spotlight); arXiv v1 submitted on 2026-05-30; PMLR vol. 306'
-  venue: 'ICML 2026 Oral & Spotlight / PMLR vol. 306 / arXiv'
+  paper_type: 'diagnostic'
+  paper_status: 'published'
+  venue: 'ICML 2026'
+  venue_track: 'Oral & Spotlight'
+  evolution_object: 'Model Priors / Prompt Adaptability'
+  learning_stage: 'not-applicable'
+  parameter_update: 'not-applicable'
+  cross_task: 'not-applicable'
   arxiv_id: '2606.00467'
+  arxiv_version: 'v1'
   arxiv_url: 'https://arxiv.org/abs/2606.00467'
   pdf_url: 'https://arxiv.org/pdf/2606.00467'
   html_url: 'https://arxiv.org/html/2606.00467v1'
+  project_url: ''
   code_url: ''
   original_code_url: ''
+  resource_url: ''
   model_url: ''
+  code_status: 'not_found'
+  model_status: 'not_applicable'
+  first_submitted: '2026-05-30'
+  last_revised: ''
+  accepted_at: ''
+  published_at: ''
+  last_verified: '2026-06-24'
   authors:
     - 'Etienne Casanova'
     - 'Rafal Kocielnik'
@@ -43,10 +59,57 @@ metadata:
     - 'notes/harness-updating-is-not-harness-benefit.md'
     - 'notes/position-agents-should-invoke-external-tools-only-when-epistemically-necessary.md'
   created: '2026-06-11'
-  updated: '2026-06-11'
+  updated: '2026-06-25'
 -->
 
 # 《On the Limits of LLM Adaptability》读书笔记
+
+## 30 秒读懂
+
+> **一句话总结：** 这篇论文发现 LLM 在标注任务中不是可被 prompt 任意重写的空白分类器；模型内部概念与任务定义越对齐，表现通常越好，而当二者冲突时，补充定义和 few-shot 示例也常受 decision stickiness 限制。
+
+| 维度 | 内容 |
+|---|---|
+| 文章性质 | LLM 可适应性边界 / 诊断论文 |
+| 核心问题 | 用户提供的定义和示例能否稳定覆盖模型在训练中形成的内部概念先验？ |
+| 核心机制 | 用 Definition-Specific Familiarity、文本熟悉度和行为干预分析内部先验与 prompt steerability |
+| 分析对象 | Model-Internalized Priors、标注定义与决策粘性 |
+| 学习阶段 | 不适用；研究的是推理时提示适应能力 |
+| 是否跨任务 | 不适用 |
+| 是否更新模型参数 | 不适用 |
+| 最重要结论 | 性能更受模型内部概念与定义的对齐程度影响，而不只是文本记忆；既有决策可能难被定义和示例纠正 |
+| 最大局限 | 结论主要来自特定标注概念、数据集、模型和提示干预，不能直接外推到所有领域或参数训练 |
+
+### 不要误读
+
+论文不是说 prompt 和 few-shot 永远无效，也不是说模型完全不能适应。它说明适应能力有边界，并且边界与模型已经内化的概念和决策惯性有关。
+
+---
+
+## 论文定位
+
+这篇文章不属于核心 Self-Evolving Agent 方法，而是一篇重要的 **外部文本更新有效性边界研究**。它质疑一个常见假设：只要把新定义、规则或示例写进 prompt，模型就会按照新标准行动。
+
+这一结论与 Harness Updating 的问题直接相关：外部 memory、skill 或定义被写入上下文后，Task-Solver 是否真正改变行为，取决于外部信息与模型内部先验的关系以及模型的可操控性。
+
+## 研究问题
+
+> 当标注定义与模型内部已经形成的概念边界不一致时，定义说明和 few-shot 示例在多大程度上能纠正模型判断？
+
+## 分析框架卡片
+
+| 维度 | 内容 |
+|---|---|
+| 被质疑的常见假设 | LLM 是服从 prompt 的通用标注器，只要定义清楚就会采用用户标准 |
+| 研究对象 | LLM-as-Annotator / Judge、内部概念先验和提示干预 |
+| 关键变量 | Definition-Specific Familiarity、定义对齐程度、示例与原始决策 |
+| 对照因素 | 文本熟悉度、数据集层混杂和不同提示设置 |
+| 主要诊断指标 | 标注性能、DSF 相关性、提示纠错效果和 decision stickiness |
+| 核心发现 | 概念定义的内部熟悉度比简单文本相似或记忆更能解释表现 |
+| 行为边界 | 与内部先验冲突的决策不一定能被新增定义或 few-shot 稳定翻转 |
+| 结论边界 | 不直接覆盖参数微调、所有任务类型或开放式 Agent 长程行为 |
+
+---
 
 ## 1. 基本信息
 
@@ -63,38 +126,7 @@ metadata:
 
 ---
 
-## 2. 投稿 / 发表状态
-
-arXiv 摘要页显示：
-
-- arXiv 编号：2606.00467
-- v1 提交时间：2026-05-30
-- 学科分类：cs.CL、cs.AI、cs.LG、stat.ML
-- 评论信息：Accepted at ICML 2026 (Oral & Spotlight); PMLR vol. 306. 9 pages, 4 figures
-
-因此，这篇论文目前可以写作：
-
-> ICML 2026 Oral & Spotlight / PMLR vol. 306，同时也有 arXiv 版本。
-
----
-
-## 3. 作者与研究圈子
-
-论文作者为：
-
-| 作者 | 备注 |
-|---|---|
-| Etienne Casanova | 论文第一作者，关注 LLM、标注任务、模型适应性等问题 |
-| Rafal Kocielnik | 近年有多篇 LLM-as-a-judge、AI 辅助标注、人机协同评价相关工作 |
-| R. Michael Alvarez | 政治科学与计算社会科学背景，长期关注数据、标注、投票技术、公共决策与计算方法 |
-
-需要注意：arXiv 摘要页没有直接展开作者机构，因此本笔记暂不强行填写完整机构信息。后续如果 PMLR 页面或 PDF 首页信息更加稳定，可以再补充精确机构。
-
-从作者组合和论文主题看，这篇论文不是单纯 NLP benchmark 论文，而更像是 **LLM 可靠性 + 人工标注 / 社会科学数据标注 + LLM-as-judge 方法论** 的交叉研究。它关心的不是模型能不能在某个榜单上刷高分，而是：当我们把 LLM 当作标注员或裁判时，它到底有多可控、多可校准、多能适应用户定义。
-
----
-
-## 4. 所属研究方向与论文定位
+## 研究坐标与边界
 
 这篇文章可以放在下面这个位置：
 
@@ -155,7 +187,7 @@ Self-Evolving LLM Agent 方法论文
 
 > 图源：论文 arXiv HTML Figure 1；用于读书笔记中的学习引用和阅读辅助。
 
-![Figure 1: overview from On the Limits of LLM Adaptability](https://arxiv.org/html/2606.00467v1/x1.png)
+![Figure 1: overview from On the Limits of LLM Adaptability](../assets/images/llm-adaptability/overview.png)
 
 图 1 适合放在研究背景之后，作为整篇论文的入口：先让读者看到论文如何把“模型内部先验”“用户给出的任务定义”“prompt / few-shot 纠错”和“标注表现”联系起来。读这篇文章时，不要只把它当成一个 toxicity detection 实验，而要把它理解成一个关于 **LLM 行为能否被外部文本稳定改写** 的诊断框架。
 
@@ -199,11 +231,7 @@ Definition-Specific Familiarity：模型是否熟悉并内化了这个标注定�
 
 论文发现，控制数据集层面的混杂因素后，DSF 和模型性能呈正相关；而 ROUGE-L、BERTScore、embedding cosine similarity 等文本记忆指标并没有表现出正相关。
 
-> 图源：论文 arXiv HTML Figure 2；用于读书笔记中的学习引用和阅读辅助。
-
-![Figure 2: DSF and familiarity results from On the Limits of LLM Adaptability](https://arxiv.org/html/2606.00467v1/x2.png)
-
-图 2 适合放在 DSF 概念后面。它对应本文最关键的区分：**模型表现好，不一定是因为记住了文本，而可能是因为模型内部概念和当前任务定义更对齐**。这张图能帮助读者把 text familiarity 和 definition-specific familiarity 分开理解。
+> **图示校正：** 论文当前版本的 Figure 2 是置信度输出模板，arXiv HTML 将其直接渲染为正文，并不存在 `x2.png`。DSF 与文本熟悉度的比较主要由回归结果、Table 4 和附录 E 支撑，因此这里保留文字分析，不再引用失效图片。
 
 ### 6.3 Decision Stickiness：决策粘性
 
@@ -229,7 +257,7 @@ rescue rate = zero-shot 中做错的样本里，后来被 prompt / definition / 
 
 ---
 
-## 7. 论文研究问题
+## 三个可检验问题
 
 这篇论文主要围绕三个问题展开。
 
@@ -321,7 +349,7 @@ rescue rate = zero-shot 中做错的样本里，后来被 prompt / definition / 
 
 > 图源：论文 arXiv HTML Figure 3；用于读书笔记中的学习引用和阅读辅助。
 
-![Figure 3: decision stickiness and rescue rate from On the Limits of LLM Adaptability](https://arxiv.org/html/2606.00467v1/x3.png)
+![Figure 3: decision stickiness and rescue rate from On the Limits of LLM Adaptability](../assets/images/llm-adaptability/decision-stickiness-rescue-rate.png)
 
 图 3 适合放在 rescue rate 结论这里。它把“zero-shot 错误能否被后续 prompt / definition / few-shot 纠正”这个问题可视化了：本文不是只报告平均准确率，而是追问 **原本错的样本到底有多少被救回来**。这个视角非常适合迁移到自演化 Agent 的失败经验利用研究。
 
@@ -351,9 +379,32 @@ rescue rate = zero-shot 中做错的样本里，后来被 prompt / definition / 
 
 > 图源：论文 arXiv HTML Figure 4；用于读书笔记中的学习引用和阅读辅助。
 
-![Figure 4: misaligned definitions and confidence from On the Limits of LLM Adaptability](https://arxiv.org/html/2606.00467v1/x4.png)
+![Figure 4: misaligned definitions and confidence from On the Limits of LLM Adaptability](../assets/images/llm-adaptability/misaligned-definitions-confidence.png)
 
 图 4 适合放在 misaligned definition 结论后面。它提醒读者：模型在错误定义下改变输出，并不一定会同步降低 confidence。对 LLM-as-a-judge 或自动标注系统来说，这意味着“模型看起来很自信”不能替代任务定义检查和外部验证。
+
+---
+
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| 模型内部概念与任务定义的对齐，比文本记忆更能解释标注表现 | 控制 dataset-level confounds 后，Definition-Specific Familiarity 与性能的 partial r = +0.41；ROUGE-L、BERTScore、embedding cosine 没有正相关 | 三类文本熟悉度 / 相似度指标 | 支持“概念定义对齐”是独立于简单文本记忆的重要解释变量 | 相关性不能直接证明内部先验导致性能，也不能完全排除未观测混杂因素 |
+| Prompt、定义和 few-shot 对既有错误的纠正能力有明显上限 | Zero-shot 错误的总体 rescue rate 只有 34.8% | 多种 prompt / definition / few-shot 增强设置 | 说明平均准确率之外，很多原始错误具有 decision stickiness | 不能推广到所有任务、所有模型，也不等于参数训练无法纠正这些错误 |
+| 高置信错误通常更难被后续提示纠正 | 对 zero-shot 错误按 confidence 分析，高置信错误 rescue 更困难 | 低置信错误 | 支持 confidence 可能反映更强的内部判断惯性，而不只是答案可靠性 | 模型自报 confidence 不等于严格概率校准，不同模型的 confidence 生成方式也可能不同 |
+| 错误任务定义不会稳定触发模型降低信心 | Misaligned definition 会改变模型输出，但 confidence 没有可靠下降 | Aligned definition 条件 | 说明不能仅依赖模型自信度发现定义冲突 | 不能证明模型在所有错误指令下都会盲从，也不能替代更广泛的校准与安全实验 |
+
+### 我的判断
+
+这篇论文最强的贡献是把“Prompt 是否有效”从平均性能问题改造成错误可修复性问题。DSF、rescue rate 和 decision stickiness 为外部文本更新提供了比单一准确率更细的诊断工具。
+
+它对 Self-Evolving Agent 的意义主要是方法论警示，而不是直接证明 Agent memory 无效：**外部经验写入之后，必须测量原本失败的样本是否被救回，以及原本成功的样本是否被干扰。**
+
+### 其他可能解释
+
+- Toxicity / hate-speech 数据集具有社会概念和标签边界差异，现象可能比格式、数学或代码任务更强。
+- DSF 的测量方式本身依赖模型输出和任务设计，可能仍混入模型能力或数据分布因素。
+- Prompt correction 的上限可能随上下文长度、示例选择、模型版本和推理策略改变。
 
 ---
 
@@ -574,3 +625,42 @@ misaligned definition 实验说明，错误外部信息可能让模型更自信�
 一句话总结：
 
 > 这篇论文把 LLM 标注任务中的失败，从“prompt 没写好”提升到了“模型内部先验与任务定义不对齐”的层面，说明 prompt-based adaptation 存在天然边界。
+
+---
+
+## 论文外部信息
+
+### 投稿与发表状态
+
+arXiv 摘要页显示：
+
+- arXiv 编号：2606.00467
+- v1 提交时间：2026-05-30
+- 学科分类：cs.CL、cs.AI、cs.LG、stat.ML
+- 评论信息：Accepted at ICML 2026 (Oral & Spotlight); PMLR vol. 306. 9 pages, 4 figures
+
+因此，这篇论文目前可以写作：
+
+> ICML 2026 Oral & Spotlight / PMLR vol. 306，同时也有 arXiv 版本。
+
+### 作者与研究圈子
+
+论文作者为：
+
+| 作者 | 备注 |
+|---|---|
+| Etienne Casanova | 论文第一作者，关注 LLM、标注任务、模型适应性等问题 |
+| Rafal Kocielnik | 近年有多篇 LLM-as-a-judge、AI 辅助标注、人机协同评价相关工作 |
+| R. Michael Alvarez | 政治科学与计算社会科学背景，长期关注数据、标注、投票技术、公共决策与计算方法 |
+
+需要注意：arXiv 摘要页没有直接展开作者机构，因此本笔记暂不强行填写完整机构信息。后续如果 PMLR 页面或 PDF 首页信息更加稳定，可以再补充精确机构。
+
+从作者组合和论文主题看，这篇论文不是单纯 NLP benchmark 论文，而更像是 **LLM 可靠性 + 人工标注 / 社会科学数据标注 + LLM-as-judge 方法论** 的交叉研究。它关心的不是模型能不能在某个榜单上刷高分，而是：当我们把 LLM 当作标注员或裁判时，它到底有多可控、多可校准、多能适应用户定义。
+
+---
+
+## 参考资料
+
+- arXiv：<https://arxiv.org/abs/2606.00467>
+- PDF：<https://arxiv.org/pdf/2606.00467>
+- HTML：<https://arxiv.org/html/2606.00467v1>
