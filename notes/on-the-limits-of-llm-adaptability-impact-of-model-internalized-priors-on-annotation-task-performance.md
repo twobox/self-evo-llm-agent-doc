@@ -126,38 +126,7 @@ metadata:
 
 ---
 
-## 2. 投稿 / 发表状态
-
-arXiv 摘要页显示：
-
-- arXiv 编号：2606.00467
-- v1 提交时间：2026-05-30
-- 学科分类：cs.CL、cs.AI、cs.LG、stat.ML
-- 评论信息：Accepted at ICML 2026 (Oral & Spotlight); PMLR vol. 306. 9 pages, 4 figures
-
-因此，这篇论文目前可以写作：
-
-> ICML 2026 Oral & Spotlight / PMLR vol. 306，同时也有 arXiv 版本。
-
----
-
-## 3. 作者与研究圈子
-
-论文作者为：
-
-| 作者 | 备注 |
-|---|---|
-| Etienne Casanova | 论文第一作者，关注 LLM、标注任务、模型适应性等问题 |
-| Rafal Kocielnik | 近年有多篇 LLM-as-a-judge、AI 辅助标注、人机协同评价相关工作 |
-| R. Michael Alvarez | 政治科学与计算社会科学背景，长期关注数据、标注、投票技术、公共决策与计算方法 |
-
-需要注意：arXiv 摘要页没有直接展开作者机构，因此本笔记暂不强行填写完整机构信息。后续如果 PMLR 页面或 PDF 首页信息更加稳定，可以再补充精确机构。
-
-从作者组合和论文主题看，这篇论文不是单纯 NLP benchmark 论文，而更像是 **LLM 可靠性 + 人工标注 / 社会科学数据标注 + LLM-as-judge 方法论** 的交叉研究。它关心的不是模型能不能在某个榜单上刷高分，而是：当我们把 LLM 当作标注员或裁判时，它到底有多可控、多可校准、多能适应用户定义。
-
----
-
-## 4. 所属研究方向与论文定位
+## 研究坐标与边界
 
 这篇文章可以放在下面这个位置：
 
@@ -292,7 +261,7 @@ rescue rate = zero-shot 中做错的样本里，后来被 prompt / definition / 
 
 ---
 
-## 7. 论文研究问题
+## 三个可检验问题
 
 这篇论文主要围绕三个问题展开。
 
@@ -417,6 +386,31 @@ rescue rate = zero-shot 中做错的样本里，后来被 prompt / definition / 
 ![Figure 4: misaligned definitions and confidence from On the Limits of LLM Adaptability](https://arxiv.org/html/2606.00467v1/x4.png)
 
 图 4 适合放在 misaligned definition 结论后面。它提醒读者：模型在错误定义下改变输出，并不一定会同步降低 confidence。对 LLM-as-a-judge 或自动标注系统来说，这意味着“模型看起来很自信”不能替代任务定义检查和外部验证。
+
+---
+
+---
+
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| 模型内部概念与任务定义的对齐，比文本记忆更能解释标注表现 | 控制 dataset-level confounds 后，Definition-Specific Familiarity 与性能的 partial r = +0.41；ROUGE-L、BERTScore、embedding cosine 没有正相关 | 三类文本熟悉度 / 相似度指标 | 支持“概念定义对齐”是独立于简单文本记忆的重要解释变量 | 相关性不能直接证明内部先验导致性能，也不能完全排除未观测混杂因素 |
+| Prompt、定义和 few-shot 对既有错误的纠正能力有明显上限 | Zero-shot 错误的总体 rescue rate 只有 34.8% | 多种 prompt / definition / few-shot 增强设置 | 说明平均准确率之外，很多原始错误具有 decision stickiness | 不能推广到所有任务、所有模型，也不等于参数训练无法纠正这些错误 |
+| 高置信错误通常更难被后续提示纠正 | 对 zero-shot 错误按 confidence 分析，高置信错误 rescue 更困难 | 低置信错误 | 支持 confidence 可能反映更强的内部判断惯性，而不只是答案可靠性 | 模型自报 confidence 不等于严格概率校准，不同模型的 confidence 生成方式也可能不同 |
+| 错误任务定义不会稳定触发模型降低信心 | Misaligned definition 会改变模型输出，但 confidence 没有可靠下降 | Aligned definition 条件 | 说明不能仅依赖模型自信度发现定义冲突 | 不能证明模型在所有错误指令下都会盲从，也不能替代更广泛的校准与安全实验 |
+
+### 我的判断
+
+这篇论文最强的贡献是把“Prompt 是否有效”从平均性能问题改造成错误可修复性问题。DSF、rescue rate 和 decision stickiness 为外部文本更新提供了比单一准确率更细的诊断工具。
+
+它对 Self-Evolving Agent 的意义主要是方法论警示，而不是直接证明 Agent memory 无效：**外部经验写入之后，必须测量原本失败的样本是否被救回，以及原本成功的样本是否被干扰。**
+
+### 其他可能解释
+
+- Toxicity / hate-speech 数据集具有社会概念和标签边界差异，现象可能比格式、数学或代码任务更强。
+- DSF 的测量方式本身依赖模型输出和任务设计，可能仍混入模型能力或数据分布因素。
+- Prompt correction 的上限可能随上下文长度、示例选择、模型版本和推理策略改变。
 
 ---
 
@@ -637,6 +631,39 @@ misaligned definition 实验说明，错误外部信息可能让模型更自信�
 一句话总结：
 
 > 这篇论文把 LLM 标注任务中的失败，从“prompt 没写好”提升到了“模型内部先验与任务定义不对齐”的层面，说明 prompt-based adaptation 存在天然边界。
+
+---
+
+---
+
+## 论文外部信息
+
+### 投稿与发表状态
+
+arXiv 摘要页显示：
+
+- arXiv 编号：2606.00467
+- v1 提交时间：2026-05-30
+- 学科分类：cs.CL、cs.AI、cs.LG、stat.ML
+- 评论信息：Accepted at ICML 2026 (Oral & Spotlight); PMLR vol. 306. 9 pages, 4 figures
+
+因此，这篇论文目前可以写作：
+
+> ICML 2026 Oral & Spotlight / PMLR vol. 306，同时也有 arXiv 版本。
+
+### 作者与研究圈子
+
+论文作者为：
+
+| 作者 | 备注 |
+|---|---|
+| Etienne Casanova | 论文第一作者，关注 LLM、标注任务、模型适应性等问题 |
+| Rafal Kocielnik | 近年有多篇 LLM-as-a-judge、AI 辅助标注、人机协同评价相关工作 |
+| R. Michael Alvarez | 政治科学与计算社会科学背景，长期关注数据、标注、投票技术、公共决策与计算方法 |
+
+需要注意：arXiv 摘要页没有直接展开作者机构，因此本笔记暂不强行填写完整机构信息。后续如果 PMLR 页面或 PDF 首页信息更加稳定，可以再补充精确机构。
+
+从作者组合和论文主题看，这篇论文不是单纯 NLP benchmark 论文，而更像是 **LLM 可靠性 + 人工标注 / 社会科学数据标注 + LLM-as-judge 方法论** 的交叉研究。它关心的不是模型能不能在某个榜单上刷高分，而是：当我们把 LLM 当作标注员或裁判时，它到底有多可控、多可校准、多能适应用户定义。
 
 ---
 

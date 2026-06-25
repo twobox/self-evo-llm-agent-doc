@@ -153,85 +153,7 @@ SFT / GRPO 更新 Executor Policy
 
 ---
 
-## 1. 论文外部信息
-
-### 1.1 投稿与发表状态
-
-这篇论文最早在 arXiv 上提交于 **2025 年 10 月 17 日**，编号为 **arXiv:2510.16079**，分类包括：
-
-- **Computation and Language (cs.CL)**；
-- **Artificial Intelligence (cs.AI)**。
-
-截至本笔记记录时，arXiv 页面显示当前版本为 **v3**，最后修订于 **2026 年 5 月 16 日**，并且 comments 中写明：
-
-> Accepted by ICML 2026
-
-所以这篇论文不能只说是“普通 arXiv 预印本”，更准确的说法是：
-
-> 这是一篇已经被 **ICML 2026** 接收的 self-evolving LLM agent 方向论文，arXiv 版本为公开稿。
-
-如果后续正式引用，可以先采用 arXiv 给出的 BibTeX 形式，等 ICML 会议页面更新后再补充正式会议信息。
-
-```bibtex
-@misc{wu2025evolverselfevolvingllmagents,
-  title={EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle},
-  author={Rong Wu and Xiaoman Wang and Jianbiao Mei and Pinlong Cai and Daocheng Fu and Cheng Yang and Licheng Wen and Xuemeng Yang and Yufan Shen and Yuxin Wang and Botian Shi},
-  year={2025},
-  eprint={2510.16079},
-  archivePrefix={arXiv},
-  primaryClass={cs.CL},
-  url={https://arxiv.org/abs/2510.16079}
-}
-```
-
-### 1.2 作者与机构
-
-论文作者共 11 位，机构以 **上海人工智能实验室** 为中心，同时联合了浙江大学、华东师范大学、复旦大学、中南大学、上海创新研究院、上海交通大学、中国科学技术大学等单位。
-
-| 作者 | 机构 |
-|---|---|
-| Rong Wu | Zhejiang University; Shanghai Artificial Intelligence Laboratory |
-| Xiaoman Wang | East China Normal University |
-| Jianbiao Mei | Zhejiang University; Shanghai Artificial Intelligence Laboratory |
-| Pinlong Cai | Shanghai Artificial Intelligence Laboratory |
-| Daocheng Fu | Shanghai Artificial Intelligence Laboratory; Fudan University |
-| Cheng Yang | Shanghai Artificial Intelligence Laboratory; Central South University |
-| Licheng Wen | Shanghai Artificial Intelligence Laboratory; Shanghai Innovation Institute; Shanghai Jiao Tong University |
-| Xuemeng Yang | Shanghai Artificial Intelligence Laboratory |
-| Yufan Shen | Shanghai Artificial Intelligence Laboratory |
-| Yuxin Wang | University of Science and Technology of China |
-| Botian Shi | Shanghai Artificial Intelligence Laboratory |
-
-论文首页标注 **Rong Wu 和 Xiaoman Wang 为共同一作**，**Botian Shi 为通讯作者**。
-
-### 1.3 作者背景和研究圈子观察
-
-从作者机构和代码仓库来看，这篇论文主要来自 **Shanghai AI Lab / Knowledge Lab / KnowledgeXLab** 这一研究圈子。这个圈子的特点是：
-
-1. **偏系统型 LLM Agent 研究**：不是只做单个 prompt 技巧，而是把工具调用、搜索、经验库、强化学习训练、模型权重发布放在一个系统里考虑。
-2. **和知识驱动、检索增强、工具调用关系密切**：EvolveR 的任务场景是复杂问答和多跳问答，Agent 需要调用外部知识搜索，也需要调用内部经验搜索。
-3. **有较强工程实现意识**：论文开源了代码，README 中给出了训练脚本、检索服务器、向量数据库、模型权重等内容，说明它不是纯概念论文。
-4. **与自演化 Agent 方向靠得很近**：论文关注的是 Agent 如何从自己的轨迹中抽象经验，再把经验用于后续任务，并通过 RL 进一步让策略学会使用经验。
-
-这篇文章所在的圈子，可以理解为：
-
-```text
-LLM Agent
-├── Search Agent / Tool-use Agent
-├── Agent Memory / Experience Base
-├── Reinforcement Learning for Agent
-└── Self-Evolving Agent
-    └── Experience-driven lifecycle / Self-distillation / Policy evolution
-```
-
-如果和仓库中已有的《Harness Updating Is Not Harness Benefit》对比：
-
-- Harness Updating 那篇更像是 **分析/诊断论文**，重点是拆解“写更新”和“用更新”两个能力；
-- EvolveR 更像是 **方法/系统论文**，重点是提出一个完整生命周期，让 Agent 通过经验库和 RL 形成闭环自我改进。
-
----
-
-## 2. 研究方向与论文定位
+## 与相邻路线的关系
 
 ### 2.1 所属研究方向
 
@@ -287,7 +209,7 @@ EvolveR 在 self-evolving agent 方向里的定位可以概括为一句话：
 
 ---
 
-## 3. 核心问题
+## 问题背景：操作性遗忘、轨迹抽象与认知对齐
 
 论文要解决的问题可以拆成三层。
 
@@ -661,6 +583,32 @@ Qwen2.5-1.5B: 0.270 → 0.123
 
 ---
 
+---
+
+## 主张—证据—边界
+
+| 论文主张 | 支持实验或论证 | 最强对照 | 能证明什么 | 不能证明什么 |
+|---|---|---|---|---|
+| 经验驱动生命周期能提升搜索增强问答 Agent | Qwen2.5-3B 平均 EM 0.382，高于 Search-R1-instruct 0.325；7B 为 0.417，对照为 0.385 | Search-R1-instruct 等 RL Search Agent | 在论文 QA 设置中，经验原则、检索和策略训练的组合优于只训练搜索策略 | 不能证明相同闭环会在代码、GUI、科研或长期开放任务中保持收益 |
+| 推理时检索经验原则是核心组件，不只是训练阶段装饰 | 3B 去掉 experience retrieval 后从 0.382 降到 0.340；0.5B 从 0.150 降到 0.078，1.5B 从 0.270 降到 0.123 | EvolveR w/o exp-retrieve | 说明显式经验检索对最终表现有直接贡献，尤其对小模型更重要 | 不能证明当前 embedding、Top-k 和原则格式是最优检索方案 |
+| Self-distillation 可能因认知对齐而优于更强教师 | 3B self-distill 为 0.382，GPT-4o-mini teacher-distill 为 0.370；但 0.5B 和 1.5B 仍是教师更好 | GPT-4o-mini teacher-distill | 说明经验总结者更强不必然意味着经验更适合执行模型 | 不能推广为“自蒸馏总是优于教师”；结果明显依赖模型规模和总结能力 |
+| 经验原则与 RL 具有互补性 | 无经验无 RL 为 0.134；RL only 为 0.325；经验+检索无 RL 为 0.357；完整系统为 0.382 | RL only、experience only、去检索消融 | 支持经验外挂和策略学习分别贡献收益，组合最好 | 不完全排除数据量、rollout 数和训练预算差异造成的部分提升 |
+| 动态打分与过滤能提高经验库质量 | 人工检查 100 条原则：High-Score 中 Ideal 82%，Low-Score 中 Ideal 26%；经验库约 45k 后继续增长时性能下降 | 高分与低分原则、不同经验库规模 | 说明经验治理和删除低质量原则是必要的 | 样本量有限，人工分类和当前分数是否能长期识别过期经验仍未验证 |
+
+### 我的判断
+
+EvolveR 最有说服力的地方不是单个主表分数，而是消融形成了较完整的因果链：经验原则本身有用、检索有用、RL 有用，三者组合更强。Self-distill 与 teacher-distill 的规模差异也让“认知对齐”不只是口号，而有可观察的边界。
+
+不过，论文仍是一个高成本 QA 系统。把结果解释成通用 Self-Evolving Agent 范式时，需要保留任务类型、训练预算和基础模型能力这三个前提。
+
+### 其他可能解释
+
+- 完整系统包含更多轨迹、检索和训练步骤，收益可能部分来自更高计算预算。
+- 域外 QA 的迁移仍与训练任务共享搜索和问答结构，不等于跨动作空间泛化。
+- 原则质量分数来自当前任务成功率，任务分布变化后可能产生滞后或错误降权。
+
+---
+
 ## 8. 工程启发
 
 ### 8.1 Agent 记忆应该存“原则”，不只是存“日志”
@@ -899,6 +847,86 @@ self-distill 在 3B 上超过 teacher-distill；
 > 自演化 Agent 的关键到底是“写经验”，还是“用经验”？
 
 EvolveR 的答案是两者都重要，而且需要 RL 把它们连接起来。
+
+---
+
+---
+
+## 论文外部信息
+
+### 投稿与发表状态
+
+这篇论文最早在 arXiv 上提交于 **2025 年 10 月 17 日**，编号为 **arXiv:2510.16079**，分类包括：
+
+- **Computation and Language (cs.CL)**；
+- **Artificial Intelligence (cs.AI)**。
+
+截至本笔记记录时，arXiv 页面显示当前版本为 **v3**，最后修订于 **2026 年 5 月 16 日**，并且 comments 中写明：
+
+> Accepted by ICML 2026
+
+所以这篇论文不能只说是“普通 arXiv 预印本”，更准确的说法是：
+
+> 这是一篇已经被 **ICML 2026** 接收的 self-evolving LLM agent 方向论文，arXiv 版本为公开稿。
+
+如果后续正式引用，可以先采用 arXiv 给出的 BibTeX 形式，等 ICML 会议页面更新后再补充正式会议信息。
+
+```bibtex
+@misc{wu2025evolverselfevolvingllmagents,
+  title={EvolveR: Self-Evolving LLM Agents through an Experience-Driven Lifecycle},
+  author={Rong Wu and Xiaoman Wang and Jianbiao Mei and Pinlong Cai and Daocheng Fu and Cheng Yang and Licheng Wen and Xuemeng Yang and Yufan Shen and Yuxin Wang and Botian Shi},
+  year={2025},
+  eprint={2510.16079},
+  archivePrefix={arXiv},
+  primaryClass={cs.CL},
+  url={https://arxiv.org/abs/2510.16079}
+}
+```
+
+### 作者与机构
+
+论文作者共 11 位，机构以 **上海人工智能实验室** 为中心，同时联合了浙江大学、华东师范大学、复旦大学、中南大学、上海创新研究院、上海交通大学、中国科学技术大学等单位。
+
+| 作者 | 机构 |
+|---|---|
+| Rong Wu | Zhejiang University; Shanghai Artificial Intelligence Laboratory |
+| Xiaoman Wang | East China Normal University |
+| Jianbiao Mei | Zhejiang University; Shanghai Artificial Intelligence Laboratory |
+| Pinlong Cai | Shanghai Artificial Intelligence Laboratory |
+| Daocheng Fu | Shanghai Artificial Intelligence Laboratory; Fudan University |
+| Cheng Yang | Shanghai Artificial Intelligence Laboratory; Central South University |
+| Licheng Wen | Shanghai Artificial Intelligence Laboratory; Shanghai Innovation Institute; Shanghai Jiao Tong University |
+| Xuemeng Yang | Shanghai Artificial Intelligence Laboratory |
+| Yufan Shen | Shanghai Artificial Intelligence Laboratory |
+| Yuxin Wang | University of Science and Technology of China |
+| Botian Shi | Shanghai Artificial Intelligence Laboratory |
+
+论文首页标注 **Rong Wu 和 Xiaoman Wang 为共同一作**，**Botian Shi 为通讯作者**。
+
+### 作者背景和研究圈子观察
+
+从作者机构和代码仓库来看，这篇论文主要来自 **Shanghai AI Lab / Knowledge Lab / KnowledgeXLab** 这一研究圈子。这个圈子的特点是：
+
+1. **偏系统型 LLM Agent 研究**：不是只做单个 prompt 技巧，而是把工具调用、搜索、经验库、强化学习训练、模型权重发布放在一个系统里考虑。
+2. **和知识驱动、检索增强、工具调用关系密切**：EvolveR 的任务场景是复杂问答和多跳问答，Agent 需要调用外部知识搜索，也需要调用内部经验搜索。
+3. **有较强工程实现意识**：论文开源了代码，README 中给出了训练脚本、检索服务器、向量数据库、模型权重等内容，说明它不是纯概念论文。
+4. **与自演化 Agent 方向靠得很近**：论文关注的是 Agent 如何从自己的轨迹中抽象经验，再把经验用于后续任务，并通过 RL 进一步让策略学会使用经验。
+
+这篇文章所在的圈子，可以理解为：
+
+```text
+LLM Agent
+├── Search Agent / Tool-use Agent
+├── Agent Memory / Experience Base
+├── Reinforcement Learning for Agent
+└── Self-Evolving Agent
+    └── Experience-driven lifecycle / Self-distillation / Policy evolution
+```
+
+如果和仓库中已有的《Harness Updating Is Not Harness Benefit》对比：
+
+- Harness Updating 那篇更像是 **分析/诊断论文**，重点是拆解“写更新”和“用更新”两个能力；
+- EvolveR 更像是 **方法/系统论文**，重点是提出一个完整生命周期，让 Agent 通过经验库和 RL 形成闭环自我改进。
 
 ---
 
