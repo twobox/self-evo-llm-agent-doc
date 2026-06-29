@@ -25,6 +25,7 @@
 | 8 | Gödel Agent: A Self-Referential Agent Framework for Recursive Self-Improvement | [notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md](notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 方法 | Agent Code / Self-Improvement Loop | 测试时 | 否 | 否 | ACL 2025 · Long Paper |
 | 9 | SE-Agent: Self-Evolution Trajectory Optimization in Multi-Step Reasoning with LLM-Based Agents | [notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md](notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md) | 方法 | Trajectory Pool | 测试时 | 否 | 否 | NeurIPS 2025 · Poster |
 | 10 | Self-Challenging Language Model Agents | [notes/self-challenging-language-model-agents.md](notes/self-challenging-language-model-agents.md) | 方法 | Synthetic Tasks / Executor Policy | 训练时 | 是 | 是 | NeurIPS 2025 · Poster |
+| 11 | WebEvolver: Enhancing Web Agent Self-Improvement with Co-evolving World Model | [notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md](notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 方法 | Agent Policy / World Model Parameters | 混合 | 是 | 是 | EMNLP 2025 · Main Conference |
 
 ## 相关基础与边界研究
 
