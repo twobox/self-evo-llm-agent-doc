@@ -42,7 +42,7 @@
 - 状态：`in progress`
 - Active Issue：[#16](https://github.com/twobox/self-evo-llm-agent-doc/issues/16)
 - 分支：`codex/add-webevolver-note`
-- Draft PR：待创建
+- Draft PR：[#17](https://github.com/twobox/self-evo-llm-agent-doc/pull/17)
 - 启动日期：2026-06-29
 
 目标：使用 WebEvolver 完整演练持续维护流程：
