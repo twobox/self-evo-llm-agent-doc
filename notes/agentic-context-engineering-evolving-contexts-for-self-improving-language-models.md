@@ -87,10 +87,84 @@ metadata:
 
 ---
 
+## 手动笔记
+
+不让 LLM 重写总结压缩全文，而是维护结构化信息。
+
+### 针对的问题
+
+当系统试图通过总结、压缩、重写来维护上下文时，往往会把真正有用的细粒度经验删掉。 论文把这个问题拆成两个现象：一是 brevity bias，即 prompt optimizer 或摘要器倾向于把复杂经验压成更短、更抽象的指令；二是 context collapse，即反复让 LLM 重写整份上下文时，原本积累起来的策略、失败模式、API 边界条件、领域格式规则可能突然被压缩成极短摘要。
+
+类型：一次性问答、单次任务执行
+
+### 必要性
+
+ACE 的必要性不只是“长对话越来越长，所以要管理上下文”，而是更进一步：Agent 在连续任务、工具调用、领域推理中会产生大量可复用经验，这些经验如果不能被稳定保留和复用，系统就无法真正 self-improve。 
+
+### 提出的方法
+
+维护结构化上下文playbook。ACE 的方法是把上下文看成一个持续演化的 playbook，也就是一份给 Agent 使用的操作手册，而不是一整段每次重写的大 prompt。它用三个角色维护这份 playbook：Generator 读取当前 playbook 执行任务并产生轨迹；Reflector 根据成功/失败轨迹、环境反馈或 ground-truth 总结哪些经验有用、哪些错误要避免；Curator 把这些经验整理成结构化的 delta context items，再合并进已有 playbook。每条 playbook bullet 通常包含唯一 ID、helpful/harmful 计数和具体内容，例如策略、领域概念、公式、常见错误或工具调用注意事项。它的关键不是“记更多”，而是增量更新：新经验作为 delta 加入，旧经验可以更新计数或内容，语义重复条目通过 embedding 去重，必要时再做修剪，避免整份上下文被 LLM 一次性重写到失真。
+
+### 实验
+
+#### 对比方法
+
+ACE 主要对比了以下几类方法：
+
+1. Base LLM / ReAct：不做上下文适配的基础模型或基础 Agent 设置。
+2. ICL：把示例直接放进上下文，让模型通过 few-shot / many-shot 示例完成任务。
+3. MIPROv2：DSPy 里的 prompt optimizer，用来自动优化 instruction 和 demonstrations。
+4. GEPA：基于反思和进化搜索的 prompt evolution 方法，是比较强的 prompt optimization baseline。
+5. Dynamic Cheatsheet / DC-CU：测试时维护 adaptive memory 的方法，作为 online adaptation / agent memory 方向的主要对照。
+6. ACE：作者方法，分 offline / online、有无 ground-truth labels 等不同设置。
+
+更简洁地说：
+
+> 它对比了无适配基线、ICL、传统 prompt optimizer、反思式 prompt evolution，以及测试时 adaptive memory 方法。
+
+#### 测试数据集或环境
+
+ACE 主要用了三类任务/数据集：
+
+1. AppWorld
+
+- 类型：Agent benchmark / 交互式应用环境。
+- 任务特点：需要 API 理解、代码生成、工具调用、环境交互和多步推理。
+
+- 用途：验证 ACE 在复杂 Agent 任务中的上下文自我改进能力。
+
+2. FiNER
+
+- 类型：金融领域信息抽取任务。
+- 任务特点：基于 XBRL 金融文档，做细粒度 financial numeric entity recognition。
+- 用途：验证 ACE 是否能积累金融领域规则、实体类型和格式经验。
+
+3. Formula
+
+- 类型：金融数值推理 / 公式计算任务。
+- 任务特点：从结构化 XBRL filings 中抽取数值并执行计算。
+- 用途：验证 ACE 对领域公式、计算规则和数值推理经验的积累能力。
+
+一句话：
+
+> 实验覆盖了一个复杂 Agent 环境 AppWorld，以及两个金融/XBRL 领域任务 FiNER 和 Formula。
+
+### 贡献创新点
+
+作者在 Introduction 中强调了四个 key findings：
+
+- ACE 在 agent 和领域任务上持续优于强基线；
+- ACE 能在没有标注监督时利用执行反馈和环境信号构建有效上下文；
+- ACE 在 AppWorld 上用 DeepSeek-V3.1 接近或超过部分生产级 agent 表现；
+- ACE 用更少 rollouts、更低 dollar cost 和更低 adaptation latency 实现更高效的 self-improvement。
+
+方法上，作者进一步将 ACE 的核心创新概括为三点：dedicated Reflector、incremental delta updates，以及 grow-and-refine mechanism。
 
 ## 30 秒读懂
 
 > **一句话总结：** ACE 不更新模型参数，而是把任务轨迹和反馈持续整理成一个结构化 playbook；Generator 使用经验，Reflector 提取增量，Curator 去重和维护，从而避免反复重写整份上下文造成的 context collapse。
+
+> WXPS.传统上下文记忆靠LLM自己总结，容易丢失重要的细节，该文章采取一套结构化的方法，规范化经验信息的保留。
 
 | 维度 | 内容 |
 |---|---|
@@ -98,7 +172,7 @@ metadata:
 | 核心问题 | 上下文能否像模型参数一样持续积累能力，同时避免越总结越短、越改越丢细节？ |
 | 核心机制 | Generator / Reflector / Curator 三角色，以增量方式维护 evolving playbook |
 | 更新对象 | 外部 Context / Playbook 条目 |
-| 学习阶段 | 混合，可在历史任务批量整理，也可随任务流持续更新 |
+| 学习阶段 | 混合，可在历史任务批量整理，也可随任务流持续更新。（wxpc.支持部署阶段学习，也支持测试阶段学习） |
 | 是否跨任务 | 是，前序任务经验进入后续任务上下文 |
 | 是否更新模型参数 | 否 |
 | 最重要结论 | 结构化增量更新比整份上下文反复重写更能保留细粒度经验，并支持后续任务改进 |
