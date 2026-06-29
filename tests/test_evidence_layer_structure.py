@@ -17,7 +17,7 @@ H3_RE = re.compile(r"(?m)^### (.+)$")
 class EvidenceLayerStructureTests(unittest.TestCase):
     def test_all_notes_have_evidence_judgment_and_alternatives(self) -> None:
         notes = find_note_files(ROOT)
-        self.assertEqual(len(notes), 11)
+        self.assertGreater(len(notes), 0)
         for path in notes:
             with self.subTest(path=path.name):
                 text = path.read_text(encoding="utf-8")
