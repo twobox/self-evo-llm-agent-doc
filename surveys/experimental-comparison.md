@@ -4,14 +4,14 @@ metadata:
   short_title: '实验设置横向对比'
   note_type: '横向综述 / 对比笔记'
   status: '持续维护'
-  scope: '仓库内 11 篇笔记的进化对象、实验设计、主要结果、成本与证据边界'
+  scope: '仓库内 12 篇笔记的进化对象、实验设计、主要结果、成本与证据边界'
   created: '2026-06-06'
-  updated: '2026-06-25'
+  updated: '2026-06-29'
 -->
 
 # Self-Evolving LLM Agent 实验设置横向对比
 
-本文档覆盖仓库当前全部 **11 篇笔记**，用于比较进化对象、学习阶段、参数更新、跨任务能力、实验环境、代表结果、成本、复现条件和证据边界。
+本文档覆盖仓库当前全部 **12 篇笔记**，用于比较进化对象、学习阶段、参数更新、跨任务能力、实验环境、代表结果、成本、复现条件和证据边界。
 
 > **阅读原则：** 不同论文的 benchmark 数字不可直接横向排名。优先比较实验设计、同设置 baseline、消融、预算和“不能证明什么”。
 
@@ -34,6 +34,7 @@ metadata:
 | [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 方法 | Frozen Player + Trainable Memory Updater | Memory Update Policy / External Memory | 混合 | 仅辅助模块 | 是 | Multi-turn GRPO、turn-wise one-step reward、3-tier adaptive memory |
 | [MLEvolve](../notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md) | 系统 | MLE / Algorithm Discovery Agent | Solution Graph / Retrospective Memory | 测试时 | 否 | 否 | Progressive MCGS、Retrospective Memory、Planner-Coder、Base / Stepwise / Diff coding |
 | [On the Limits](../notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md) | 诊断 | Model Capability Boundary Diagnostic | Model Priors / Prompt Adaptability | 不适用 | 不适用 | 不适用 | Definition-Specific Familiarity、rescue rate、decision stickiness、misaligned definition |
+| [WebEvolver](../notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 方法 | Web Agent / World-model Planning | Agent Policy / World Model Parameters | 混合 | 是 | 是 | 真实成功轨迹 SFT；网页转移世界模型；失败查询合成轨迹；WMLA 前瞻动作选择 |
 
 ---
 
@@ -54,6 +55,7 @@ metadata:
 | [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 方法实证 | TextArena RPS；RLCard LHE；StreamBench CoSQL；StreamBench DS-1000 | No Memory、Full History、Human Counter-Strategy、prompt-based memory updater | Qwen2.5-14B Player：RPS@5 / LHE@5 = 3.28 / 2.03；No Memory = 0.43 / -1.36。 | 较强：主结果、结构消融、奖励消融、跨 Player 与 StreamBench 迁移。 | 依赖可计算奖励和可重复交互；对手切换越频繁性能越低，StreamBench held-out episodes 数量有限。 |
 | [MLEvolve](../notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md) | 系统实证 | MLE-Bench 75 tasks；AlphaEvolve 15 optimization tasks | AIDE、ML-Master、AIRA-Dojo、MARS+、AlphaEvolve | MLE-Bench：overall medal 65.3±0.8%，valid submission 100%，above median 76.0±2.3%；15 个算法任务中 14 个匹配或超过 AlphaEvolve。 | 较强工程证据：75 个任务、组件消融与算法发现迁移。 | baseline 使用不同模型或 24h 设置，不能做严格同预算比较；结果证明高预算 scaffold 能力，不代表低成本 AutoML 已解决。 |
 | [On the Limits](../notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md) | 实证诊断 | 多套 toxicity / hate-speech 标注数据集 | ROUGE-L、BERTScore、embedding cosine 等文本熟悉度指标；多种 prompt / definition / few-shot 设置 | 控制 dataset-level confounds 后 DSF 与性能 partial r = +0.41；zero-shot 错误总体 rescue rate 仅 34.8%。 | 中强诊断证据：相关分析、错误级 rescue 分析和错误定义实验互相补充。 | 相关性不等于因果；社会概念标注任务可能放大定义冲突，不能直接推广到代码、数学或所有 Agent memory 场景。 |
+| [WebEvolver](../notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 方法实证 | Text-only WebVoyager；Mind2Web-Live-filtered；GAIA-web；SimpleQA | Llama-3.3-70B 多轮 self-improve、普通 Synthetic Trajectory、WebDreamer、GPT-4o | WebVoyager：Llama-3.3-70B 32.98，WebEvolver 42.49，WMLA d=2 为 51.37；Mind2Web-Live 为 18.86、22.64、24.53。 | 较强：真实网页主结果、普通自训练平台期、无世界模型合成对照、世界模型内部评测、深度与分支消融。 | 最高结果混合参数训练与高预算测试时搜索；WMLA 和 GAIA 管线使用 GPT-4o，世界模型幻觉未直接测量，跨任务不等于长期持续学习。 |
 
 ---
 
@@ -72,6 +74,7 @@ metadata:
 | [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 中高：冻结 Player，但需训练 memory updater 并执行多轮 rollout；memory budget 512 tokens。 | 论文称代码公开，但当前笔记仍缺明确仓库链接；博弈环境易复现，完整训练流程待核验。 | 中高 |
 | [MLEvolve](../notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md) | 很高：每任务最多 12 小时、500 expansion、H200 GPU，并包含大量代码执行与评估。 | 官方 MIT 代码公开；闭源 backbone、H200 环境和长预算使完整复现成本高。 | 高 |
 | [On the Limits](../notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md) | 中：主要是多模型、多 prompt 条件的推理与统计分析，不涉及参数训练。 | 实验定义和统计方法清晰；结果依赖具体模型版本、数据集与 confidence 获取方式。 | 中 |
+| [WebEvolver](../notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 很高：1,516 个真实网页查询、两个 70B 模型的多轮 SFT、深度 7 合成轨迹；WMLA 每步最多 3 分支并调用 GPT-4o 评分。 | 官方 MIT 代码和 SFT 数据公开，但未找到训练后权重；动态网站、地区/IP 过滤、浏览器环境和 70B 训练资源使严格复现困难。 | 高 |
 
 ---
 
@@ -86,6 +89,7 @@ metadata:
 | DROP | [Gödel Agent](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 阅读理解、数学、多领域知识、科学问答和 Game of 24 |
 | FiNER | [ACE](../notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md) | API 工具调用、金融抽取与公式计算 |
 | Formula / XBRL | [ACE](../notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md) | API 工具调用、金融抽取与公式计算 |
+| GAIA-web | [WebEvolver](../notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 真实网页导航、事实搜索与网页依赖问答 |
 | Game of 24 | [Gödel Agent](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 阅读理解、数学、多领域知识、科学问答和 Game of 24 |
 | GPQA | [Gödel Agent](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 阅读理解、数学、多领域知识、科学问答和 Game of 24 |
 | HotpotQA | [EvolveR](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 开放域与多跳问答、搜索增强推理 |
@@ -93,18 +97,21 @@ metadata:
 | M3ToolEval Web Browsing | [Self-Challenging](../notes/self-challenging-language-model-agents.md) | 计算、网页浏览、零售和航空工具环境 |
 | MCP-Atlas | [Harness Updating](../notes/harness-updating-is-not-harness-benefit.md) | 代码修复、MCP 工具调用、Skill 使用 |
 | MGSM | [Gödel Agent](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 阅读理解、数学、多领域知识、科学问答和 Game of 24 |
+| Mind2Web-Live-filtered | [WebEvolver](../notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 真实网页导航、事实搜索与网页依赖问答 |
 | MLE-Bench 75 tasks | [MLEvolve](../notes/mlevolve-a-self-evolving-framework-for-automated-machine-learning-algorithm-discovery.md) | Kaggle-style 机器学习工程与数学算法优化 |
 | MMLU | [Gödel Agent](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 阅读理解、数学、多领域知识、科学问答和 Game of 24 |
 | MuSiQue | [EvolveR](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 开放域与多跳问答、搜索增强推理 |
 | Natural Questions | [EvolveR](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 开放域与多跳问答、搜索增强推理 |
 | PopQA | [EvolveR](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 开放域与多跳问答、搜索增强推理 |
 | RLCard LHE | [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 连续博弈与流式数据库 / 代码任务 |
+| SimpleQA | [WebEvolver](../notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 真实网页导航、事实搜索与网页依赖问答 |
 | SkillsBench | [Harness Updating](../notes/harness-updating-is-not-harness-benefit.md) | 代码修复、MCP 工具调用、Skill 使用 |
 | StreamBench CoSQL | [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 连续博弈与流式数据库 / 代码任务 |
 | StreamBench DS-1000 | [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 连续博弈与流式数据库 / 代码任务 |
 | SWE-bench Verified | [Harness Updating](../notes/harness-updating-is-not-harness-benefit.md)、[SE-Agent](../notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md) | 代码修复、MCP 工具调用、Skill 使用；真实 GitHub issue 修复、代码定位、编辑和测试 |
 | TauBench Airline | [Self-Challenging](../notes/self-challenging-language-model-agents.md) | 计算、网页浏览、零售和航空工具环境 |
 | TauBench Retail | [Self-Challenging](../notes/self-challenging-language-model-agents.md) | 计算、网页浏览、零售和航空工具环境 |
+| Text-only WebVoyager | [WebEvolver](../notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 真实网页导航、事实搜索与网页依赖问答 |
 | TextArena RPS | [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 连续博弈与流式数据库 / 代码任务 |
 | TriviaQA | [EvolveR](../notes/evolver-self-evolving-llm-agents-through-an-experience-driven-lifecycle.md) | 开放域与多跳问答、搜索增强推理 |
 | 多套 toxicity / hate-speech 标注数据集 | [On the Limits](../notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md) | Toxicity / hate-speech annotation under changing definitions and prompts |
@@ -139,6 +146,7 @@ metadata:
 | memory retrieval | [From Storage to Experience](../notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md) | 论文特定指标；解释时需回到对应任务和评测协议。 |
 | memory utility | [From Storage to Experience](../notes/from-storage-to-experience-a-survey-on-the-evolution-of-llm-agent-memory-mechanisms.md) | 论文特定指标；解释时需回到对应任务和评测协议。 |
 | Optimization Failure | [Gödel Agent](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 自修改未能超过初始策略。 |
+| Overall Assessment | [WebEvolver](../notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 对世界模型生成页面功能与语义连贯性的综合自动评分。 |
 | partial correlation | [On the Limits](../notes/on-the-limits-of-llm-adaptability-impact-of-model-internalized-priors-on-annotation-task-performance.md) | 控制数据集层混杂因素后的相关性。 |
 | Pass@1 | [SE-Agent](../notes/se-agent-self-evolution-trajectory-optimization-in-multi-step-reasoning-with-llm-based-agents.md)、[Self-Challenging](../notes/self-challenging-language-model-agents.md) | 单次采样成功率；代码修复中也对应 resolution rate。 |
 | Pass@4 | [Self-Challenging](../notes/self-challenging-language-model-agents.md) | 四次采样至少一次成功。 |
@@ -149,7 +157,10 @@ metadata:
 | rollouts | [ACE](../notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md) | 获取更新或训练信号所需交互次数。 |
 | RPS@k | [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 连续石头剪刀布任务的 k 轮表现。 |
 | SGC | [ACE](../notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md) | AppWorld 的 Scenario Goal Completion。 |
+| Similarity | [WebEvolver](../notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 世界模型生成页面与真实下一页面内容的相似程度。 |
 | StreamBench pass@4 accuracy | [MemoPilot](../notes/from-player-to-master-enhancing-test-time-learning-of-llm-agents-via-reinforcement-learning-over-memory.md) | 论文特定指标；解释时需回到对应任务和评测协议。 |
+| Structural Correctness | [WebEvolver](../notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 世界模型生成的 accessibility tree 是否满足结构和语法约束。 |
+| Task Success Rate | [WebEvolver](../notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md) | 真实网页任务被自动评价为完成的比例；受网站可访问性与评测时段影响。 |
 | Temporary Drop | [Gödel Agent](../notes/godel-agent-a-self-referential-agent-framework-for-recursive-self-improvement.md) | 自修改过程中性能短暂下降。 |
 | TGC | [ACE](../notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md) | AppWorld 的 Task Goal Completion。 |
 | token cost | [ACE](../notes/agentic-context-engineering-evolving-contexts-for-self-improving-language-models.md) | 模型调用 token 消耗。 |
@@ -165,7 +176,7 @@ metadata:
 
 1. **外部上下文 / 经验资产**：ACE、EvolveR、MemoPilot。
 2. **当前任务轨迹或候选解**：SE-Agent、MLEvolve。
-3. **模型参数或辅助策略参数**：EvolveR、Self-Challenging、MemoPilot 的 updater。
+3. **模型参数或辅助策略参数**：EvolveR、Self-Challenging、MemoPilot 的 updater、WebEvolver 的策略模型与世界模型。
 4. **Agent 可执行程序**：Gödel Agent。
 5. **能力边界与评价框架**：Harness Updating、Theory of Agent、On the Limits、Memory Survey。
 
@@ -173,7 +184,7 @@ metadata:
 
 ### 6.2 测试时优化不等于长期学习
 
-SE-Agent、Gödel Agent 和 MLEvolve 都能在当前任务中持续产生更好候选，但 metadata 中均不把它们标记为跨任务长期记忆。判断“是否学习”时，应同时检查：结果是否跨任务保留、是否修改参数、是否有持久经验库。
+SE-Agent、Gödel Agent 和 MLEvolve 都能在当前任务中持续产生更好候选，但 metadata 中均不把它们标记为跨任务长期记忆。WebEvolver 同时包含参数级跨任务训练和测试时 WMLA，必须把 42.49 的训练后策略结果与 51.37 的额外前瞻搜索结果分开理解。判断“是否学习”时，应同时检查：结果是否跨任务保留、是否修改参数、是否有持久经验库。
 
 ### 6.3 外部经验存在四个独立环节
 
@@ -181,18 +192,19 @@ SE-Agent、Gödel Agent 和 MLEvolve 都能在当前任务中持续产生更好�
 生成 / 写入 → 检索 / 激活 → 遵循 / 执行 → 产生真实收益
 ```
 
-ACE 和 EvolveR 重点研究生成与治理；Harness Updating 强调激活和遵循；MemoPilot 直接优化 frozen Player 可执行的 memory。只报告“写出了经验”不足以证明 Harness Benefit。
+ACE 和 EvolveR 重点研究生成与治理；Harness Updating 强调激活和遵循；MemoPilot 直接优化 frozen Player 可执行的 memory。只报告“写出了经验”不足以证明 Harness Benefit。WebEvolver 则把网页转移经验压入模型参数，并通过合成轨迹间接影响后续策略。
 
 ### 6.4 主结果必须和预算一起阅读
 
-MLEvolve 的 12 小时 / 500 expansion / H200、Self-Challenging 的约 12k rollout、SE-Agent 的多轨迹池，以及 EvolveR 的 SFT + GRPO 都说明：更高结果往往来自更复杂的系统与更高预算。横向比较应优先寻找同模型、同环境、同 rollout 或同 wall-clock 的对照。
+MLEvolve 的 12 小时 / 500 expansion / H200、Self-Challenging 的约 12k rollout、SE-Agent 的多轨迹池、EvolveR 的 SFT + GRPO，以及 WebEvolver 的双 70B SFT、真实网页 rollout 和 WMLA 分支搜索都说明：更高结果往往来自更复杂的系统与更高预算。横向比较应优先寻找同模型、同环境、同 rollout 或同 wall-clock 的对照。
 
 ### 6.5 诊断论文提供了比平均分更细的研究变量
 
 - Harness Updating：activation 与 adherence；
 - On the Limits：DSF、rescue rate 与 decision stickiness；
 - Theory of Agent：tool-use necessity 与 effort allocation；
-- Memory Survey：repository、retrieval、utility 与 lifecycle。
+- Memory Survey：repository、retrieval、utility 与 lifecycle；
+- WebEvolver：世界模型结构正确性、页面相似度、可信前瞻深度与分支数。
 
 这些变量可用于设计后续 Self-Evolving Agent 实验，而不只是在 benchmark 上再提高一个平均分。
 
@@ -208,7 +220,8 @@ MLEvolve 的 12 小时 / 500 expansion / H200、Self-Challenging 的约 12k roll
 | 失败经验治理不足 | 多数系统展示新增经验，较少系统研究删除、过期、冲突和污染 | 长期任务流中的去重、遗忘、版本回滚与错误经验注入实验 |
 | 参数与外挂经验难分 | 同时使用经验库、SFT 和 RL 时，收益来源容易混合 | Experience-only、parameter-only、combined 和 equal-budget 消融 |
 | 评价过度依赖最终成功 | 最终答对可能掩盖无必要工具调用、过度搜索或偶然成功 | 过程级 reward、必要性、校准、执行成本和可审计轨迹指标 |
-| 开放环境证据有限 | 许多结果来自 QA、博弈、代码或 Kaggle 等结构化环境 | Web / Office / GUI / 数据库等跨动作空间、跨分布长期任务 |
+| 开放环境证据有限 | WebEvolver 补充了真实网页证据，但动态网站、过滤任务、自动评价和短期时间窗仍限制结论 | 跨月份、跨地区、跨网站版本的长期任务流，以及世界模型错误注入和恢复实验 |
+| 世界模型忠实度不足 | 短前瞻有效，深度增加后页面预测快速退化，幻觉缺少直接度量 | 校准置信度、分支状态分布、真实状态回放和错误模拟对策略污染的长期评测 |
 
 ---
 
@@ -227,4 +240,4 @@ python scripts/generate_experimental_comparison.py --check
 python -m unittest discover -s tests -v
 ```
 
-生成器会检查 11 篇笔记是否全部被覆盖，以及 research-positioning 字段是否与 note metadata 一致。
+生成器会检查全部 12 篇笔记是否被覆盖，以及 research-positioning 字段是否与 note metadata 一致。
