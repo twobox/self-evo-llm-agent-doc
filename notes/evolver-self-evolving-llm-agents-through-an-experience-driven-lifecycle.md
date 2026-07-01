@@ -97,7 +97,7 @@ metadata:
 
 > GRPO 将 LLM 视为 policy，使其在每个状态/历史下更好地选择 `<think>`、`<search experience>`、`<search knowledge>`、`<answer>` 等动作。
 
-值得学习的是**训练LLM更好的去使用经验库**！
+值得学习的是**训练LLM更好的去使用经验库**！（训练怎么去用好经验库）
 
 ## 30 秒读懂
 
