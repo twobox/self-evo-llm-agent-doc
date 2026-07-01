@@ -12,3 +12,17 @@
 ## trajectory-level policy
 
 多步轨迹组织能力
+
+
+
+## Intra-Trajectory Transformation
+
+对**同一条轨迹内部**做改写/重构，不改变它"是哪条轨迹"，但改变其**表示形式或结构**，例如：
+
+| 变换类型          | 说明                                      |
+| ----------------- | ----------------------------------------- |
+| **Abstraction**   | 去掉冗余步骤，保留决策关键点              |
+| **Reordering**    | 调整内部步骤顺序（逻辑等价）              |
+| **Annotation**    | 给各步打标签（success / failure / pivot） |
+| **Compaction**    | 压缩重复或低信息量的子步骤                |
+| **Format Change** | 原始 log → structured JSON / graph        |
