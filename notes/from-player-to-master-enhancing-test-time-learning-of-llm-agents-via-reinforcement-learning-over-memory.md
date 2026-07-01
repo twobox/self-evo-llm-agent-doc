@@ -97,6 +97,10 @@ metadata:
 
 目前看的三篇文章的经验库的结构都不太一样。第一个就是一行描述，第二个是结构化描述，这一个是X
 
+https://openreview.net/forum?id=gNWNtstp3r
+
+感觉这篇文章有点假。
+
 ## 30 秒读懂
 
 > **一句话总结：** MemoPilot 冻结执行任务的 player，单独训练一个外部 memory updater，让它在每次交互后把轨迹压缩成下一轮真正可执行的记忆，并用后续任务奖励通过 multi-turn GRPO 学会“怎样写 memory 才有用”。
