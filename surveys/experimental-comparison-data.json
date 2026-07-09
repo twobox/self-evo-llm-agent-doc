@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated": "2026-06-25",
+  "updated": "2026-06-29",
   "records": [
     {
       "id": "ace",
@@ -243,6 +243,28 @@
       "reproducibility": "实验定义和统计方法清晰；结果依赖具体模型版本、数据集与 confidence 获取方式。",
       "evidence_strength": "中强诊断证据：相关分析、错误级 rescue 分析和错误定义实验互相补充。",
       "boundary": "相关性不等于因果；社会概念标注任务可能放大定义冲突，不能直接推广到代码、数学或所有 Agent memory 场景。"
+    },
+    {
+      "id": "webevolver",
+      "short_title": "WebEvolver",
+      "note": "notes/webevolver-enhancing-web-agent-self-improvement-with-co-evolving-world-model.md",
+      "paper_type": "method",
+      "evidence_kind": "empirical-method",
+      "evolution_object": "Agent Policy / World Model Parameters",
+      "learning_stage": "mixed",
+      "parameter_update": "yes",
+      "cross_task": "yes",
+      "agent_type": "Web Agent / World-model Planning",
+      "tasks": "真实网页导航、事实搜索与网页依赖问答",
+      "method": "真实成功轨迹 SFT；网页转移世界模型；失败查询合成轨迹；WMLA 前瞻动作选择",
+      "benchmarks": ["Text-only WebVoyager", "Mind2Web-Live-filtered", "GAIA-web", "SimpleQA"],
+      "metrics": ["Task Success Rate", "Structural Correctness", "Similarity", "Overall Assessment"],
+      "strongest_baseline": "Llama-3.3-70B 多轮 self-improve、普通 Synthetic Trajectory、WebDreamer、GPT-4o",
+      "headline_result": "WebVoyager：Llama-3.3-70B 32.98，WebEvolver 42.49，WMLA d=2 为 51.37；Mind2Web-Live 为 18.86、22.64、24.53。",
+      "cost_profile": "很高：1,516 个真实网页查询、两个 70B 模型的多轮 SFT、深度 7 合成轨迹；WMLA 每步最多 3 分支并调用 GPT-4o 评分。",
+      "reproducibility": "官方 MIT 代码和 SFT 数据公开，但未找到训练后权重；动态网站、地区/IP 过滤、浏览器环境和 70B 训练资源使严格复现困难。",
+      "evidence_strength": "较强：真实网页主结果、普通自训练平台期、无世界模型合成对照、世界模型内部评测、深度与分支消融。",
+      "boundary": "最高结果混合参数训练与高预算测试时搜索；WMLA 和 GAIA 管线使用 GPT-4o，世界模型幻觉未直接测量，跨任务不等于长期持续学习。"
     }
   ]
 }

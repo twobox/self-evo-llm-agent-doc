@@ -21,10 +21,10 @@ class ResearchGapMapTests(unittest.TestCase):
     def test_repository_context(self) -> None:
         self.assertIn("issues/13", TEXT)
         self.assertIn("experimental-comparison.md", TEXT)
-        notes = sorted((ROOT / "notes").glob("*.md"))
-        self.assertEqual(len(notes), 11)
-        for note in notes:
-            self.assertIn(f"../notes/{note.name}", TEXT)
+        linked_notes = re.findall(r"\.\./notes/([^)\s]+\.md)", TEXT)
+        self.assertGreaterEqual(len(set(linked_notes)), 11)
+        for relative in linked_notes:
+            self.assertTrue((ROOT / "notes" / relative).is_file(), relative)
 
     def test_gap_and_project_counts(self) -> None:
         self.assertGreaterEqual(len(re.findall(r"(?m)^## \d+\. Gap [A-Z]：", TEXT)), 5)

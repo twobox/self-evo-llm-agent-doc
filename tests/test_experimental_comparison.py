@@ -20,9 +20,10 @@ class ExperimentalComparisonTests(unittest.TestCase):
     def test_data_covers_all_notes_and_matches_metadata(self) -> None:
         payload = module.load_data(DATA)
         records = module.validate_data(ROOT, payload)
-        self.assertEqual(len(records), 11)
-        self.assertEqual(len({record["id"] for record in records}), 11)
-        self.assertEqual(len({record["note"] for record in records}), 11)
+        note_count = len(list((ROOT / "notes").glob("*.md")))
+        self.assertEqual(len(records), note_count)
+        self.assertEqual(len({record["id"] for record in records}), note_count)
+        self.assertEqual(len({record["note"] for record in records}), note_count)
 
     def test_generated_document_is_current(self) -> None:
         payload = module.load_data(DATA)
@@ -47,11 +48,12 @@ class ExperimentalComparisonTests(unittest.TestCase):
         self.assertIn("无新增", by_id["theory-of-agent"]["headline_result"])
         self.assertIn("无新增", by_id["memory-survey"]["headline_result"])
 
-    def test_on_limits_and_memopilot_are_included(self) -> None:
+    def test_key_recent_records_are_included(self) -> None:
         payload = json.loads(DATA.read_text(encoding="utf-8"))
         ids = {record["id"] for record in payload["records"]}
         self.assertIn("adaptability-limits", ids)
         self.assertIn("memopilot", ids)
+        self.assertIn("webevolver", ids)
 
 
 if __name__ == "__main__":
